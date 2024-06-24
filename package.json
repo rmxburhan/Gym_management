@@ -1,0 +1,8 @@
+{
+  "name": "gym-management",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/rmxburhan/gym-management.git",
+  "author": "rmxburhan <rizalburhanudin556@gmail.com>",
+  "license": "MIT"
+}
