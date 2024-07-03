@@ -1,10 +1,8 @@
 const route = require("express").Router();
 const {
-    getMyData,
     getAllMembers,
     getMemberById,
     filterMemberRules,
-    updateMyProfile,
     updateProfileRules,
     updateUserProfile
 } = require("../controllers/userController")
@@ -31,8 +29,5 @@ route.put("/:id", updateProfileRules(), validate, updateUserProfile);
 
 // TODO : member section for userRoute
 
-route.get("/me", getMyData);
-
-route.put("/me", updateProfileRules(), validate, updateMyProfile)
 
 module.exports = route;

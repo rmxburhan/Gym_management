@@ -2,9 +2,9 @@ const User = require("../models/User")
 const {query,  body} = require("express-validator")
 const UserMembership = require("../models/UserMembership");
 
-const getMyData = (req, res) => {
+const getMyData = async (req, res) => {
     try {
-        const user = req.user;
+        const user = await User.findById(req.user._id);
         
         return res.status(200).json({
             success : true,
@@ -96,18 +96,25 @@ const getMemberById = async (req, res,next) => {
 const updateProfileRules = () =>{
     return [
         body("name").optional().isString().withMessage("name must be a string").trim().escape(),
+        
         body("dateOfBirth").optional().isDate().withMessage("date is invalid!").trim(),
-        body("gender").optional().isString().withMessage("gender must be a string").isIn(['male', 'female']).withMessage("invalid gender input, valid option male | female").trim()
+        
+        body("gender").optional().isString().withMessage("gender must be a string").isIn(['male', 'female']).withMessage("invalid gender input, valid option male | female").trim(),
+        
+        body("address").optional().isString().withMessage("address must be a string").trim(),
     ]
 }
 
 const updateProfile = async (req, res, id) => {
-    const user = User.findById(id);
+    try {
+  
+    const user = await User.findById(id);
 
     const {
         name, 
         dateOfBirth,
-    gender
+        gender,
+        address
     } = req.body;
 
     if (!user) {
@@ -116,10 +123,11 @@ const updateProfile = async (req, res, id) => {
             message : "User not eixst. Id not found"
         })
     }
-
+    
     user.name = name != undefined ? name : user.name;
     user.dateOfBirth = dateOfBirth != undefined ? dateOfBirth : user.dateOfBirth;
     user.gender = gender != undefined ? gender : user.gender;
+    user.address = address != undefined ? address: user.address; 
 
     var isSuccess = await user.save();
 
@@ -134,12 +142,18 @@ const updateProfile = async (req, res, id) => {
         success : true,
         message : "User profile has been updated"
     })
+          
+} catch (error) {
+    return res.status(500).json({
+        success : false,
+        errors : error
+    })
+}
 }
 
 const updateMyProfile = (req, res,next) => {
     const user = req.user;
-
-    updateProfile(req,res,user.id);
+    updateProfile(req,res,user._id);
 }
 
 /*

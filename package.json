@@ -10,5 +10,12 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.4"
-  }
+  },
+  "prettier": {
+    "tabWidth": 4,
+    "useTabs": false,
+    "singleQuote": true,
+    "semi": true,
+    "printWidth": 80
+  },
 }
