@@ -9,6 +9,8 @@ const morgan = require("morgan");
 
 dotenv.config();
 
+app.use(express.static("./public"))
+
 // morgan.token("statusColor", (req, res) => {
 //   const status = res.statusCode;
 //   if (status >= 500) return chalk.red(status);

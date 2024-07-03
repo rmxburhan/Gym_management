@@ -1,15 +1,14 @@
-const route = require("express").Router();
+const route = require('express').Router();
 const {
     getMyData,
-    updateProfileRules, 
+    updateProfileRules,
     updateMyProfile,
-} = require("../controllers/userController")
-const validate = require("../utils/validationRules")
+} = require('../controllers/userController');
+const validate = require('../utils/validationRules');
 
+route.get('/', getMyData);
 
-route.get("/", getMyData);
-
-route.put("/", updateProfileRules(), validate, updateMyProfile)
+route.put('/', updateProfileRules(), validate, updateMyProfile);
 
 // route.post("/image", updateProfileImage);
 
