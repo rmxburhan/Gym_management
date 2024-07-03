@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const {body, validationResult} = require("express-validator")
+const {body} = require("express-validator")
 const jwt = require("jsonwebtoken")
 
 const loginValidationRules = ()=> {
@@ -62,7 +62,6 @@ const registerValidationRules = () => {
     ]
 }
 
-
 const registerHandler = async (req,res )=> {
     try {
         const {
@@ -74,6 +73,7 @@ const registerHandler = async (req,res )=> {
         } = req.body
     
         const isExist = await User.findOne({email : email});
+
         if (isExist) {
             console.log(isExist);
             return res.status(409).json({
@@ -90,14 +90,14 @@ const registerHandler = async (req,res )=> {
             gender
         });
     
-        await user.save();
+        const isSuccess = await user.save();
     
-        // if (!isSuccess) {
-        //     return res.status(500).json({
-        //         success : false,
-        //         message : "failed to add user data"
-        //     })
-        // }
+        if (!isSuccess) {
+            return res.status(500).json({
+                success : false,
+                message : "failed to add user data"
+            })
+        }
 
         return res.status(201).json({
             success : true,
