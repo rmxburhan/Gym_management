@@ -1,0 +1,19 @@
+@token = 
+
+# Get user profile data
+# 1. Member
+# 2. Admin
+# 3. Employee
+GET http://localhost:5000/api/profile
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###
+PUT http://localhost:5000/api/profile
+Content-Type: application/json
+Authorization:  Bearer {{token}}
+
+{
+    "name" : "Burhan"
+}
+
