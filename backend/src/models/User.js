@@ -24,15 +24,30 @@ const userSchema = new Schema({
         type : String,
         enum : ['male', 'female']
     },
-    membershipActive : {
-        type : Boolean,
-        default : false,
-        required : true
+    image : {
+        type : String,
+        required : true,
+        default : "images/default/profile.png"
+    },
+    address : {
+        type : String,
+        required : () => this.role !== 'admin'
+    },
+    role : {
+        type : String,
+        required : true,
+        enum : ['member', 'admin' , 'employee'],
+        default : 'member',
+    },
+    employeeRole : {
+        type : String,
+        required : () => this.role == "employee",
+        enum : ["trainer", "staff",]
     },
     deletedAt : {
         type : Date,
         required : false
-    }
+    },
 }, {timestamps : true})
 
 userSchema.pre('save', function (next) {
