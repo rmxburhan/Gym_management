@@ -1,0 +1,11 @@
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+    "name" : "Rizal Burhanudin",
+    "email" : "rizalburhanudin556@gmail.com",
+    "password" : "password",
+    "dateOfBirth" : "2005-07-22",
+    "gender" : "male",
+    "address" : "Sukabumi City"
+}

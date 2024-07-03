@@ -2,7 +2,6 @@ const User = require("../models/User")
 const {query,  body} = require("express-validator")
 const UserMembership = require("../models/UserMembership");
 
-
 const getMyData = (req, res) => {
     try {
         const user = req.user;

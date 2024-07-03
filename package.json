@@ -6,7 +6,7 @@
   "author": "rmxburhan <rizalburhanudin556@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "server": "nodemon backend/index.js"
+    "server": "nodemon ./backend/src/index.js"
   },
   "devDependencies": {
     "nodemon": "^3.1.4"
