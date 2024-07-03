@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
-
-const authorize = (req, res, next) => {
+const User = require('../models/User');
+const authorize = async (req, res, next) => {
     try {
         const token = req.headers.authorization?.split(' ');
-     
+
         if (token[0] !== 'Bearer') {
             return res.status().json({
                 message: 'Token invalid',
@@ -18,7 +18,14 @@ const authorize = (req, res, next) => {
             });
         }
 
-        req.user = decoded;
+        const user = await User.findById(decoded.user_id);
+        if (!user) {
+            return res.status(401).json({
+                message: 'Unauthorized',
+            });
+        }
+
+        req.user = user;
 
         next();
     } catch (error) {
