@@ -1,31 +1,43 @@
-const {model, Schema, SchemaType} = require("mongoose");
+const { model, Schema, SchemaType } = require('mongoose');
 
-const userMembershipSchema = new Schema({
-    userId : {
-        type : Schema.Types.ObjectId,
-        required : true,
-        ref : "User"
+const userMembershipSchema = new Schema(
+    {
+        memberId: {
+            type: Schema.Types.ObjectId,
+            required: true,
+            ref: 'User',
+        },
+        membershipId: {
+            type: Schema.Types.ObjectId,
+            ref: 'Membership',
+            required: true,
+        },
+        registerDate: {
+            type: Date,
+            required: true,
+        },
+        expiresDate: {
+            type: Date,
+            required: true,
+        },
+        status: {
+            type: Boolean,
+            required: true,
+            default: true,
+        },
+        // TODO : uncomment when you have a transaction table
+        // payment : {
+        //     type : Schema.Types.ObjectId,
+        //     required : true
+        // }
+        deletedAt: {
+            type: Date,
+            required: false,
+        },
     },
-    registerTime : {
-        type : Date,
-        required : true
-    },
-    expiresTime : {
-        type : Date, 
-        required : true
-    },
-    membershipId : {
-        type : Schema.Types.ObjectId,
-        ref : "Membership",
-        required : true
-    },
-    status : {
-        type : Boolean,
-        required :true,
-        default : true
-    }
-})
+    { timestamps: true }
+);
 
-const UserMembership = model("UserMembership", userMembershipSchema);
+const UserMembership = model('UserMembership', userMembershipSchema);
 
-module.exports = userMembershipSchema
+module.exports = userMembershipSchema;
