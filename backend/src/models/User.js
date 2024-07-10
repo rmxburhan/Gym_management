@@ -40,11 +40,6 @@ const userSchema = new Schema(
             enum: ['member', 'admin', 'employee'],
             default: 'member',
         },
-        employeeRole: {
-            type: String,
-            required: () => this.role == 'employee',
-            enum: ['trainer', 'staff'],
-        },
         deletedAt: {
             type: Date,
             required: false,

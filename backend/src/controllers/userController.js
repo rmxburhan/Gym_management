@@ -44,7 +44,7 @@ const getAllMembers = async (req, res, next) => {
 
         console.log('Filter log in geAllMembers', filter);
 
-        const members = await User.find(filter);
+        const members = await User.find({ deletedAt: undefined });
 
         return res.status(200).json({
             success: true,
@@ -64,11 +64,11 @@ const getMemberById = async (req, res, next) => {
     try {
         const { id } = req.params;
 
-        const member = await User.findById(id);
-        const membership = await UserMembership.findOne({
-            userId: member.id,
-            status: true,
-        });
+        const member = await User.findOne({ _id: id, deletedAt: undefined });
+        // const membership = await UserMembership.findOne({
+        //     userId: member.id,
+        //     status: true,
+        // });
 
         if (!member) {
             return res.status(404).json({
@@ -123,9 +123,10 @@ const updateProfileRules = () => {
     ];
 };
 
-const updateProfile = async (req, res, id) => {
+const updateProfile = async (req, res) => {
     try {
-        const user = await User.findById(id);
+        const { id } = req.params;
+        const user = await User.findOne({ _id: id, deletedAt: undefined });
 
         const { name, dateOfBirth, gender, address } = req.body;
 
