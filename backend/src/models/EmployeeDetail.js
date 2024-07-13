@@ -7,18 +7,6 @@ const employeeDetailSchema = new Schema(
             ref: 'User',
             required: true,
         },
-        bankAccountName: {
-            type: String,
-            required: true,
-        },
-        bankAccountNumber: {
-            type: Number,
-            required: true,
-        },
-        baseSalary: {
-            type: Number,
-            required: true,
-        },
         employeeType: {
             type: String,
             enum: ['trainer', 'staff'],
@@ -30,7 +18,7 @@ const employeeDetailSchema = new Schema(
         },
         workSchedule: {
             type: String,
-            required: () => this.employeeType == 'staff',
+            required: false,
         },
     },
     { timestamps: true }

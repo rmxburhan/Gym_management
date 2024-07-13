@@ -1,6 +1,6 @@
 const User = require('../models/User');
+const EmployeeDetail = require('../models/EmployeeDetail');
 const { body } = require('express-validator');
-
 const addEmployeeValidationRules = () => {
     return [
         body('name')
@@ -45,31 +45,26 @@ const addEmployeeValidationRules = () => {
             .isString()
             .withMessage('Address cannot be empty'),
 
-        body('employeeRole')
+        body('employeeType')
             .exists()
-            .withMessage('Employee role cannot be empty')
-            .isIn(['trainer', 'staff']),
+            .withMessage('Employee type cannot be empty')
+            .isIn(['trainer', 'staff'])
+            .withMessage('Employee type can only contain trainer and staff'),
     ];
 };
 
 const updateEmployeeValidationRules = () => {
     return [
-        body('name')
-            .optional()
-            .withMessage('name cannot be empty')
-            .isString()
-            .withMessage('name must be a string'),
+        body('name').optional().isString().withMessage('name must be a string'),
 
         body('email')
             .optional()
-            .withMessage('email cannot be empty')
             .isEmail()
             .withMessage('Please input the valid email')
             .normalizeEmail(),
 
         body('password')
             .optional()
-            .withMessage('Password cannot be empty')
             .isString()
             .withMessage('Password must be a string')
             .isLength({ min: 6 })
@@ -77,29 +72,23 @@ const updateEmployeeValidationRules = () => {
 
         body('gender')
             .optional()
-            .withMessage('Gender cannot be empty')
             .isString()
             .withMessage('Gender must be a string')
             .isIn(['male', 'female'])
             .withMessage('Please input valid gender between male and female')
             .trim(),
 
-        body('dateOfBirth')
-            .optional()
-            .withMessage('Date of birth cannot be empty')
-            .isDate()
-            .withMessage('Date is invalid'),
+        body('dateOfBirth').optional().isDate().withMessage('Date is invalid'),
 
         body('address')
             .optional()
-            .withMessage('Address  cannot be empty')
             .isString()
             .withMessage('Address cannot be empty'),
 
-        body('employeeRole')
+        body('employeeType')
             .optional()
-            .withMessage('Employee role cannot be empty')
-            .isIn(['trainer', 'staff']),
+            .isIn(['trainer', 'staff'])
+            .withMessage('Employee type can only contain trainer and staff'),
     ];
 };
 
@@ -113,7 +102,7 @@ const addEmployee = async (req, res) => {
             gender,
             image,
             address,
-            employeeRole,
+            employeeType,
         } = req.body;
 
         const userExist = await User.findOne({ email, deletedAt: undefined });
@@ -135,11 +124,27 @@ const addEmployee = async (req, res) => {
             dateOfBirth,
             gender,
             address,
-            employeeRole,
             role: 'employee',
         });
 
         await user.save();
+
+        const employeeDetail = new EmployeeDetail({
+            employeeId: user._id,
+            status: 'active',
+            employeeType,
+        });
+
+        const success = await employeeDetail.save();
+
+        if (!success) {
+            await user.delete();
+
+            return res.status(400).json({
+                success: false,
+                message: 'update employee success',
+            });
+        }
 
         return res.status(200).json({
             success: true,
@@ -173,12 +178,18 @@ const updateEmployee = async (req, res) => {
                 message: 'User not found',
             });
         }
+        const employeeDetail = await EmployeeDetail.findOne({
+            _id: employee._id,
+            deletedAt: undefined,
+        });
+
         if (name != undefined) employee.name = name;
         if (password != undefined) employee.password = password;
         if (dateOfBirth != undefined) employee.dateOfBirth = dateOfBirth;
         if (gender != undefined) employee.gender = gender;
         if (address != undefined) employee.address = address;
         if (employeeRole != undefined) employee.role = employeeRole;
+
         if (image != undefined) {
             /// TODO : upload image
         }
@@ -200,18 +211,25 @@ const updateEmployee = async (req, res) => {
 const getDetailEmployee = async (req, res) => {
     try {
         const { id } = req.params;
-        const employee = await User.findOne({ _id: id, deletedAt: undefined });
+        console.log(req.params);
+        const employee = await User.findOne({
+            _id: id,
+            deletedAt: undefined,
+        })
+            .populate('employeeDetail')
+            .lean();
         if (!employee) {
             return res.status(404).json({
                 success: false,
                 message: 'Get employee failed, Id not found',
             });
         }
+        console.log(employee);
         // TODO : get detailed like attendances, graph data
         return res.status(200).json({
             success: true,
             data: {
-                employeeDetail,
+                employee: employee,
             },
         });
     } catch (error) {
@@ -224,7 +242,6 @@ const getDetailEmployee = async (req, res) => {
 
 const getAllEmployees = async (req, res) => {
     try {
-        // TODO : apply filters
         const employees = await User.find({
             role: 'employee',
             deletedAt: undefined,
@@ -249,4 +266,6 @@ module.exports = {
     updateEmployee,
     getDetailEmployee,
     getAllEmployees,
+    addEmployeeValidationRules,
+    updateEmployeeValidationRules,
 };

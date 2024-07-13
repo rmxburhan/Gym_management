@@ -45,8 +45,14 @@ const userSchema = new Schema(
             required: false,
         },
     },
-    { timestamps: true }
+    { timestamps: true, toJSON: true, toObject: true }
 );
+
+userSchema.virtual('employeeDetail', {
+    ref: 'EmployeeDetail',
+    localField: '_id',
+    foreignField: 'employeeId',
+});
 
 userSchema.pre('save', function (next) {
     const user = this;

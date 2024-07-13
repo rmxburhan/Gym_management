@@ -37,33 +37,21 @@ const addClassValidationRules = () => {
 };
 const updateClassValidationRules = () => {
     return [
-        body('name')
-            .optional()
-            .withMessage('name cannot be empty')
-            .isString()
-            .withMessage('name must be a string'),
+        body('name').optional().isString().withMessage('name must be a string'),
 
         body('description')
             .optional()
-            .withMessage('description cannot be empty')
             .isString()
             .withMessage('description must be a string'),
 
-        body('trainerId').optional().withMessage('trainer id cannot be empty'),
-        body('classCategory')
-            .optional()
-            .withMessage('class category cannot be empty')
-            .isIn(['asd']),
-
+        body('trainerId').optional(),
         body('maxParticipant')
             .optional()
-            .withMessage('max participant cannot be empty')
             .isInt()
             .withMessage('max participant must be an int'),
 
         body('date')
             .optional()
-            .withMessage('date cannot be empty')
             .isDate()
             .withMessage('input date with a correct format'),
     ];
@@ -80,6 +68,7 @@ const addClassHandler = async (req, res) => {
             date,
         } = req.body;
 
+        // TODO : verified if it is treal trainer
         const trainer = await User.findOne({
             _id: trainerId,
             deletedAt: undefined,
@@ -255,6 +244,7 @@ const getClassHandler = async (req, res, next) => {
 module.exports = {
     addClassHandler,
     addClassValidationRules,
+    updateClassValidationRules,
     updateClassHandler,
     deleteClassHandler,
     updateClassHandler,
