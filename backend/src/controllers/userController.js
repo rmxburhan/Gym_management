@@ -33,23 +33,21 @@ const filterMemberRules = () => {
 
 const getAllMembers = async (req, res, next) => {
     try {
-        const { active, name, gender } = req.query;
+        const { active, name, gender, role } = req.query;
 
-        const filter = {};
+        const filter = { deletedAt: undefined };
 
-        active != undefined ? (filter.active = active) : undefined;
-        name != undefined ? (filter.name = name) : undefined;
-        gender != undefined ? (filter.gender = gender) : undefined;
-        filter.deletedAt = undefined || null;
+        if (active != undefined) filter.active = active;
+        if (name != undefined) filter.name = name;
+        if (gender != undefined) filter.gender = gender;
+        if (role != undefined) filter.role = role;
 
-        console.log('Filter log in geAllMembers', filter);
-
-        const members = await User.find({ deletedAt: undefined });
+        const members = await User.find(filter);
 
         return res.status(200).json({
             success: true,
             data: {
-                members,
+                users: members,
             },
         });
     } catch (error) {

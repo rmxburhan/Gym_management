@@ -17,11 +17,6 @@ const addClassValidationRules = () => {
             .withMessage('description must be a string'),
 
         body('trainerId').exists().withMessage('trainer id cannot be empty'),
-        body('classCategory')
-            .exists()
-            .withMessage('class category cannot be empty')
-            .isIn(['asd']),
-
         body('maxParticipant')
             .exists()
             .withMessage('max participant cannot be empty')
@@ -59,14 +54,7 @@ const updateClassValidationRules = () => {
 
 const addClassHandler = async (req, res) => {
     try {
-        const {
-            name,
-            description,
-            classCategory,
-            trainerId,
-            maxParticipant,
-            date,
-        } = req.body;
+        const { name, description, trainerId, maxParticipant, date } = req.body;
 
         // TODO : verified if it is treal trainer
         const trainer = await User.findOne({
@@ -84,7 +72,6 @@ const addClassHandler = async (req, res) => {
         const classData = new Class({
             name,
             description,
-            classCategory,
             trainerId,
             maxParticipant,
             date,
@@ -106,14 +93,7 @@ const addClassHandler = async (req, res) => {
 
 const updateClassHandler = async (req, res) => {
     try {
-        const {
-            name,
-            description,
-            classCategory,
-            trainerId,
-            maxParticipant,
-            date,
-        } = req.body;
+        const { name, description, trainerId, maxParticipant, date } = req.body;
         const { id } = req.params;
         const classData = await Class.findOne({
             _id: id,
@@ -128,7 +108,6 @@ const updateClassHandler = async (req, res) => {
 
         if (name) classData.name = name;
         if (description) classData.description = description;
-        if (classCategory) classData.classCategory = classCategory;
         if (trainerId) {
             const trainer = await User.findOne({
                 _id: trainerId,

@@ -10,13 +10,6 @@ const classSchema = new Schema(
             type: String,
             required: true,
         },
-
-        // TODO : cari class cateoory yang bener
-        clsasCategory: {
-            type: String,
-            required: true,
-            enum: ['asd', 'asd2'],
-        },
         trainerId: {
             type: Schema.Types.ObjectId,
             required: true,

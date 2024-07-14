@@ -17,7 +17,7 @@ const {
 
 route.use('/auth', authRoute);
 route.use('/profile', authorize, profileRoute);
-route.use('/users', authorize, userRoute);
+route.use('/users', authorize, adminAuthorize, userRoute);
 route.use('/attendances', authorize, attendanceRoute);
 route.use('/classes', authorize, classRoute);
 route.use('/employees', authorize, adminAuthorize, employeeRoute);
