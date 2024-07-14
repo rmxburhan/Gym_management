@@ -25,12 +25,12 @@ const addMembershipValidationRules = () => {
         body('price')
             .exists()
             .withMessage('price cannot be empty')
-            .isInt()
+            .isFloat()
             .withMessage('price must be a number'),
 
         body('discountPrice')
             .optional()
-            .isInt()
+            .isFloat()
             .withMessage('discount price cannot be empty'),
     ];
 };
@@ -39,32 +39,28 @@ const updateMembershipValidationRules = () => {
     return [
         body('name')
             .optional()
-            .withMessage('name cannot be empty')
             .isString('name must be a string')
             .trim()
             .escape(),
 
         body('description')
             .optional()
-            .withMessage('description cannot be empty')
             .isString()
             .withMessage('description must be a string'),
 
         body('duration')
             .optional()
-            .withMessage('duration cannot be empty')
             .isInt()
             .withMessage('duration must be an int, day format'),
 
         body('price')
             .optional()
-            .withMessage('price cannot be empty')
-            .isInt()
+            .isFloat()
             .withMessage('price must be a number'),
 
         body('discountPrice')
             .optional()
-            .isInt()
+            .isFloat()
             .withMessage('discount price cannot be empty'),
     ];
 };
@@ -155,11 +151,9 @@ const getMembershipById = async (req, res, next) => {
     }
 };
 
-const publishMembership = async (req, res, next) => {
+const publishMembership = async (req, res) => {
     try {
         const { id } = req.params;
-
-        const { publish } = req.body;
 
         const data = await Membership.findOne({
             _id: id,
@@ -173,14 +167,7 @@ const publishMembership = async (req, res, next) => {
             });
         }
 
-        if (data.published == publish) {
-            return res.status(400).json({
-                success: false,
-                message: 'Published data is already,' + ` ${data.published}`,
-            });
-        }
-
-        data.published = published;
+        data.published = !data.published;
 
         await data.save();
 
@@ -196,7 +183,7 @@ const publishMembership = async (req, res, next) => {
     }
 };
 
-const deleteMembership = async (req, rese, next) => {
+const deleteMembership = async (req, res, next) => {
     try {
         const { id } = req.params;
         const membership = await Membership.findOne({
@@ -262,7 +249,6 @@ const updateMembershipHandler = async (req, res, next) => {
 
 module.exports = {
     addMembershipValidationRules,
-    publishMemberValidationRules,
     addMembershipHandler,
     getAllMemberships,
     getMembershipById,

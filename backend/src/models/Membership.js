@@ -30,7 +30,7 @@ const membershipSchema = new Schema(
         },
         deletedAt: {
             type: Date,
-            required: true,
+            required: false,
         },
     },
     { timestamps: true }

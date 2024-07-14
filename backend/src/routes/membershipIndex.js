@@ -1,12 +1,32 @@
-const route = require("express").Router();
+const route = require('express').Router();
 const {
-addMemberValidationRules,
-addMembershipHandler
-} = require("../controllers/membershipController")
-const validate = require("../utils/validationRules")
+    addMembershipHandler,
+    getMembershipById,
+    getAllMemberships,
+    addMembershipValidationRules,
+    publishMembership,
+    deleteMembership,
+    publishMemberValidationRules,
+    updateMembershipValidationRules,
+    updateMembershipHandler,
+} = require('../controllers/membershipController');
+const validate = require('../utils/validationRules');
 
-route.get("/", function () {})
+route.get('/', getAllMemberships);
 
-route.post("/", addMemberValidationRules(), validate, addMembershipHandler);
+route.post('/', addMembershipValidationRules(), validate, addMembershipHandler);
+
+route.post('/publish/:id', publishMembership);
+
+route.get('/:id', getMembershipById);
+
+route.put(
+    '/:id',
+    updateMembershipValidationRules(),
+    validate,
+    updateMembershipHandler
+);
+
+route.delete('/:id', deleteMembership);
 
 module.exports = route;

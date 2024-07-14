@@ -7,6 +7,7 @@ const classRoute = require('./classRouteIndex');
 const employeeRoute = require('./employeeIndex');
 const authorize = require('../middleware/authorizationMiddleware');
 const adminSeed = require('../seef/seedDatabase');
+const membershipRoute = require('./membershipIndex');
 
 const {
     adminAuthorize,
@@ -22,5 +23,6 @@ route.use('/attendances', authorize, attendanceRoute);
 route.use('/classes', authorize, classRoute);
 route.use('/employees', authorize, adminAuthorize, employeeRoute);
 route.get('/seedAdmin', adminSeed);
+route.use('/memberships', authorize, adminAuthorize, membershipRoute);
 
 module.exports = route;
