@@ -1,0 +1,24 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjhmNDAzZWNkNDA5NWZhMGZlZjZhZGMiLCJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJHVLUk1sUkt2MDRLZ0VzaVFsUmVjZE9Oa21hb2IvN1hYWWxhdTFhZnRFZ3BCeTlmR3BYWWF5IiwiZGF0ZU9mQmlydGgiOiIyMDI0LTA3LTExVDAyOjE1OjI2LjgxMloiLCJpbWFnZSI6ImRlZmF1bHQvcHJvZmlsZS5wbmciLCJhZGRyZXNzIjoiYXNkIiwicm9sZSI6ImFkbWluIiwiY3JlYXRlZEF0IjoiMjAyNC0wNy0xMVQwMjoxNToyNi44MjlaIiwidXBkYXRlZEF0IjoiMjAyNC0wNy0xMVQwMjoxNToyNi44MjlaIiwiX192IjowLCJpYXQiOjE3MjA5MTI4MTksImV4cCI6MTcyMDkxNjQxOX0.3tlygPzUm3hZ0izlg5Y808ziZoXba6Fn6FjZZgirLtU
+GET http://localhost:5000/api/employees
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### 
+POST http://localhost:5000/api/employees
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name" : "Trainer",
+    "email": "trainer1@trainer.com",
+    "password" : "password",
+    "gender" : "male",
+    "dateOfBirth" : "2022-01-01",
+    "address" : "Sarasa",
+    "employeeType" : "trainer"
+}
+
+###
+GET http://localhost:5000/api/employees/668f477b9381c23ad77d290f
+Content-Type: application/json
+Authorization: Bearer {{token}}

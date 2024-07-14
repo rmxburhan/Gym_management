@@ -1,7 +1,15 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjhmNDAzZWNkNDA5NWZhMGZlZjZhZGMiLCJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJHVLUk1sUkt2MDRLZ0VzaVFsUmVjZE9Oa21hb2IvN1hYWWxhdTFhZnRFZ3BCeTlmR3BYWWF5IiwiZGF0ZU9mQmlydGgiOiIyMDI0LTA3LTExVDAyOjE1OjI2LjgxMloiLCJpbWFnZSI6ImRlZmF1bHQvcHJvZmlsZS5wbmciLCJhZGRyZXNzIjoiYXNkIiwicm9sZSI6ImFkbWluIiwiY3JlYXRlZEF0IjoiMjAyNC0wNy0xMVQwMjoxNToyNi44MjlaIiwidXBkYXRlZEF0IjoiMjAyNC0wNy0xMVQwMjoxNToyNi44MjlaIiwiX192IjowLCJpYXQiOjE3MjA5MTU3NzcsImV4cCI6MTcyMDkxOTM3N30.U29YXGw_kMPT9yzP50IiUnCCU9t84v9TN9ima3S1ME8
 POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-    "email" : "rizalburhanudin556@gmail.com",
+    "email" : "admin@admin.com",
     "password" : "password"
 }
+
+###
+GET http://localhost:5000/api/seedAdmin
+
+###
+GET http://localhost:5000/api/users?role=member
+Authorization: Bearer {{token}}

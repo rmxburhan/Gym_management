@@ -1,0 +1,36 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjhmNDAzZWNkNDA5NWZhMGZlZjZhZGMiLCJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJHVLUk1sUkt2MDRLZ0VzaVFsUmVjZE9Oa21hb2IvN1hYWWxhdTFhZnRFZ3BCeTlmR3BYWWF5IiwiZGF0ZU9mQmlydGgiOiIyMDI0LTA3LTExVDAyOjE1OjI2LjgxMloiLCJpbWFnZSI6ImRlZmF1bHQvcHJvZmlsZS5wbmciLCJhZGRyZXNzIjoiYXNkIiwicm9sZSI6ImFkbWluIiwiY3JlYXRlZEF0IjoiMjAyNC0wNy0xMVQwMjoxNToyNi44MjlaIiwidXBkYXRlZEF0IjoiMjAyNC0wNy0xMVQwMjoxNToyNi44MjlaIiwiX192IjowLCJpYXQiOjE3MjA5MjI4MjAsImV4cCI6MTcyMDkyNjQyMH0.GX0XkNVThxazxCIxmiqVYpxGhJ44V1wnJFetUwykRXk
+@id =66933416d058e02505bf922d
+GET http://localhost:5000/api/memberships
+Authorization:  Bearer {{token}}
+###
+POST http://localhost:5000/api/memberships
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name" : "Paket siang",
+    "price" : 2,
+    "description" : "Latihan 2 minggu",
+    "duration" : 30
+}
+###
+GET http://localhost:5000/api/memberships/{{id}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+###
+PUT http://localhost:5000/api/memberships/{{id}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name" : "Paket malam"
+}
+
+### 
+DELETE http://localhost:5000/api/memberships/{{id}}
+Authorization: Bearer {{token}}
+
+### 
+POST http://localhost:5000/api/memberships/publish/{{id}}
+Authorization: Bearer {{token}}
