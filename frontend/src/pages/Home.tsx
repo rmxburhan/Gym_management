@@ -1,20 +1,23 @@
+import { useNavigate } from 'react-router';
 import FaciilitiesCard from './landing_page/FaciilitiesCard';
 import HomeNavbar from './landing_page/HomeNavbar';
 import MembershipCard from './landing_page/MembershipCard';
 import './styles/Home.css';
 const Home = () => {
+    const navigate = useNavigate();
     return (
         <div>
             <HomeNavbar />
             <main>
                 <div className="hamburger h-[100vh] w-[100vw] flex items-center justify-center">
                     <div className="hamburger-content text-center text-white flex flex-col ms-auto me-auto">
-                        <h1 className="text-8xl mb-16  font-bold">
-                            Gym XYZ Sukabumi
-                        </h1>
+                        <h1 className="text-8xl mb-16  font-bold">Gym XYZ</h1>
 
                         <div className="cta-group flex flex-row items-center gap-8 justify-center">
-                            <button className="primary ps-[32px] pe-[32px] pt-[16px] pb-[16px] rounded text-black font-bold">
+                            <button
+                                className="primary ps-[32px] pe-[32px] pt-[16px] pb-[16px] rounded text-black font-bold"
+                                onClick={() => navigate('/register')}
+                            >
                                 Join now
                             </button>
                             <button className="secondary ps-[32px] pe-[32px] pt-[16px] pb-[16px] rounded font-bold">

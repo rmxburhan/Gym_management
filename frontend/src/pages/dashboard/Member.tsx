@@ -1,9 +1,29 @@
 import { PencilIcon, PlusIcon, Trash } from 'lucide-react';
 import StatusChips from '../../components/StatusChips';
-import Avatar from '../../components/Avatar';
 import Name from '../../components/Name';
+import { useEffect, useState } from 'react';
+import { getMembers } from '../../network/api';
 
+type memberData = {
+    name: string;
+    email: string;
+    dateOfBirth: Date;
+    gender: string;
+    image: string;
+    address: string;
+    role: string;
+};
 const Member = () => {
+    const [members, setMembers] = useState<memberData[]>();
+    useEffect(() => {
+        getMembers().then((response) => {
+            console.log(response);
+            if (response.status == 200) {
+                const members = response.data.data.users;
+                setMembers(members);
+            }
+        });
+    }, []);
     return (
         <div>
             <h1 className="text-4xl font-semibold mb-8">Member</h1>
@@ -39,107 +59,38 @@ const Member = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1.</td>
-                                <td>
-                                    <Name
-                                        name="Farhan"
-                                        imageUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQae9FkVDq-pht9_nec324ZbRxcuV7juKPPvA&s"
-                                    />
-                                </td>
-                                <td>rizalburhanudin556@gmail.com</td>
-                                <td>Man</td>
-                                <td>Senin, 12 Januari 2022</td>
-                                <td>
-                                    <StatusChips status="active" />
-                                </td>
-                                <td className="flex flex-row gap-2">
-                                    <button className="p-2 bg-indigo-100 text-indigo-500 rounded">
-                                        <PencilIcon size={20} />
-                                    </button>
+                            {members?.map((x) => {
+                                return (
+                                    <tr>
+                                        <td>1.</td>
+                                        <td>
+                                            <Name
+                                                name={x.name}
+                                                imageUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQae9FkVDq-pht9_nec324ZbRxcuV7juKPPvA&s"
+                                            />
+                                        </td>
+                                        <td>{x.email}</td>
+                                        <td>{x.gender}</td>
+                                        <td>
+                                            {new Date(
+                                                x.dateOfBirth
+                                            ).toLocaleDateString()}
+                                        </td>
+                                        <td>
+                                            <StatusChips status="active" />
+                                        </td>
+                                        <td className="flex flex-row gap-2">
+                                            <button className="p-2 bg-indigo-100 text-indigo-500 rounded">
+                                                <PencilIcon size={20} />
+                                            </button>
 
-                                    <button className="p-2 bg-indigo-500 text-indigo-100 rounded">
-                                        <Trash size={20} />
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>1.</td>
-                                <td></td>
-                                <td>rizalburhanudin556@gmail.com</td>
-                                <td>Man</td>
-                                <td>Senin, 12 Januari 2022</td>
-                                <td>
-                                    <StatusChips status="active" />
-                                </td>{' '}
-                                <td className="flex flex-row gap-2">
-                                    <button className="p-2 bg-indigo-100 text-indigo-500 rounded">
-                                        <PencilIcon size={20} />
-                                    </button>
-
-                                    <button className="p-2 bg-indigo-500 text-indigo-100 rounded">
-                                        <Trash size={20} />
-                                    </button>
-                                </td>
-                            </tr>{' '}
-                            <tr>
-                                <td>1.</td>
-                                <td>
-                                    <div className="flex flex-row gap-4 items-center">
-                                        <Avatar imageUrl="https://wallpapers.com/images/hd/cute-anime-profile-pictures-k6h3uqxn6ei77kgl.jpg" />
-                                        Rizal Burhanudin
-                                    </div>
-                                </td>
-                                <td>rizalburhanudin556@gmail.com</td>
-                                <td>Man</td>
-                                <td>Senin, 12 Januari 2022</td>
-                                <td>Active</td>
-                                <td className="flex flex-row gap-2">
-                                    <button className="p-2 bg-indigo-100 text-indigo-500 rounded">
-                                        <PencilIcon size={20} />
-                                    </button>
-
-                                    <button className="p-2 bg-indigo-500 text-indigo-100 rounded">
-                                        <Trash size={20} />
-                                    </button>
-                                </td>
-                            </tr>{' '}
-                            <tr>
-                                <td>1.</td>
-                                <td>Rizal Burhanudin</td>
-                                <td>rizalburhanudin556@gmail.com</td>
-                                <td>Man</td>
-                                <td>Senin, 12 Januari 2022</td>
-                                <td>
-                                    <StatusChips status="active" />
-                                </td>
-                                <td className="flex flex-row gap-2">
-                                    <button className="p-2 bg-indigo-100 text-indigo-500 rounded">
-                                        <PencilIcon size={20} />
-                                    </button>
-
-                                    <button className="p-2 bg-indigo-500 text-indigo-100 rounded">
-                                        <Trash size={20} />
-                                    </button>
-                                </td>
-                            </tr>{' '}
-                            <tr>
-                                <td>1.</td>
-                                <td>Rizal Burhanudin</td>
-                                <td>rizalburhanudin556@gmail.com</td>
-                                <td>Man</td>
-                                <td>Senin, 12 Januari 2022</td>
-                                <td>Active</td>
-                                <td className="flex flex-row gap-2">
-                                    <button className="p-2 bg-indigo-100 text-indigo-500 rounded">
-                                        <PencilIcon size={20} />
-                                    </button>
-
-                                    <button className="p-2 bg-indigo-500 text-indigo-100 rounded">
-                                        <Trash size={20} />
-                                    </button>
-                                </td>
-                            </tr>
+                                            <button className="p-2 bg-indigo-500 text-indigo-100 rounded">
+                                                <Trash size={20} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>

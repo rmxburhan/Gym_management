@@ -11,6 +11,7 @@ import Notifications from './pages/dashboard/Notifications';
 import Attendances from './pages/dashboard/Attendances';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import Authorization from './pages/auth/Authorization';
 function App() {
     return (
         <>
@@ -19,17 +20,22 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
-                    <Route path="/dashboard" element={<DashboardLayout />}>
-                        <Route path="" element={<Dashboard />} />
-                        <Route path="attendances" element={<Attendances />} />
-                        <Route path="members" element={<Member />} />
-                        <Route path="classes" element={<Classes />} />
-                        <Route path="employees" element={<Employee />} />
-                        <Route path="equipments" element={<Equipments />} />
-                        <Route
-                            path="notifications"
-                            element={<Notifications />}
-                        />
+                    <Route element={<Authorization />}>
+                        <Route path="/dashboard" element={<DashboardLayout />}>
+                            <Route path="" element={<Dashboard />} />
+                            <Route
+                                path="attendances"
+                                element={<Attendances />}
+                            />
+                            <Route path="members" element={<Member />} />
+                            <Route path="classes" element={<Classes />} />
+                            <Route path="employees" element={<Employee />} />
+                            <Route path="equipments" element={<Equipments />} />
+                            <Route
+                                path="notifications"
+                                element={<Notifications />}
+                            />
+                        </Route>
                     </Route>
                     <Route path="*" element={<NoMatch />} />
                 </Routes>

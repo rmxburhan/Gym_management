@@ -1,30 +1,26 @@
-const base_url = "http://localhost:5000/api"
+const base_url = "http://localhost:5000/api/"
 import axios from 'axios'
-
+import useAuth from '../components/context/Auth'
 export const postLogin = (payload : loginPayload) => {
     return axios
         .post(base_url + "auth/login", payload)
-        .then(data => console.log("login response", data))
         .catch(err => console.error)
 }
 
 export const postRegister = (payload : registerPayload) => {
     return axios
-        .post(base_url + "auth/register", payload)
-        .then(data => console.log("register response", data))
+        .post(base_url + "auth/register", {...payload, gender : genderType[payload.gender]})
         .catch(err => console.error)
 }
 
 export const getMembers = () : Promise<any> => {
-    return axios.get(base_url + "members")
-        .then(data => console.log("member response", data))
+    return axios.get(base_url + "users?role=member", {headers : {Authorization : "Bearer " + localStorage.getItem('token')}})
         .catch(err => console.error);
 }
 
 export const getClasses = () : Promise<any> => {
     return axios
-        .get(base_url + "classes")
-        .then(data => console.log("get class response", data))
+        .get(base_url + "classes", {headers : {Authorization : "Bearer " + localStorage.getItem('token')}})
         .catch(err => console.error)
 }
 
@@ -58,26 +54,26 @@ export const getClass = (id : string) : Promise<any> => {
 
 export const getAttendancesCode = () :Promise<any> => {
     return axios
-        .get(base_url + "attendances/code")
-        .then(data => console.log("get attendance code", data))
+        .get(base_url + "attendances/code", {headers : {Authorization : "Bearer " + localStorage.getItem('token')} } )
         .catch(err => console.error)
 }
+
 
 interface loginPayload {
     email : string;
     password : string;
 }
 
-interface registerPayload {
+export interface registerPayload {
     name : string;
     email : string;
     password : string;
     address : string;
     gender : genderType;
-    dateOfBirth : Date;
+    dateOfBirth : string;
 }
 
-enum genderType 
+export enum genderType 
 {
     male,
     female
@@ -90,6 +86,10 @@ interface addCLasssPayload {
     classCategory : string;
     maxParticipant : number;
     date : Date
+}
+
+export const getEmployee = () => {
+    return axios.get(base_url + "employees", {headers : {Authorization : "Bearer " + localStorage.getItem('token')}}).catch(err => console.error)
 }
 
 interface updateClassPayload {

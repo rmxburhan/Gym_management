@@ -25,9 +25,11 @@ const HomeNavbar = () => {
                     <a href="#">Customer Help</a>
                 </li>
             </ul>
-            <button className="bg-[#94ff08] rounded text-black font-bold">
-                <a href="">Join now</a>
-            </button>
+            <a href="/register">
+                <button className="bg-[#94ff08] rounded text-black font-bold">
+                    Join now
+                </button>
+            </a>
         </nav>
     );
 };

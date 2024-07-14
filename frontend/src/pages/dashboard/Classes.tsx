@@ -1,7 +1,27 @@
 import { PencilIcon, PlusIcon, Trash } from 'lucide-react';
 import Name from '../../components/Name';
+import { useEffect, useState } from 'react';
+import { getClasses } from '../../network/api';
+
+type classData = {
+    _id: string;
+    name: string;
+    description: string;
+    date: Date;
+    maxParticipant: number;
+};
 
 const Classes = () => {
+    const [classes, setClasses] = useState<classData[]>();
+    useEffect(() => {
+        getClasses().then((response) => {
+            if (response.status == 200) {
+                console.log(response);
+                const classesData = response.data.data.classes;
+                setClasses(classesData);
+            }
+        });
+    }, []);
     return (
         <div>
             <h1 className="text-4xl font-semibold mb-8">Classes</h1>
@@ -36,29 +56,37 @@ const Classes = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1.</td>
-                                <td>Yoga</td>
-                                <td>
-                                    <Name
-                                        name="Farhan"
-                                        imageUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQae9FkVDq-pht9_nec324ZbRxcuV7juKPPvA&s"
-                                    />
-                                </td>
-                                <td>Senin, 12 Januari / 08:00 - 09:00</td>
-                                <td>30</td>
-                                <td>
-                                    <div className="flex flex-row gap-2 my-auto">
-                                        <button className="p-2 bg-indigo-100 text-indigo-500 rounded">
-                                            <PencilIcon size={20} />
-                                        </button>
+                            {classes?.map((x) => {
+                                return (
+                                    <tr key={x._id}>
+                                        <td>1.</td>
+                                        <td>{x.name}</td>
+                                        <td>
+                                            <Name
+                                                name="Farhan"
+                                                imageUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQae9FkVDq-pht9_nec324ZbRxcuV7juKPPvA&s"
+                                            />
+                                        </td>
+                                        <td>
+                                            {new Date(
+                                                x.date.toString()
+                                            ).toLocaleDateString()}
+                                        </td>
+                                        <td>{x.maxParticipant.toString()}</td>
+                                        <td>
+                                            <div className="flex flex-row gap-2 my-auto">
+                                                <button className="p-2 bg-indigo-100 text-indigo-500 rounded">
+                                                    <PencilIcon size={20} />
+                                                </button>
 
-                                        <button className="p-2 bg-indigo-500 text-indigo-100 rounded">
-                                            <Trash size={20} />
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                                                <button className="p-2 bg-indigo-500 text-indigo-100 rounded">
+                                                    <Trash size={20} />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>

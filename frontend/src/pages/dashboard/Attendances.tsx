@@ -1,10 +1,27 @@
 import { Code } from 'lucide-react';
 import { Card } from '../../components/Card';
 import Name from '../../components/Name';
-import { Bar, Chart, Line } from 'react-chartjs-2';
 import { LineChart } from '@tremor/react';
+import { useEffect, useState } from 'react';
+import { getAttendancesCode } from '../../network/api';
 
 const Attendances = () => {
+    const [code, setCode] = useState('');
+    const getCode = () => {
+        getAttendancesCode().then((response: any) => {
+            if (response.status != 200) {
+                console.log('error');
+                setCode('NaN');
+            }
+            console.log(response.data);
+            const code = response.data.data.code.code;
+            setCode(code);
+        });
+    };
+    useEffect(() => {
+        getCode();
+    }, []);
+
     return (
         <div>
             <h2 className="text-black font-bold text-4xl mb-8 col-span-4">
@@ -18,7 +35,7 @@ const Attendances = () => {
                     alert={false}
                     Icon={Code}
                 >
-                    <p className="text-black font-bold text-2xl">20</p>
+                    <p className="text-black font-bold text-2xl">{code}</p>
                 </Card>
                 <Card
                     title="Member checkIn"

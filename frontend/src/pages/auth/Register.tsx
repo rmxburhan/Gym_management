@@ -1,4 +1,35 @@
+import { useState } from 'react';
+import { genderType, postRegister, registerPayload } from '../../network/api';
+import { useNavigate } from 'react-router';
+import { AxiosResponse } from 'axios';
 const Register = () => {
+    const navigate = useNavigate();
+    const [payload, setPayload] = useState<registerPayload>({
+        name: '',
+        email: '',
+        password: '',
+        address: '',
+        gender: genderType.male,
+        dateOfBirth: new Date().toString(),
+    });
+
+    const inputChangeHandler = (e: any) => {
+        const data = { ...payload, [e.target.name]: e.target.value.toString() };
+        setPayload(data);
+    };
+
+    const submitHandler = (e: any) => {
+        e.preventDefault();
+        postRegister(payload)
+            .then((data: any) => {
+                if (data.status == 201) {
+                    navigate('/login');
+                } else {
+                    alert('register failed');
+                }
+            })
+            .catch((err) => console.error);
+    };
     return (
         <div
             className="flex justify-center items-center h-[100vh] hamburger"
@@ -89,7 +120,7 @@ const Register = () => {
                 <h1 className="text-center text-2xl font-semibold mb-4 ">
                     Register
                 </h1>
-                <form action="" method="post" className="flex flex-col gap-2">
+                <form className="flex flex-col gap-2" onSubmit={submitHandler}>
                     <label htmlFor="email">Name</label>
                     <input
                         type="text"
@@ -97,6 +128,8 @@ const Register = () => {
                         id="name"
                         required
                         className="mb-4"
+                        value={payload.name}
+                        onChange={inputChangeHandler}
                     />
                     <label htmlFor="email">Email</label>
                     <input
@@ -105,6 +138,8 @@ const Register = () => {
                         id="email"
                         required
                         className="mb-4"
+                        onChange={inputChangeHandler}
+                        value={payload.email}
                     />
                     <label htmlFor="password">Password</label>
                     <input
@@ -113,7 +148,40 @@ const Register = () => {
                         id="password"
                         required
                         className="mb-4"
+                        value={payload.password}
+                        onChange={inputChangeHandler}
                     />
+                    <label htmlFor="dateOfBirth">Birth Date</label>
+                    <input
+                        type="date"
+                        name="dateOfBirth"
+                        id="dateOfBirth"
+                        required
+                        className="mb-4"
+                        value={payload.dateOfBirth}
+                        onChange={inputChangeHandler}
+                    />
+                    <label htmlFor="address">Address</label>
+                    <textarea
+                        value={payload.address}
+                        name="address"
+                        id="address"
+                        required
+                        className="mb-4"
+                        onChange={inputChangeHandler}
+                    />
+                    <label htmlFor="gender">Gender</label>
+                    <select
+                        name="gender"
+                        id="gender"
+                        className="mb-4"
+                        value={payload.gender.toString()}
+                        required
+                        onChange={inputChangeHandler}
+                    >
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
                     <button
                         type="submit"
                         className="btn px-8 py-4 rounded bg-black text-white font-semibold"

@@ -1,8 +1,48 @@
 import { PencilIcon, PlusIcon, Trash } from 'lucide-react';
 import StatusChips from '../../components/StatusChips';
 import Name from '../../components/Name';
+import { useEffect, useState } from 'react';
+import { getEmployee } from '../../network/api';
+
+type employeeData = {
+    _id: string;
+    name: string;
+    email: string;
+    dateOfBirth: string;
+    gender: string;
+    image: string;
+    address: string;
+    role: string;
+};
 
 const Employee = () => {
+    const [employee, setEmployee] = useState<employeeData[]>([]);
+    useEffect(() => {
+        getEmployee()
+            .then((response: any) => {
+                if (response.status == 200) {
+                    console.log(response);
+                    const employees = response.data.data.employees.map(
+                        (x: any) => {
+                            return {
+                                _id: x._id,
+                                name: x.name,
+                                email: x.email,
+                                dateOfBirth: new Date(
+                                    x.dateOfBirth
+                                ).toLocaleDateString(),
+                                gender: x.gender,
+                                image: x.image,
+                                address: x.address,
+                                role: x.role,
+                            };
+                        }
+                    );
+                    setEmployee(employees);
+                }
+            })
+            .catch();
+    }, []);
     return (
         <div>
             <h1 className="text-4xl font-semibold mb-8">Employee</h1>
@@ -39,35 +79,39 @@ const Employee = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1.</td>
-                                <td>
-                                    <Name
-                                        name="Farhan"
-                                        imageUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQae9FkVDq-pht9_nec324ZbRxcuV7juKPPvA&s"
-                                    />
-                                </td>
-                                <td>rizalburhanudin556@gmail.com</td>
-                                <td>Man</td>
-                                <td>Senin, 12 Januari 2022</td>
-                                <td>
-                                    <StatusChips status="Holiday" />
-                                </td>
-                                <td>
-                                    <StatusChips status="Trainer" />
-                                </td>
-                                <td>
-                                    <div className="flex flex-row gap-2 my-auto">
-                                        <button className="p-2 bg-indigo-100 text-indigo-500 rounded">
-                                            <PencilIcon size={20} />
-                                        </button>
+                            {employee.map((x) => {
+                                return (
+                                    <tr>
+                                        <td>1.</td>
+                                        <td>
+                                            <Name
+                                                name={x.name}
+                                                imageUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQae9FkVDq-pht9_nec324ZbRxcuV7juKPPvA&s"
+                                            />
+                                        </td>
+                                        <td>{x.email}</td>
+                                        <td>{x.gender}</td>
+                                        <td>{x.dateOfBirth}</td>
+                                        <td>
+                                            <StatusChips status="Holiday" />
+                                        </td>
+                                        <td>
+                                            <StatusChips status="Trainer" />
+                                        </td>
+                                        <td>
+                                            <div className="flex flex-row gap-2 my-auto">
+                                                <button className="p-2 bg-indigo-100 text-indigo-500 rounded">
+                                                    <PencilIcon size={20} />
+                                                </button>
 
-                                        <button className="p-2 bg-indigo-500 text-indigo-100 rounded">
-                                            <Trash size={20} />
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                                                <button className="p-2 bg-indigo-500 text-indigo-100 rounded">
+                                                    <Trash size={20} />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>

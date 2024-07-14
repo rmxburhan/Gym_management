@@ -39,7 +39,6 @@ const DashboardLayout: React.FC = () => {
         { icon: FileBarChart, title: 'Reports', path: '/dashboard/reports' },
     ];
     const { activeSideBar, setActiveSideBar } = useHide();
-
     return (
         <div className="flex flex-row">
             <Sidebar>

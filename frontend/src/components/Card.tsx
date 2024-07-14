@@ -24,7 +24,7 @@ export const Card: React.FC<CardProps> = ({
                 active
                     ? 'border-indigo-500 bg-indigo-100'
                     : 'border-gray-300 bg-white'
-            } shadow-lg hover:shadow-xl`}
+            } shadow-lg hover:shadow-xl overflow-hidden`}
         >
             <div className="flex items-center mb-4">
                 <Icon className="text-indigo-500 w-6 h-6 mr-2" />

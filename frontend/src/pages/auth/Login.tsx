@@ -1,22 +1,31 @@
 import { useState } from 'react';
 import { postLogin } from '../../network/api';
 import useAuth from '../../components/context/Auth';
+import { useNavigate } from 'react-router';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { setToken, setUser } = useAuth();
-    const loginHandler = () => {
+    const navigate = useNavigate();
+    const loginHandler = (e: any) => {
+        e.preventDefault();
         postLogin({ email, password })
-            .then((data: any) => {
-                const token = data.data.token;
-                const user = data.data.user;
-                setToken(token);
-                setUser(user);
-                alert('login success');
+            .then((response: any) => {
+                if (response.status == 200) {
+                    console.log(response);
+                    const token = response.data.data.token;
+                    const user = response.data.data.user;
+                    console.log('ini token woi ', response.data.data.token);
+                    setToken(token);
+                    setUser(user);
+                    navigate('/dashboard');
+                } else {
+                    alert('login failed');
+                }
             })
             .catch((error) => {
-                alert('login failed');
+                console.error(error);
             });
     };
 
@@ -110,12 +119,7 @@ const Login = () => {
                 <h1 className="text-center text-2xl font-semibold mb-4 ">
                     Login
                 </h1>
-                <form
-                    action=""
-                    method="post"
-                    className="flex flex-col gap-2"
-                    onSubmit={loginHandler}
-                >
+                <form className="flex flex-col gap-2" onSubmit={loginHandler}>
                     <label htmlFor="email">Email</label>
                     <input
                         type="email"
