@@ -9,12 +9,24 @@ const memberDetailSchema = new Schema(
         },
         weight: {
             type: Number,
-            required: true,
+            required: false,
         },
         height: {
             type: Number,
-            required: true,
+            required: false,
+        },
+        // percentage
+        fat: {
+            type: Number,
+            required: false,
+        },
+        deletedAt: {
+            type: Date,
+            required: false,
         },
     },
     { timestamps: true }
 );
+
+const MemberDetail = model('MemberDetail', memberDetailSchema);
+module.exports = MemberDetail;

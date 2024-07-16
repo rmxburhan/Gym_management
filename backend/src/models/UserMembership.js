@@ -40,4 +40,4 @@ const userMembershipSchema = new Schema(
 
 const UserMembership = model('UserMembership', userMembershipSchema);
 
-module.exports = userMembershipSchema;
+module.exports = UserMembership;

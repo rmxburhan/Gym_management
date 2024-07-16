@@ -10,12 +10,12 @@ const adminSeed = require('../seef/seedDatabase');
 const membershipRoute = require('./membershipIndex');
 
 route.use('/auth', authRoute);
-route.use('/profile', authorize(['admin', 'member', 'employee']), profileRoute);
+route.use('/attendances', attendanceRoute);
+route.use('/classes', classRoute);
+route.use('/memberships', membershipRoute);
 route.use('/users', authorize(['admin']), userRoute);
-route.use('/attendances', authorize(['admin']), attendanceRoute);
-route.use('/classes', authorize(['admin']), classRoute);
 route.use('/employees', authorize(['admin']), employeeRoute);
-route.get('/seedAdmin', adminSeed);
-route.use('/memberships', authorize(['admmin']), membershipRoute);
+route.use('/profile', authorize(['admin', 'member', 'employee']), profileRoute);
+// route.get('/seedAdmin', adminSeed);
 
 module.exports = route;

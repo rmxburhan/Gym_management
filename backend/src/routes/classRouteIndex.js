@@ -1,5 +1,3 @@
-const validate = require('../utils/validationRules');
-
 const {
     getClassHandler,
     getClassesHandler,
@@ -9,16 +7,30 @@ const {
     addClassValidationRules,
     deleteClassHandler,
 } = require('../controllers/classController');
+const validate = require('../utils/validationRules');
+const authorize = require('../middleware/authorizationMiddleware');
 const route = require('express').Router();
 
-route.get('/', getClassesHandler);
+route.get('/', authorize(['admin', 'employee', 'member']), getClassesHandler);
 
-route.post('/', addClassValidationRules(), validate, addClassHandler);
+route.get('/:id', authorize(['admin', 'staff', 'member']), getClassHandler);
 
-route.get('/:id', getClassHandler);
+route.post(
+    '/',
+    authorize(['admin']),
+    addClassValidationRules(),
+    validate,
+    addClassHandler
+);
 
-route.put('/:id', updateClassValidationRules(), validate, updateClassHandler);
+route.put(
+    '/:id',
+    authorize(['admin']),
+    updateClassValidationRules(),
+    validate,
+    updateClassHandler
+);
 
-route.delete('/:id', deleteClassHandler);
+route.delete('/:id', authorize(['admin']), deleteClassHandler);
 
 module.exports = route;

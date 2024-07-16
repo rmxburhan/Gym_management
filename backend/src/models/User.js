@@ -54,6 +54,18 @@ userSchema.virtual('employeeDetail', {
     foreignField: 'employeeId',
 });
 
+userSchema.virtual('memberDetail', {
+    ref: 'MemberDetail',
+    localField: '_id',
+    foreignField: 'memberId',
+});
+
+userSchema.virtual('membershipDetail', {
+    ref: 'UserMembership',
+    localField: '_id',
+    foreignField: 'memberId',
+});
+
 userSchema.pre('save', function (next) {
     const user = this;
 

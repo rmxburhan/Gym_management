@@ -2,39 +2,30 @@ const route = require('express').Router();
 const {
     getMyAttendencesHistory,
     visitValidationRules,
-    getAttendences,
+    getAttendances,
     checkInHandler,
     getCheckInCode,
     checkOutHandler,
 } = require('../controllers/attendanceController');
 const validate = require('../utils/validationRules');
 
-const AttendanceCode = require('../models/AttendanceCode');
+const authorize = require('../middleware/authorizationMiddleware');
 
-route.get('/', getAttendences);
+route.get('/', authorize(['admin']), getAttendances);
 
-route.get('/code', getCheckInCode);
+route.get('/code', authorize(['admin']), getCheckInCode);
 
 // GET : get all my history attendance
-route.get('/history', getMyAttendencesHistory);
+route.get('/history', authorize(['member']), getMyAttendencesHistory);
 
 // POST : check in and record member attendance
-route.post('/check_in', visitValidationRules(), validate, checkInHandler);
-route.post('/check_out', checkOutHandler);
-
-route.get('/seed', async (req, res) => {
-    const data = new AttendanceCode({
-        code: 'HALOHALOHALOHALO',
-        expiresIn: new Date(new Date().setHours(23, 59, 59)),
-        createdIn: new Date(new Date().setHours(0, 0, 0)),
-    });
-
-    await data.save();
-
-    return res.status(200).json({
-        message: 'Success',
-        data,
-    });
-});
+route.post(
+    '/check_in',
+    authorize(['member']),
+    visitValidationRules(),
+    validate,
+    checkInHandler
+);
+route.post('/check_out', authorize(['member']), checkOutHandler);
 
 module.exports = route;

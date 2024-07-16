@@ -6,27 +6,46 @@ const {
     addMembershipValidationRules,
     publishMembership,
     deleteMembership,
-    publishMemberValidationRules,
     updateMembershipValidationRules,
     updateMembershipHandler,
+    registerMembership,
+    registerMembershipValidationRules,
 } = require('../controllers/membershipController');
 const validate = require('../utils/validationRules');
+const authorize = require('../middleware/authorizationMiddleware');
 
-route.get('/', getAllMemberships);
+route.get('/', authorize(['admin']), getAllMemberships);
 
-route.post('/', addMembershipValidationRules(), validate, addMembershipHandler);
+route.post(
+    '/',
+    authorize(['admin']),
+    addMembershipValidationRules(),
+    validate,
+    addMembershipHandler
+);
 
-route.post('/publish/:id', publishMembership);
+route.post('/publish/:id', authorize(['admin']), publishMembership);
 
-route.get('/:id', getMembershipById);
+route.get('/:id', authorize(['admin']), getMembershipById);
 
 route.put(
     '/:id',
+    authorize(['admin']),
     updateMembershipValidationRules(),
     validate,
     updateMembershipHandler
 );
 
-route.delete('/:id', deleteMembership);
+route.delete('/:id', authorize(['admin']), deleteMembership);
+
+// for member
+
+route.post(
+    '/register',
+    authorize(['member']),
+    registerMembershipValidationRules(),
+    validate,
+    registerMembership
+);
 
 module.exports = route;

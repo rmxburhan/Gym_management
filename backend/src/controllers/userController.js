@@ -1,6 +1,7 @@
+const multer = require('multer');
 const User = require('../models/User');
 const { query, body } = require('express-validator');
-const UserMembership = require('../models/UserMembership');
+const fs = require('fs');
 
 const getMyData = async (req, res) => {
     try {
@@ -167,9 +168,53 @@ const updateMyProfile = (req, res, next) => {
     updateProfile(req, res, user._id);
 };
 
-/*
-This is for admin use
-*/
+const updateProfileImage = async (req, res, next) => {
+    try {
+        const imageFile = req.file;
+        if (imageFile == undefined) {
+            return res.status(400).json({
+                success: false,
+                message: 'Image is empty',
+            });
+        }
+
+        const user = req.user;
+        user.image = imageFile.path;
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: 'saved',
+        });
+    } catch (error) {
+        if (error)
+            return res.status(500).json({
+                success: false,
+                error,
+            });
+    }
+};
+const path = require('path');
+const getProfileImage = (req, res, next) => {
+    try {
+        const user = req.user;
+        const pathImage = path.join(process.cwd(), user.image);
+        if (!fs.existsSync(pathImage)) {
+            return res.status(404).json({
+                success: false,
+                message: 'Image not found',
+            });
+        }
+        return res.sendFile(pathImage);
+    } catch (error) {
+        if (error)
+            return res.status(500).json({
+                success: false,
+                error: error.message,
+            });
+    }
+};
+
 const updateUserProfile = (req, res, next) => {
     const { id } = req.params;
 
@@ -184,4 +229,6 @@ module.exports = {
     updateProfileRules,
     updateMyProfile,
     updateUserProfile,
+    updateProfileImage,
+    getProfileImage,
 };

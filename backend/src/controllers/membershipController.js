@@ -1,5 +1,7 @@
 const Membership = require('../models/Membership');
+const UserMembership = require('../models/UserMembership');
 const { body } = require('express-validator');
+const { addDays } = require('date-fns');
 
 const addMembershipValidationRules = () => {
     return [
@@ -247,6 +249,64 @@ const updateMembershipHandler = async (req, res, next) => {
     }
 };
 
+const registerMembershipValidationRules = () => {
+    return [
+        body('membershipId')
+            .exists()
+            .withMessage('membershipId cannot be empty')
+            .trim(),
+    ];
+};
+
+const registerMembership = async (req, res) => {
+    try {
+        const { membershipId } = req.body;
+        const user = req.body;
+        const membershipExist = await Membership.findOne({
+            deletedAt: undefined,
+            _id: membershipId,
+            published: true,
+        });
+
+        if (!membershipExist) {
+            return res.status(400).json({
+                success: false,
+                message: 'Register membership failed, membership not found',
+            });
+        }
+        const membershipAlreadyRegistered = await UserMembership.findOne({
+            memberId: user._id,
+            deletedAt: undefined,
+            expiresDate: { $gte: new Date() },
+        });
+        if (!membershipAlreadyRegistered) {
+            return res.status(400).json({
+                success: false,
+                message: 'Member already registered in membership',
+            });
+        }
+
+        const registeredDate = new Date();
+        const membershipData = new Membership({
+            memberId: user._id,
+            membershipId,
+            registeredDate,
+            expiresDate: addDays(registeredDate, membershipExist.duration),
+        });
+        await membershipData.save();
+        return res.status(200).json({
+            success: true,
+            message: 'Membership has been registered',
+        });
+    } catch (error) {
+        if (error)
+            return res.status(500).json({
+                success: false,
+                error: error.message,
+            });
+    }
+};
+
 module.exports = {
     addMembershipValidationRules,
     addMembershipHandler,
@@ -256,4 +316,6 @@ module.exports = {
     deleteMembership,
     updateMembershipHandler,
     updateMembershipValidationRules,
+    registerMembership,
+    registerMembershipValidationRules,
 };

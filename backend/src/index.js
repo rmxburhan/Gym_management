@@ -6,11 +6,12 @@ const connectMonggose = require('./utils/db');
 const routeIndex = require('./routes/routesIndex');
 const morgan = require('morgan');
 const cors = require('cors');
+const attendanceCodeJob = require('./cron_job/attendanceCode');
 // const chalk = require("chalk");
 
 dotenv.config();
 
-app.use(express.static('./public'));
+app.use(express.static('public'));
 app.use(cors({ credentials: true }));
 // morgan.token("statusColor", (req, res) => {
 //   const status = res.statusCode;
@@ -34,6 +35,7 @@ app.use('/api', routeIndex);
 app.use(notFoundHandler);
 
 connectMonggose();
+attendanceCodeJob();
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log(`Server berjalan di http://localhost:${port}`);

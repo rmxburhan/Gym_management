@@ -1,7 +1,7 @@
 const { body } = require('express-validator');
 const AttendanceCode = require('../models/AttendanceCode');
 const Attendance = require('../models/Attendance');
-const moment = require('moment-timezone');
+const Member = require('../models/User');
 const visitValidationRules = () => {
     return [
         body('code')
@@ -103,7 +103,7 @@ const checkOutHandler = async (req, res) => {
 const getCheckInCode = async (req, res) => {
     try {
         const code = await AttendanceCode.findOne({
-            expiresIn: { $gt: Date.now() },
+            expiresIn: { $gte: new Date() },
         });
 
         return res.status(200).json({
@@ -120,15 +120,78 @@ const getCheckInCode = async (req, res) => {
     }
 };
 
-// TODO : appliy filter in getAllVisits
-// and get more info like how many today attendances who is the newest arrival and so on
-const getAttendences = async (req, res, next) => {
+const getAttendances = async (req, res, next) => {
     try {
-        const datas = await Attendance.find();
+        const { today, startDate, endDate, memberId, checkOut } = req.query;
+        const filter = {};
 
+        const filterDate = {};
+        if (startDate != undefined) {
+            try {
+                const startDateFilter = new Date(startDate);
+                filterDate['$gte'] = startDateFilter.setHours(0, 0, 0, 0);
+                filter.checkInTime = filterDate;
+            } catch (error) {}
+        }
+        if (endDate != undefined) {
+            try {
+                const endDateFilter = new Date(endDate);
+                filterDate['$lte'] = endDateFilter.setHours(23, 59, 59, 599);
+                filter.checkInTime = filterDate;
+            } catch (error) {}
+        }
+
+        if (today != undefined) {
+            if (today == 'true' || today == '1') {
+                const dateNow = new Date();
+                filter.checkInTime = {
+                    $gte: dateNow.setHours(0, 0, 0, 0),
+                    $lte: dateNow.setHours(23, 59, 59, 599),
+                };
+            }
+        }
+
+        if (memberId) {
+            const member = await Member.findOne({
+                _id: memberId,
+                deletedAt: undefined,
+            });
+            console.log('memberId', member);
+            if (member) {
+                filter.userId = member._id;
+            }
+        }
+
+        if (checkOut != undefined) {
+            if (checkOut == 'false' || checkOut == '0') {
+                console.log('CheckOut', typeof checkOut);
+                filter.checkOutTime = undefined;
+            } else if (checkOut == 'true' || checkOut == '1') {
+                console.log('CheckOut', checkOut);
+                filter.checkOutTime = { $exists: true };
+            }
+        }
+        console.log(filter);
+        const datas = await Attendance.find(filter);
+        const checkInCount = await Attendance.countDocuments({
+            checkInTime: {
+                $gte: new Date().setHours(0, 0, 0, 0),
+                $lte: new Date().setHours(23.59, 59, 599),
+            },
+        });
+
+        const checkOutCount = await Attendance.countDocuments({
+            checkInTime: {
+                $gte: new Date().setHours(0, 0, 0, 0),
+                $lte: new Date().setHours(23.59, 59, 599),
+            },
+            checkOutTime: undefined,
+        });
         return res.status(200).json({
             success: true,
             data: {
+                todayCheckIn: checkInCount,
+                todayUnCheckOut: checkOutCount,
                 memberLog: datas,
             },
         });
@@ -141,10 +204,29 @@ const getAttendences = async (req, res, next) => {
 };
 
 // Get attendance history for member
-// TODO : apply serach and filtering function
 const getMyAttendencesHistory = async (req, res, next) => {
     try {
-        const myAttendances = await Attendance.find({ userId: req.user._id });
+        const { startDate, endDate } = req.query;
+        const filter = { userId: req.user._id };
+
+        if (startDate != undefined) {
+            try {
+                const dateStartFilter = new Date(startDate);
+                filter.checkInTime = dateStartFilter;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        if (endDate != undefined) {
+            try {
+                const endDateFilter = new Date(endDate);
+                filter.checkOutTime = endDateFilter;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        const myAttendances = await Attendance.find(filter);
 
         return res.status(200).json({
             message: 'Get history attendance data succes',
@@ -162,7 +244,7 @@ const getMyAttendencesHistory = async (req, res, next) => {
 
 module.exports = {
     checkInHandler,
-    getAttendences,
+    getAttendances,
     getMyAttendencesHistory,
     getCheckInCode,
     visitValidationRules,
