@@ -36,8 +36,8 @@ const loginHandler = async (req, res) => {
             });
         }
 
-        var isMatch = user.comparePassword(password);
-
+        var isMatch = await user.comparePassword(password);
+        console.log('isMatch', isMatch);
         if (!isMatch) {
             return res.status(400).json({
                 success: false,
