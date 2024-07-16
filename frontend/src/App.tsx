@@ -12,6 +12,7 @@ import Attendances from './pages/dashboard/Attendances';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import Authorization from './pages/auth/Authorization';
+import Membership from './pages/dashboard/Membership';
 function App() {
     return (
         <>
@@ -28,6 +29,10 @@ function App() {
                                 element={<Attendances />}
                             />
                             <Route path="members" element={<Member />} />
+                            <Route
+                                path="memberships"
+                                element={<Membership />}
+                            />
                             <Route path="classes" element={<Classes />} />
                             <Route path="employees" element={<Employee />} />
                             <Route path="equipments" element={<Equipments />} />

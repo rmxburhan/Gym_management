@@ -1,6 +1,7 @@
 const base_url = "http://localhost:5000/api/"
 import axios from 'axios'
 import useAuth from '../components/context/Auth'
+import { Heart } from 'lucide-react'
 export const postLogin = (payload : loginPayload) => {
     return axios
         .post(base_url + "auth/login", payload)
@@ -58,6 +59,11 @@ export const getAttendancesCode = () :Promise<any> => {
         .catch(err => console.error)
 }
 
+export const getMemberships= () : Promise<any> => {
+    return axios
+        .get(base_url + "memberships", {headers : {Authorization : "Bearer " + localStorage.getItem('token')}})
+        .catch(err => console.error)
+}
 
 interface loginPayload {
     email : string;

@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
     "name" : "Rizal Burhanudin",
-    "email" : "rizalburhanudin556@gmail.com",
+    "email" : "rizal@rizal.com",
     "password" : "password",
     "dateOfBirth" : "2005-07-22",
     "gender" : "male",

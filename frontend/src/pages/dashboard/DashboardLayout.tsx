@@ -6,6 +6,7 @@ import {
     FileBarChart,
     HomeIcon,
     LucideIcon,
+    Package,
     Users,
 } from 'lucide-react';
 import { Sidebar, SideBarItem } from './Sidebar';
@@ -31,6 +32,7 @@ const DashboardLayout: React.FC = () => {
         { icon: Users, title: 'Employees', path: '/dashboard/employees' },
         { icon: CalendarDays, title: 'Class', path: '/dashboard/classes' },
         { icon: Dumbbell, title: 'Equipment', path: '/dashboard/equipments' },
+        { icon: Package, title: 'Memberships', path: '/dashboard/memberships' },
         {
             icon: BellIcon,
             title: 'Notifications',
