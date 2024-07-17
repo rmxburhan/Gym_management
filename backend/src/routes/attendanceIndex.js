@@ -1,6 +1,5 @@
 const route = require('express').Router();
 const {
-    getMyAttendencesHistory,
     visitValidationRules,
     getAttendances,
     checkInHandler,
@@ -15,10 +14,6 @@ route.get('/', authorize(['admin']), getAttendances);
 
 route.get('/code', authorize(['admin']), getCheckInCode);
 
-// GET : get all my history attendance
-route.get('/history', authorize(['member']), getMyAttendencesHistory);
-
-// POST : check in and record member attendance
 route.post(
     '/check_in',
     authorize(['member']),

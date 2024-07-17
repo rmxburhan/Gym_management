@@ -1,6 +1,8 @@
 const User = require('../models/User');
 const EmployeeDetail = require('../models/EmployeeDetail');
 const { body } = require('express-validator');
+const fs = require('fs');
+const path = require('path');
 const addEmployeeValidationRules = () => {
     return [
         body('name')
@@ -161,15 +163,8 @@ const addEmployee = async (req, res) => {
 const updateEmployee = async (req, res) => {
     try {
         const { id } = req.params;
-        const {
-            name,
-            password,
-            dateOfBirth,
-            gender,
-            image,
-            address,
-            employeeRole,
-        } = req.body;
+        const { name, password, dateOfBirth, gender, address, employeeRole } =
+            req.body;
 
         const employee = await User.findOne({ _id: id, deletedAt: undefined });
         if (!employee) {
@@ -178,10 +173,6 @@ const updateEmployee = async (req, res) => {
                 message: 'User not found',
             });
         }
-        const employeeDetail = await EmployeeDetail.findOne({
-            _id: employee._id,
-            deletedAt: undefined,
-        });
 
         if (name != undefined) employee.name = name;
         if (password != undefined) employee.password = password;
@@ -190,8 +181,11 @@ const updateEmployee = async (req, res) => {
         if (address != undefined) employee.address = address;
         if (employeeRole != undefined) employee.role = employeeRole;
 
-        if (image != undefined) {
-            /// TODO : upload image
+        if (req.file != undefined) {
+            if (fs.existsSync(path.join(pathprocess.cwd(), employee.image))) {
+                fs.unlink(path.join(process.cwd(), employee.image));
+            }
+            employee.image = req.file.path;
         }
 
         await employee.save();
@@ -211,20 +205,22 @@ const updateEmployee = async (req, res) => {
 const getDetailEmployee = async (req, res) => {
     try {
         const { id } = req.params;
-        console.log(req.params);
+        const { employeeType } = req.body;
+
         const employee = await User.findOne({
             _id: id,
             deletedAt: undefined,
         })
             .populate('employeeDetail')
             .lean();
+
         if (!employee) {
             return res.status(404).json({
                 success: false,
                 message: 'Get employee failed, Id not found',
             });
         }
-        console.log(employee);
+
         // TODO : get detailed like attendances, graph data
         return res.status(200).json({
             success: true,

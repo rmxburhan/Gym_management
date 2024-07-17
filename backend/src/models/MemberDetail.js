@@ -1,4 +1,4 @@
-const { model, Schema, SchemaType } = required('mongoose');
+const { model, Schema, SchemaType } = require('mongoose');
 
 const memberDetailSchema = new Schema(
     {

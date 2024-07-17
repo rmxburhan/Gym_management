@@ -14,7 +14,6 @@ const equipmentSchema = new Schema(
         image: {
             type: String,
             required: false,
-            default: '',
         },
         deletedAt: {
             type: Date,
@@ -23,6 +22,12 @@ const equipmentSchema = new Schema(
     },
     { timestamps: true }
 );
+
+equipmentSchema.virtual('equipmentLogs', {
+    ref: 'EquipmentLog',
+    localField: '_id',
+    foreignField: 'equipmentId',
+});
 
 const Equipment = model('Equipment', equipmentSchema);
 

@@ -13,13 +13,27 @@ const getMembers = async (req, res, next) => {
         else if (gender == 'female') filter.gender = 'female';
 
         const members = await User.find(filter)
-            .populate('membershipDetail')
+            .populate({
+                path: 'membershipDetail',
+                match: { expiresDate: { $gte: new Date() } },
+            })
             .lean();
-
+        let dataResponse = members;
+        if (active != undefined) {
+            if (active == 'false' || active == '0') {
+                dataResponse = dataResponse.filter(
+                    (x) => x.membershipDetail.length == 0
+                );
+            } else if (active == 'true' || active == '1') {
+                dataResponse = dataResponse.filter(
+                    (x) => x.membershipDetail.length != 0
+                );
+            }
+        }
         return res.status(200).json({
             success: true,
             data: {
-                members,
+                members: dataResponse,
             },
         });
     } catch (error) {

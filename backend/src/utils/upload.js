@@ -10,9 +10,19 @@ const storage = multer.diskStorage({
     },
 });
 
-const uploadSingle = (keyname) => {
+const storagePublic = multer.diskStorage({
+    destination: './public/images',
+    filename: (req, file, cb) => {
+        cb(
+            null,
+            file.fieldname + '-' + Date.now() + path.extname(file.originalname)
+        );
+    },
+});
+
+const uploadSingle = (keyname, public = false) => {
     return multer({
-        storage: storage,
+        storage: public == false ? storage : storagePublic,
         fileFilter: (req, file, cb) => {
             checkFileType(file, cb);
         },

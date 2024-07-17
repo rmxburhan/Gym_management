@@ -67,15 +67,15 @@ const updateMembershipValidationRules = () => {
     ];
 };
 
-const publishMemberValidationRules = () => {
-    return [
-        body('publish')
-            .exists()
-            .withMessage('publish cannot be empty')
-            .isBoolean()
-            .withMessage('publish must be a boolean'),
-    ];
-};
+// const publishMemberValidationRules = () => {
+//     return [
+//         body('publish')
+//             .exists()
+//             .withMessage('publish cannot be empty')
+//             .isBoolean()
+//             .withMessage('publish must be a boolean'),
+//     ];
+// };
 
 const addMembershipHandler = async (req, res, next) => {
     try {
@@ -275,23 +275,26 @@ const registerMembership = async (req, res) => {
             });
         }
         const membershipAlreadyRegistered = await UserMembership.findOne({
-            memberId: user._id,
+            memberId: req.user._id,
             deletedAt: undefined,
-            expiresDate: { $gte: new Date() },
-        });
-        if (!membershipAlreadyRegistered) {
+            expiresDate: { $gt: new Date() },
+        }).sort({ registerDate: -1 });
+
+        console.log(membershipAlreadyRegistered);
+
+        if (membershipAlreadyRegistered) {
             return res.status(400).json({
                 success: false,
                 message: 'Member already registered in membership',
             });
         }
 
-        const registeredDate = new Date();
-        const membershipData = new Membership({
-            memberId: user._id,
+        const registerDate = new Date();
+        const membershipData = new UserMembership({
             membershipId,
-            registeredDate,
-            expiresDate: addDays(registeredDate, membershipExist.duration),
+            memberId: req.user._id,
+            registerDate,
+            expiresDate: addDays(registerDate, membershipExist.duration),
         });
         await membershipData.save();
         return res.status(200).json({
