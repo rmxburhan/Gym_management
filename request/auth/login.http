@@ -3,14 +3,15 @@ POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-    "email" : "rizal@rizal.com",
+    "email" : "admin@admin.com",
     "password" : "password"
 }
 
 # {
-#     "email" : "admin@admin.com",
-#     "password" : "password"
+#     "email" : "rizal@rizal.com",
+#     "password" : "halohalo"
 # }
+
 
 ###
 GET http://localhost:5000/api/seedAdmin

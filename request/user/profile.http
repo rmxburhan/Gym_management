@@ -1,4 +1,4 @@
-@token = 
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Njk1ZDMwZjRmZGQ5ZDk5MDlhYzE0YzkiLCJuYW1lIjoiUml6YWwgQnVyaGFudWRpbiIsImVtYWlsIjoicml6YWxAcml6YWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkUFhiLllGMlBoeVJUN3M4c2RsaThuT1gvQS9sVTYvSWpIZG5LWmhHbXhndWt5OFdoRlJLRFMiLCJkYXRlT2ZCaXJ0aCI6IjIwMDUtMDctMjJUMDA6MDA6MDAuMDAwWiIsImdlbmRlciI6Im1hbGUiLCJpbWFnZSI6ImRlZmF1bHQvcHJvZmlsZS5wbmciLCJhZGRyZXNzIjoiU3VrYWJ1bWkgQ2l0eSIsInJvbGUiOiJtZW1iZXIiLCJjcmVhdGVkQXQiOiIyMDI0LTA3LTE2VDAxOjU1OjI3LjEyNloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA3LTE2VDAxOjU1OjI3LjEyNloiLCJfX3YiOjAsImlhdCI6MTcyMTEzNTcyMCwiZXhwIjoxNzIxMTM5MzIwfQ.WzuPkB4BEqXn63QurnX1Dq1hGAXesbgUtILyn57oX4w
 
 # Get user profile data
 # 1. Member
@@ -14,6 +14,7 @@ Content-Type: application/json
 Authorization:  Bearer {{token}}
 
 {
-    "name" : "Burhan"
+    "oldPassword" : "Burhan",
+    "newPassword" : "halohalo"
 }
 
