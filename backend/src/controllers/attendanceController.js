@@ -172,7 +172,9 @@ const getAttendances = async (req, res, next) => {
             }
         }
         console.log(filter);
-        const datas = await Attendance.find(filter);
+        const datas = await Attendance.find(filter)
+            .populate('memberDetail')
+            .lean();
         const checkInCount = await Attendance.countDocuments({
             checkInTime: {
                 $gte: new Date().setHours(0, 0, 0, 0),
@@ -192,7 +194,7 @@ const getAttendances = async (req, res, next) => {
             data: {
                 todayCheckIn: checkInCount,
                 todayUnCheckOut: checkOutCount,
-                memberLog: datas,
+                attendances: datas,
             },
         });
     } catch (error) {

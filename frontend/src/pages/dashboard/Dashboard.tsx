@@ -1,6 +1,6 @@
 import { Monitor } from 'lucide-react';
 import { Card } from '../../components/Card';
-import useAuth from '../../components/context/Auth';
+import useAuth from '../../context/Auth';
 function Dashboard() {
     const { user } = useAuth();
     return (

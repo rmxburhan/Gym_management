@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { postLogin } from '../../network/api';
-import useAuth from '../../components/context/Auth';
+import useAuth from '../../context/Auth';
 import { useNavigate } from 'react-router';
 
 const Login = () => {

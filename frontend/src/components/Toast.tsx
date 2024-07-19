@@ -14,10 +14,10 @@ export enum ToastType {
 }
 const Toast: FC<{ type: ToastType; message: string }> = ({ type, message }) => {
     const toastStyle = [
-        'bg-green-700 text-white',
-        'bg-red-700 text-white',
-        'bg-yellow-700 text-black',
-        'bg-blue-600 text-white',
+        'bg-green-100 text-green-800',
+        'bg-red-100 text-red-800',
+        'bg-yellow-100 text-yello-800',
+        'bg-blue-100 text-blue-800',
     ];
 
     const toastIcon = [

@@ -12,7 +12,7 @@ import {
 import { Sidebar, SideBarItem } from './Sidebar';
 import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
-import useHide from '../../components/context/SideBarState';
+import useHide from '../../context/SideBarState';
 
 type SideBarListProps = {
     title: string;

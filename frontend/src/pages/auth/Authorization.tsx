@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import useAuth from '../../components/context/Auth';
+import useAuth from '../../context/Auth';
 import { Navigate, Outlet } from 'react-router';
 const Authorization: FC<{ role: string }> = ({ role }) => {
     const { token, user } = useAuth();

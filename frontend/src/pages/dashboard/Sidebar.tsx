@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight, LogOut, LucideIcon } from 'lucide-react';
 import React from 'react';
-import useHide from '../../components/context/SideBarState';
+import useHide from '../../context/SideBarState';
 interface SidebarProps {
     children: React.ReactNode;
 }

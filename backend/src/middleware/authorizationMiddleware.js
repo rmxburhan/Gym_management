@@ -45,7 +45,7 @@ const authorize = (roles) => {
             }
             next();
         } catch (error) {
-            return res.status(400).json({
+            return res.status(401).json({
                 message: 'Token is invalid',
             });
         }

@@ -170,7 +170,7 @@ const deleteClassHandler = async (req, res) => {
 
 const getClassesHandler = async (req, res, next) => {
     try {
-        const datas = await Class.find({})
+        const datas = await Class.find({ deletedAt: undefined })
             .populate('trainerDetails')
             .sort({ createdAt: -1 })
             .lean();

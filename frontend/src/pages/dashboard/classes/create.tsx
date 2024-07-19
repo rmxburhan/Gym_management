@@ -1,8 +1,8 @@
 import { FC, useState } from 'react';
 import Modal from '../../../components/Modal';
 import { createClass } from '../../../network/api';
-import useAuth from '../../../components/context/Auth';
-import { Navigate, useNavigate } from 'react-router';
+import useAuth from '../../../context/Auth';
+import { useNavigate } from 'react-router';
 
 interface payload {
     name: string;
@@ -34,27 +34,23 @@ const CreateClass: FC<Props> = ({ isModalVisible, onClose }) => {
     };
 
     const submitHandler = (e: any) => {
-        try {
-            e.prventDefault();
-            createClass(payload)
-                .then((response: any) => {
-                    console.log('create class response', response);
-                    if (response.status === 200) {
-                        reset();
-                        onClose();
-                    } else if (response.status === 401) {
-                        logout();
-                        navigate('/login');
-                    } else {
-                        console.warn('Create class failed', response);
-                    }
-                })
-                .catch((error) => {
-                    alert(error.message);
-                });
-        } catch (error) {
-            console.log('Create class failed,', error);
-        }
+        e.preventDefault();
+        createClass(payload)
+            .then((response: any) => {
+                console.log('create class response', response);
+                if (response.status === 200) {
+                    reset();
+                    onClose();
+                } else if (response.status === 401) {
+                    logout();
+                    navigate('/login');
+                } else {
+                    console.warn('Create class failed', response);
+                }
+            })
+            .catch((error) => {
+                alert(error.message);
+            });
     };
 
     const reset = () => {
@@ -62,7 +58,7 @@ const CreateClass: FC<Props> = ({ isModalVisible, onClose }) => {
             ...payload,
             name: '',
             description: '',
-            maxParticiipant: 0,
+            maxParticipant: 0,
             date: '',
             trainerId: '',
         };
@@ -71,13 +67,13 @@ const CreateClass: FC<Props> = ({ isModalVisible, onClose }) => {
 
     return (
         <>
-            <Modal isModalVisible={isModalVisible} onClose={onClose}>
+            <Modal
+                isModalVisible={isModalVisible}
+                onClose={onClose}
+                closeButton={true}
+            >
                 <h2 className="text-2xl font-bold text-black">Create</h2>
-                <form
-                    onSubmit={submitHandler}
-                    className="flex flex-col"
-                    method="post"
-                >
+                <form onSubmit={submitHandler} className="flex flex-col">
                     <label
                         htmlFor="name"
                         className="text-md text-black font-semibold my-2"
@@ -85,7 +81,7 @@ const CreateClass: FC<Props> = ({ isModalVisible, onClose }) => {
                         Name
                     </label>
                     <input
-                        className="rounded-lg"
+                        className="rounded px-4 py-2"
                         type="text"
                         name="name"
                         id="name"
@@ -100,7 +96,7 @@ const CreateClass: FC<Props> = ({ isModalVisible, onClose }) => {
                         Description
                     </label>
                     <input
-                        className="rounded-lg"
+                        className="rounded px-4 py-2"
                         type="text"
                         name="description"
                         id="description"
@@ -115,7 +111,7 @@ const CreateClass: FC<Props> = ({ isModalVisible, onClose }) => {
                         Trainer
                     </label>
                     <input
-                        className="rounded-lg"
+                        className="rounded px-4 py-2"
                         type="text"
                         name="trainerId"
                         id="trainerId"
@@ -130,7 +126,7 @@ const CreateClass: FC<Props> = ({ isModalVisible, onClose }) => {
                         Max participant
                     </label>
                     <input
-                        className="rounded-lg"
+                        className="rounded px-4 py-2"
                         type="number"
                         name="maxParticipant"
                         id="maxParticipant"
@@ -145,7 +141,7 @@ const CreateClass: FC<Props> = ({ isModalVisible, onClose }) => {
                         Date
                     </label>
                     <input
-                        className="rounded-lg"
+                        className="rounded px-4 py-2"
                         type="date"
                         name="date"
                         id="date"
@@ -156,7 +152,7 @@ const CreateClass: FC<Props> = ({ isModalVisible, onClose }) => {
                     <div className="flex flex-row gap-4">
                         <button
                             type="button"
-                            className="ms-auto bg-indigo-100 text-indigo-800 px-6 py-2 rounded-lg border-none mt-4"
+                            className="ms-auto bg-indigo-100 text-indigo-800 px-6 py-2 rounded border-none mt-4"
                             onClick={reset}
                         >
                             Reset
@@ -164,7 +160,7 @@ const CreateClass: FC<Props> = ({ isModalVisible, onClose }) => {
                         <input
                             type="submit"
                             value="Save"
-                            className="bg-indigo-800 text-indigo-100 px-6 py-2 rounded-lg border-none mt-4"
+                            className="bg-indigo-800 text-indigo-100 px-6 py-2 rounded border-none mt-4"
                         />
                     </div>
                 </form>

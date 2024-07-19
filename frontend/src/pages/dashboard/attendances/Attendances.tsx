@@ -1,9 +1,8 @@
 import { Code } from 'lucide-react';
-import { Card } from '../../components/Card';
-import Name from '../../components/Name';
-import { LineChart } from '@tremor/react';
-import { useEffect, useState, useTransition } from 'react';
-import { getAttendancesCode, getAttendances } from '../../network/api';
+import { Card } from '../../../components/Card';
+import Name from '../../../components/Name';
+import { useEffect, useState } from 'react';
+import { getAttendancesCode, getAttendances } from '../../../network/api';
 
 const Attendances = () => {
     const [code, setCode] = useState('');
@@ -104,40 +103,6 @@ const Attendances = () => {
                     <h1 className="text-2xl text-black font-semibold">
                         Gym Traffic
                     </h1>
-                    <LineChart
-                        className=""
-                        data={[
-                            {
-                                date: 'Aug 22',
-                                SolarPanels: 2903,
-                                Inverters: 2012,
-                            },
-                            {
-                                date: 'Sep 22',
-                                SolarPanels: 2643,
-                                Inverters: 2342,
-                            },
-                            {
-                                date: 'Oct 22',
-                                SolarPanels: 2837,
-                                Inverters: 2473,
-                            },
-                            {
-                                date: 'Nov 22',
-                                SolarPanels: 2954,
-                                Inverters: 3848,
-                            },
-                            {
-                                date: 'Dec 22',
-                                SolarPanels: 3239,
-                                Inverters: 3736,
-                            },
-                        ]}
-                        index="date"
-                        yAxisWidth={65}
-                        categories={['SolarPanels', 'Inverters']}
-                        colors={['red', 'blue']}
-                    />
                 </div>
             </div>
         </div>

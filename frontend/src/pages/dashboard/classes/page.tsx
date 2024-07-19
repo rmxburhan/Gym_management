@@ -1,8 +1,9 @@
-import { PencilIcon, Trash } from 'lucide-react';
+import { FileQuestionIcon, PencilIcon, Trash } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { deleteClass, getClasses } from '../../../network/api';
-import CreateClass from './Create';
+import CreateClass from './create';
 import SearchBox from '@/components/SearchBox';
+import Confirmation from '@/components/Confirmation';
 
 type classData = {
     _id: string;
@@ -13,18 +14,22 @@ type classData = {
     trainerDetails: any[];
 };
 
-const Classes = () => {
-    const [classes, setClasses] = useState<classData[]>();
+const ClassPage = () => {
+    const [classes, setClasses] = useState<classData[]>([]);
     const [createModalVisible, setCreateModalVisible] =
         useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
-
+    const [confirmationVisible, setConfirmationVisible] =
+        useState<boolean>(false);
     const [filter, setFilter] = useState('');
 
     const openCreateModal = () => setCreateModalVisible(true);
-    const closeCreateModal = () => setCreateModalVisible(false);
 
-    useEffect(() => {
+    const closeCreateModal = () => {
+        setCreateModalVisible(false);
+        getClassesData();
+    };
+
+    const getClassesData = () => {
         getClasses().then((response) => {
             if (response.status == 200) {
                 console.log(response);
@@ -32,6 +37,10 @@ const Classes = () => {
                 setClasses(classesData);
             }
         });
+    };
+
+    useEffect(() => {
+        getClassesData();
     }, []);
 
     const handleSearch = (name: string) => {
@@ -41,10 +50,14 @@ const Classes = () => {
     const filterHandler = (x: classData) => {
         return x.name.startsWith(filter);
     };
+
     const deleteHandler = (id: string, index: number) => {
+        setConfirmationVisible(true);
+        return;
         deleteClass(id).then((response) => {
             if (response.status === 204) {
-                let data = classes?.splice(index, 1);
+                const data = [...classes];
+                data.splice(index, 1);
                 setClasses(data);
             } else {
                 console.log('delete class failed');
@@ -100,7 +113,15 @@ const Classes = () => {
                                                     <PencilIcon size={20} />
                                                 </button>
 
-                                                <button className="p-2 bg-indigo-500 text-indigo-100 rounded">
+                                                <button
+                                                    className="p-2 bg-indigo-500 text-indigo-100 rounded"
+                                                    onClick={() => {
+                                                        deleteHandler(
+                                                            x._id,
+                                                            index
+                                                        );
+                                                    }}
+                                                >
                                                     <Trash size={20} />
                                                 </button>
                                             </div>
@@ -110,14 +131,31 @@ const Classes = () => {
                             })}
                         </tbody>
                     </table>
+                    {classes.length === 0 ? (
+                        <div className="flex w-full p-4 border-b">
+                            <span>No Data</span>
+                        </div>
+                    ) : (
+                        ''
+                    )}
                 </div>
             </div>
             <CreateClass
                 isModalVisible={createModalVisible}
                 onClose={closeCreateModal}
             />
+            <Confirmation
+                Icon={FileQuestionIcon}
+                body="Are you want to delete this class"
+                header="Delete confirmation?"
+                onClose={() => {
+                    setConfirmationVisible(false);
+                }}
+                visible={confirmationVisible}
+                onYes={() => {}}
+            />
         </div>
     );
 };
 
-export default Classes;
+export default ClassPage;

@@ -19,5 +19,11 @@ const attendanceSchema = new Schema(
     { timestamps: true }
 );
 
+attendanceSchema.virtual('memberDetail', {
+    ref: 'User',
+    localField: 'userId',
+    foreignField: '_id',
+});
+
 const Attendance = model('Attendance', attendanceSchema);
 module.exports = Attendance;
