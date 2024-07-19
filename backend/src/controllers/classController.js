@@ -170,10 +170,10 @@ const deleteClassHandler = async (req, res) => {
 
 const getClassesHandler = async (req, res, next) => {
     try {
-        // TODO : apply search and filtering
-
-        const datas = await Class.find({});
-
+        const datas = await Class.find({ deletedAt: undefined })
+            .populate('trainerDetails')
+            .sort({ createdAt: -1 })
+            .lean();
         return res.status(200).json({
             success: true,
             message: 'Get class success',

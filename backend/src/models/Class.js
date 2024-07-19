@@ -28,9 +28,14 @@ const classSchema = new Schema(
             required: false,
         },
     },
-    { timestamps: true }
+    { timestamps: true, toJSON: true, toObject: true }
 );
 
+classSchema.virtual('trainerDetails', {
+    ref: 'User',
+    localField: 'trainerId',
+    foreignField: '_id',
+});
 const Class = model('Class', classSchema);
 
 module.exports = Class;

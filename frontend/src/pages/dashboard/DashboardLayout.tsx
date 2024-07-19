@@ -12,7 +12,7 @@ import {
 import { Sidebar, SideBarItem } from './Sidebar';
 import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
-import useHide from '../../components/context/SideBarState';
+import useHide from '../../context/SideBarState';
 
 type SideBarListProps = {
     title: string;
@@ -29,7 +29,8 @@ const DashboardLayout: React.FC = () => {
             path: '/dashboard/attendances',
         },
         { icon: Users, title: 'Members', path: '/dashboard/members' },
-        { icon: Users, title: 'Employees', path: '/dashboard/employees' },
+        { icon: Users, title: 'Trainer', path: '/dashboard/employees' },
+        { icon: Users, title: 'Staff', path: '/dashboard/staffs' },
         { icon: CalendarDays, title: 'Class', path: '/dashboard/classes' },
         { icon: Dumbbell, title: 'Equipment', path: '/dashboard/equipments' },
         { icon: Package, title: 'Memberships', path: '/dashboard/memberships' },

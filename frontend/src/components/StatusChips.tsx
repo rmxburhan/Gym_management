@@ -1,15 +1,22 @@
 import { FC } from 'react';
-interface StatusChipsProps {
-    status: string;
+
+export enum StatusChipType {
+    success,
+    danger,
+    warning,
 }
-const StatusChips: FC<StatusChipsProps> = ({ status }) => {
+const StatusChips: FC<{ type: StatusChipType; status: string }> = ({
+    status,
+    type,
+}) => {
+    const style = [
+        'bg-green-100 text-green-800 rounded-full',
+        'bg-red-100 text-red-800 rounded-full',
+        'bg-yellow-100 text-yellow-800 rounded-full',
+    ];
     return (
         <div className="flex">
-            <div
-                className={`px-4 py-2 bg-green-100 text-green-800 rounded-full`}
-            >
-                {status}
-            </div>
+            <div className={`px-4 py-2 ${style[type]}`}>{status}</div>
         </div>
     );
 };

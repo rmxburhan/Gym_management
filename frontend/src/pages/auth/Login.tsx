@@ -1,31 +1,29 @@
 import { useState } from 'react';
-import { postLogin } from '../../network/api';
-import useAuth from '../../components/context/Auth';
+import useAuth from '../../context/Auth';
 import { useNavigate } from 'react-router';
-
+import usePost from '@/hooks/usePost';
+import { isAxiosError } from 'axios';
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { setToken, setUser } = useAuth();
     const navigate = useNavigate();
+    const { post, error, isLoading } = usePost('auth/login');
+
     const loginHandler = (e: any) => {
         e.preventDefault();
-        postLogin({ email, password })
-            .then((response: any) => {
-                if (response.status == 200) {
-                    console.log(response);
-                    const token = response.data.data.token;
-                    const user = response.data.data.user;
-                    console.log('ini token woi ', response.data.data.token);
-                    setToken(token);
-                    setUser(user);
+        post({ email, password })
+            .then((response) => {
+                if (response.status === 200) {
+                    const data = response.data.data;
+                    setToken(data.token);
+                    setUser(data.user);
                     navigate('/dashboard');
-                } else {
-                    alert('login failed');
                 }
             })
-            .catch((error) => {
-                console.error(error);
+            .catch((err) => {
+                if (isAxiosError(err)) {
+                }
             });
     };
 
@@ -119,6 +117,22 @@ const Login = () => {
                 <h1 className="text-center text-2xl font-semibold mb-4 ">
                     Login
                 </h1>
+
+                {error ? (
+                    <div className="bg-red-500 text-white p-4 text-sm rounded my-2 flex">
+                        <span>{error}</span>
+                        {/* <XIcon
+                            size={20}
+                            className="ms-auto"
+                            onClick={() => {
+                                error;
+                            }}
+                        /> */}
+                    </div>
+                ) : (
+                    ''
+                )}
+
                 <form className="flex flex-col gap-2" onSubmit={loginHandler}>
                     <label htmlFor="email">Email</label>
                     <input
@@ -126,7 +140,7 @@ const Login = () => {
                         name="email"
                         id="email"
                         required
-                        className="mb-4"
+                        className="mb-4 px-4 py-2 rounded"
                         value={email}
                         onChange={(e) => {
                             setEmail(e.target.value);
@@ -138,7 +152,7 @@ const Login = () => {
                         name="password"
                         id="password"
                         required
-                        className="mb-4"
+                        className="mb-4 px-4 py-2 rounded"
                         value={password}
                         onChange={(e) => {
                             setPassword(e.target.value);
