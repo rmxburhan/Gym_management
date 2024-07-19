@@ -1,116 +1,149 @@
-const base_url = "http://localhost:5000/api/"
-import axios from 'axios'
-import useAuth from '../components/context/Auth'
-import { Heart } from 'lucide-react'
-export const postLogin = (payload : loginPayload) => {
-    return axios
-        .post(base_url + "auth/login", payload)
-        .catch(err => console.error)
-}
+const base_url = 'http://localhost:5000/api/';
+import useAuth from '@/context/Auth';
+import axios from 'axios';
 
-export const postRegister = (payload : registerPayload) => {
-    return axios
-        .post(base_url + "auth/register", {...payload, gender : genderType[payload.gender]})
-        .catch(err => console.error)
-}
+const token = useAuth.getState().token;
+export const api = axios.create({
+    baseURL: base_url,
+    timeout: 1000,
+    headers: {
+        Authorization: 'Bearer ' + token,
+    },
+});
 
-export const getMembers = () : Promise<any> => {
-    return axios.get(base_url + "users?role=member", {headers : {Authorization : "Bearer " + localStorage.getItem('token')}})
-        .catch(err => console.error);
-}
+api.interceptors.request.use(
+    (config) => {
+        console.log('Request :', config);
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
 
-export const getClasses = () : Promise<any> => {
-    return axios
-        .get(base_url + "classes", {headers : {Authorization : "Bearer " + localStorage.getItem('token')}})
-        .catch(err => console.error)
-}
+api.interceptors.response.use(
+    (config) => {
+        console.log('Response:', config);
+        return config;
+    },
+    (error) => {
+        if (error.response?.status === 401) {
+        }
+        return Promise.reject(error);
+    }
+);
 
-export const addClass = (payload : addCLasssPayload) : Promise<any> => {
-    return axios
-        .post(base_url + "classes", payload)
-        .then(data => console.log("add class response", data))
-        .catch(err => console.error)
-}
-
-export const updateClass = (payload : updateClassPayload, id : string) : Promise<any> => {
-    return axios
-        .post(base_url + "classess/" + id, payload)
-        .then(data => console.log("update class response", data))
-        .catch(err => console.error)
-}
-
-export const deleteClass = (id : string) : Promise<any> => {
-    return axios
-        .delete(base_url + "classes/" + id)
-        .catch(err => console.error)
-}
-
-export const getClass = (id : string) : Promise<any> => {
-    return axios
-        .get(base_url + "classes/" + id)
-        .then(data => console.log("get class success", data))
-        .catch(err => console.error)
-}
-
-export const getAttendancesCode = () :Promise<any> => {
-    return axios
-        .get(base_url + "attendances/code", {headers : {Authorization : "Bearer " + localStorage.getItem('token')} } )
-        .catch(err => console.error)
-}
-
-export const getMemberships= () : Promise<any> => {
-    return axios
-        .get(base_url + "memberships", {headers : {Authorization : "Bearer " + localStorage.getItem('token')}})
-        .catch(err => console.error)
-}
-
-export const getAttendances = (opts  : {today? : boolean, checkOut? : boolean, startDate? : Date, endDate? : Date}) : Promise<any> => {
-    return axios.get("/attendances" + opts.today ? "?today=true" : "")
-        .catch(err => console.error);
-}
-
-export const createClass = (payload : any) => {
-    return axios.post("/classes", payload).catch(err => console.error);
-}
+/*
+ *
+ * I't an auth caller
+ *
+ *
+ */
 
 interface loginPayload {
-    email : string;
-    password : string;
+    email: string;
+    password: string;
 }
 
 export interface registerPayload {
-    name : string;
-    email : string;
-    password : string;
-    address : string;
-    gender : genderType;
-    dateOfBirth : string;
+    name: string;
+    email: string;
+    password: string;
+    address: string;
+    gender: genderType;
+    dateOfBirth: string;
 }
 
-export enum genderType 
-{
-    male,
-    female
-}
+export const postLogin = (payload: loginPayload) => {
+    return api.post('auth/login', payload);
+};
 
-interface addCLasssPayload {
-    name : string;
-    description :  string;
-    trainerId : string;
-    classCategory : string;
-    maxParticipant : number;
-    date : Date
-}
+export const postRegister = (payload: registerPayload) => {
+    return api.post('auth/register', {
+        ...payload,
+        gender: genderType[payload.gender],
+    });
+};
 
-export const getEmployee = () => {
-    return axios.get(base_url + "employees", {headers : {Authorization : "Bearer " + localStorage.getItem('token')}}).catch(err => console.error)
-}
+/*
+ *
+ * it's member caller
+ *
+ */
+
+export const getMembers = (): Promise<any> => {
+    return api.get('members');
+};
+
+/*
+ *
+ * it's classes caller
+ *
+ */
 
 interface updateClassPayload {
-    name? : string;
-    description? :  string;
-    trainerId? : string;
-    classCategory? : string;
-    maxParticipant? : number;
-    date? : Date;
+    name?: string;
+    description?: string;
+    trainerId?: string;
+    classCategory?: string;
+    maxParticipant?: number;
+    date?: Date;
+}
+
+export const getClasses = (): Promise<any> => {
+    return api.get('classes');
+};
+
+export const getClass = (id: string): Promise<any> => {
+    return api.get('classes/' + id);
+};
+
+export const createClass = (payload: any) => {
+    return api.post('classes', payload);
+};
+
+export const updateClass = (
+    payload: updateClassPayload,
+    id: string
+): Promise<any> => {
+    return api.post('classess/' + id, payload);
+};
+
+export const deleteClass = (id: string): Promise<any> => {
+    return api.delete('classes/' + id);
+};
+
+/*
+ *
+ * attendances
+ *
+ */
+
+export const getAttendances = (opts: {
+    today?: boolean;
+    checkOut?: boolean;
+    startDate?: Date;
+    endDate?: Date;
+}): Promise<any> => {
+    return api.get('attendances' + opts.today ? '?today=true' : '');
+};
+
+export const getAttendancesCode = (): Promise<any> => {
+    return api.get('attendances/code');
+};
+
+export const getMemberships = (): Promise<any> => {
+    return api.get('memberships');
+};
+
+/*
+ * Employees
+ */
+export const getEmployee = () => {
+    return api.get('employees');
+};
+
+export enum genderType {
+    male,
+    female,
 }
