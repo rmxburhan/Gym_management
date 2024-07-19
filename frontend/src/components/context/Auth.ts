@@ -1,22 +1,33 @@
+import { User } from 'lucide-react';
 import {create} from 'zustand';
 
 type AuthDataProps = {
     token? : string;
-    user? : Object;
+    user? : User;
     setToken : (token : string) => void;
-    setUser : (user : Object) => void;
+    setUser : (user : User) => void;
     logout : () => void;
 }
 
+type User  = {
+    name : string;
+    email : string;
+    dateOfBirth : Date;
+    image : string;
+    address : string;
+    role : string;
+}
+
+
 const useAuth = create<AuthDataProps>()((set) => ({
-    token : "",
+    token : localStorage.getItem("token") || "",
     user : undefined,
     setToken : (token) => {
         console.log("sebuah token",token)
         set({token})
         localStorage.setItem('token', token)
     },
-    setUser : (user) => set({user}),
+    setUser : (user : User) => set({user}),
     logout : () => {
         set({user : undefined, token : undefined})
         localStorage.setItem('token', '')

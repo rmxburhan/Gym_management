@@ -7,10 +7,12 @@ Content-Type: application/json
     "password" : "password"
 }
 
+
 # {
-#     "email" : "rizal@rizal.com",
-#     "password" : "halohalo"
+#     "email" : "admin@admin.com",
+#     "password" : "password"
 # }
+
 
 
 ###

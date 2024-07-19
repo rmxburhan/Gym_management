@@ -2,12 +2,14 @@ import { Code } from 'lucide-react';
 import { Card } from '../../components/Card';
 import Name from '../../components/Name';
 import { LineChart } from '@tremor/react';
-import { useEffect, useState } from 'react';
-import { getAttendancesCode } from '../../network/api';
+import { useEffect, useState, useTransition } from 'react';
+import { getAttendancesCode, getAttendances } from '../../network/api';
 
 const Attendances = () => {
     const [code, setCode] = useState('');
-    const getCode = () => {
+    const [attendances, setAttendances] = useState([]);
+
+    const getCodeHandler = () => {
         getAttendancesCode().then((response: any) => {
             if (response.status != 200) {
                 console.log('error');
@@ -18,8 +20,20 @@ const Attendances = () => {
             setCode(code);
         });
     };
+
+    const getAttendancesHandler = () => {
+        getAttendances({ today: true }).then((response) => {
+            if (response.status == 200) {
+                const data = response.data.data;
+                const attendancesData = data.attendances;
+                setAttendances(attendancesData);
+            }
+            console.log(response);
+        });
+    };
     useEffect(() => {
-        getCode();
+        getCodeHandler();
+        getAttendancesHandler();
     }, []);
 
     return (

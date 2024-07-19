@@ -126,7 +126,7 @@ const Login = () => {
                         name="email"
                         id="email"
                         required
-                        className="mb-4"
+                        className="mb-4 px-4 py-2"
                         value={email}
                         onChange={(e) => {
                             setEmail(e.target.value);
@@ -138,7 +138,7 @@ const Login = () => {
                         name="password"
                         id="password"
                         required
-                        className="mb-4"
+                        className="mb-4 px-4 py-2"
                         value={password}
                         onChange={(e) => {
                             setPassword(e.target.value);

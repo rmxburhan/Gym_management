@@ -1,7 +1,8 @@
-import { PencilIcon, PlusIcon, Trash } from 'lucide-react';
-import Name from '../../components/Name';
+import { PencilIcon, Trash } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { getClasses } from '../../network/api';
+import { deleteClass, getClasses } from '../../../network/api';
+import CreateClass from './Create';
+import SearchBox from '@/components/SearchBox';
 
 type classData = {
     _id: string;
@@ -9,10 +10,20 @@ type classData = {
     description: string;
     date: Date;
     maxParticipant: number;
+    trainerDetails: any[];
 };
 
 const Classes = () => {
     const [classes, setClasses] = useState<classData[]>();
+    const [createModalVisible, setCreateModalVisible] =
+        useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const [filter, setFilter] = useState('');
+
+    const openCreateModal = () => setCreateModalVisible(true);
+    const closeCreateModal = () => setCreateModalVisible(false);
+
     useEffect(() => {
         getClasses().then((response) => {
             if (response.status == 200) {
@@ -22,25 +33,40 @@ const Classes = () => {
             }
         });
     }, []);
+
+    const handleSearch = (name: string) => {
+        setFilter(name);
+    };
+
+    const filterHandler = (x: classData) => {
+        return x.name.startsWith(filter);
+    };
+    const deleteHandler = (id: string, index: number) => {
+        deleteClass(id).then((response) => {
+            if (response.status === 204) {
+                let data = classes?.splice(index, 1);
+                setClasses(data);
+            } else {
+                console.log('delete class failed');
+            }
+        });
+    };
+
     return (
         <div>
             <h1 className="text-4xl font-semibold mb-8">Classes</h1>
             <div className="flex flex-col">
                 <div
                     id="table-container"
-                    className="w-full px-6 py-8 rounded-3xl bg-white"
+                    className="border w-full px-6 py-8 rounded-3xl bg-white"
                 >
                     <div className="flex flex-row mb-4">
-                        <input
-                            type="text"
-                            name="search"
-                            id="searchQuery"
-                            className="px-4 py-2 border bg-white rounded outline-none focus:border-indigo-500"
-                            placeholder="Searh..."
-                        />
-                        <button className="px-[18px] py-[12px] bg-indigo-800 text-white rounded flex flex-row gap-1 justify-center ms-auto items-center">
-                            <PlusIcon size={20} />
-                            <span>Add</span>
+                        <SearchBox onSearch={handleSearch} />
+                        <button
+                            className="px-[18px] py-[12px] bg-indigo-800 text-white rounded flex flex-row gap-1 justify-center ms-auto items-center"
+                            onClick={openCreateModal}
+                        >
+                            <span>Create</span>
                         </button>
                     </div>
 
@@ -56,17 +82,12 @@ const Classes = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {classes?.map((x) => {
+                            {classes?.filter(filterHandler).map((x, index) => {
                                 return (
                                     <tr key={x._id}>
-                                        <td>1.</td>
+                                        <td>{index + 1}</td>
                                         <td>{x.name}</td>
-                                        <td>
-                                            <Name
-                                                name="Farhan"
-                                                imageUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQae9FkVDq-pht9_nec324ZbRxcuV7juKPPvA&s"
-                                            />
-                                        </td>
+                                        <td>{x.trainerDetails[0].name}</td>
                                         <td>
                                             {new Date(
                                                 x.date.toString()
@@ -91,6 +112,10 @@ const Classes = () => {
                     </table>
                 </div>
             </div>
+            <CreateClass
+                isModalVisible={createModalVisible}
+                onClose={closeCreateModal}
+            />
         </div>
     );
 };

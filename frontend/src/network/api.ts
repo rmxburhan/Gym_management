@@ -42,7 +42,6 @@ export const updateClass = (payload : updateClassPayload, id : string) : Promise
 export const deleteClass = (id : string) : Promise<any> => {
     return axios
         .delete(base_url + "classes/" + id)
-        .then(data => console.log("delete class", data))
         .catch(err => console.error)
 }
 
@@ -63,6 +62,15 @@ export const getMemberships= () : Promise<any> => {
     return axios
         .get(base_url + "memberships", {headers : {Authorization : "Bearer " + localStorage.getItem('token')}})
         .catch(err => console.error)
+}
+
+export const getAttendances = (opts  : {today? : boolean, checkOut? : boolean, startDate? : Date, endDate? : Date}) : Promise<any> => {
+    return axios.get("/attendances" + opts.today ? "?today=true" : "")
+        .catch(err => console.error);
+}
+
+export const createClass = (payload : any) => {
+    return axios.post("/classes", payload).catch(err => console.error);
 }
 
 interface loginPayload {

@@ -1,7 +1,8 @@
 import { Monitor } from 'lucide-react';
 import { Card } from '../../components/Card';
-
+import useAuth from '../../components/context/Auth';
 function Dashboard() {
+    const { user } = useAuth();
     return (
         <>
             <h1 className="font-bold text-2xl mb-4">Dashboard</h1>

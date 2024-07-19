@@ -5,7 +5,7 @@ import Dashboard from './pages/dashboard/Dashboard';
 import Member from './pages/dashboard/Member';
 import Employee from './pages/dashboard/Employee';
 import NoMatch from './components/NoMatch';
-import Classes from './pages/dashboard/Classes';
+import Classes from './pages/dashboard/classes/Classes';
 import Equipments from './pages/dashboard/Equpiment';
 import Notifications from './pages/dashboard/Notifications';
 import Attendances from './pages/dashboard/Attendances';
@@ -21,7 +21,7 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
-                    <Route element={<Authorization />}>
+                    <Route element={<Authorization role="admin" />}>
                         <Route path="/dashboard" element={<DashboardLayout />}>
                             <Route path="" element={<Dashboard />} />
                             <Route

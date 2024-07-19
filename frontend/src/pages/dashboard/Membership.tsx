@@ -32,7 +32,7 @@ const Membership = () => {
             <div className="flex flex-col">
                 <div
                     id="table-container"
-                    className="w-full px-6 py-8 rounded-3xl bg-white"
+                    className="border w-full px-6 py-8 rounded-3xl bg-white"
                 >
                     <div className="flex flex-row mb-4">
                         <input

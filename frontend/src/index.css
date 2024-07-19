@@ -37,41 +37,7 @@ button:hover {
     background-size: cover;
 }
 ::-webkit-scrollbar {
-    width: 8px; /* Width of the scrollbar */
-}
-
-::-webkit-scrollbar-track {
-    background: #e0e0e0; /* Light grey background of the scrollbar track */
-    border-radius: 10px; /* Rounded corners of the track */
-}
-
-::-webkit-scrollbar-thumb {
-    background: linear-gradient(
-        to bottom,
-        #32cd32,
-        #ffeb3b
-    ); /* Gradient from lime green to yellow */
-    border-radius: 10px; /* Rounded corners of the thumb */
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(
-        to bottom,
-        #2e8b57,
-        #ffd700
-    ); /* Darker lime green to gold when hovered */
-}
-
-/* Custom Scrollbar for Firefox */
-body {
-    scrollbar-width: thin; /* Width of the scrollbar */
-    scrollbar-color: #32cd32 #e0e0e0; /* Lime green thumb and light grey track */
-}
-
-/* Custom Scrollbar for Firefox */
-body {
-    scrollbar-width: thin; /* Width of the scrollbar */
-    scrollbar-color: red black; /* Color of the thumb and track */
+    display: none;
 }
 
 .cta-group button.primary {
