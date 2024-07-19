@@ -6,6 +6,7 @@ interface FetchState<T> {
     data: T | null;
     isLoading: boolean;
     error: string | null;
+    refresh: () => void;
 }
 
 const useGet = <T>(url: string): FetchState<T> => {
@@ -15,6 +16,10 @@ const useGet = <T>(url: string): FetchState<T> => {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+        refresh();
+    }, [url]);
+
+    const refresh = () => {
         api.get<T>(url)
             .then((response: any) => {
                 setData(response.data.data);
@@ -28,12 +33,13 @@ const useGet = <T>(url: string): FetchState<T> => {
             .finally(() => {
                 setLoading(false);
             });
-    }, [url]);
+    };
 
     return {
         data,
         isLoading,
         error,
+        refresh,
     };
 };
 

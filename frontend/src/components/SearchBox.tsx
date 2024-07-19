@@ -9,7 +9,7 @@ const SearchBox: FC<{ onSearch: (name: string) => void }> = ({ onSearch }) => {
                 type="text"
                 name="search"
                 id="searchQuery"
-                className="px-4 py-2 border bg-white rounded outline-none focus:border-indigo-500"
+                className="px-4 py-2 border bg-white rounded outline-none focus:border-blue-500"
                 placeholder="Searh..."
                 value={search}
                 onChange={(e) => {
@@ -17,12 +17,12 @@ const SearchBox: FC<{ onSearch: (name: string) => void }> = ({ onSearch }) => {
                 }}
             />
             <button
-                className="flex flex-row items-center  bg-indigo-800 text-indigo-100 rounded"
+                className="flex flex-row items-center bg-blue-500 text-white rounded"
                 onClick={() => {
                     onSearch(search);
                 }}
             >
-                <SearchIcon size={20} className="me-2" /> Search
+                <SearchIcon size={18} className="me-2" /> Search
             </button>
         </div>
     );

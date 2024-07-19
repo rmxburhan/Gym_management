@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import axios, { isAxiosError } from 'axios';
+import { useEffect, useState } from 'react';
+import { isAxiosError } from 'axios';
 import { useNavigate } from 'react-router';
+import { api } from '@/network/api';
 
 const useDelete = (url: string) => {
     const [isLoading, setLoading] = useState<boolean>(false);
@@ -8,10 +9,18 @@ const useDelete = (url: string) => {
 
     const navigate = useNavigate();
 
-    const remove = async (): Promise<any | null> => {
+    useEffect(() => {
+        if (error) {
+            setTimeout(() => {
+                setError(null);
+            }, 5000);
+        }
+    }, [error]);
+
+    const remove = async (id: string): Promise<any | null> => {
         setLoading(true);
         try {
-            const response = await axios.delete(url);
+            const response = await api.delete(url + `/${id}`);
             return response;
         } catch (error) {
             if (isAxiosError(error)) {
@@ -19,7 +28,7 @@ const useDelete = (url: string) => {
                     navigate('/login');
                 } else if (error.response?.status === 403) {
                 } else {
-                    setError(error.message);
+                    setError(error.response?.data.message);
                 }
             }
         } finally {

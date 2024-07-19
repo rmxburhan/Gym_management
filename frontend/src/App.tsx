@@ -6,13 +6,13 @@ import Member from './pages/dashboard/members/page';
 import Employee from './pages/dashboard/Employee';
 import NoMatch from './components/NoMatch';
 import ClassPage from './pages/dashboard/classes/page';
-import Equipments from './pages/dashboard/Equpiment';
+import Equipments from './pages/dashboard/equipments/Equpiment';
 import Notifications from './pages/dashboard/Notifications';
-import Attendances from './pages/dashboard/attendances/Attendances';
+import AttendancesPage from './pages/dashboard/attendances/page';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import Authorization from './pages/auth/Authorization';
-import Membership from './pages/dashboard/Membership';
+import Membership from './pages/dashboard/membership/page';
 function App() {
     return (
         <>
@@ -26,7 +26,7 @@ function App() {
                             <Route path="" element={<Dashboard />} />
                             <Route
                                 path="attendances"
-                                element={<Attendances />}
+                                element={<AttendancesPage />}
                             />
                             <Route path="members" element={<Member />} />
                             <Route

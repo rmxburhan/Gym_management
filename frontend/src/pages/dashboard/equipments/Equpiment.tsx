@@ -1,6 +1,7 @@
 import { PencilIcon, PlusIcon, Trash } from 'lucide-react';
-import StatusChips from '../../components/StatusChips';
-import Name from '../../components/Name';
+import StatusChips, { StatusChipType } from '@/components/StatusChips';
+import Name from '@/components/Name';
+import SearchBox from '@/components/SearchBox';
 
 const Equipments = () => {
     return (
@@ -12,16 +13,9 @@ const Equipments = () => {
                     className="border w-full px-6 py-8 rounded-3xl bg-white"
                 >
                     <div className="flex flex-row mb-4">
-                        <input
-                            type="text"
-                            name="search"
-                            id="searchQuery"
-                            className="px-4 py-2 border bg-white rounded outline-none focus:border-indigo-500"
-                            placeholder="Searh..."
-                        />
-                        <button className="px-[18px] py-[12px] bg-indigo-800 text-white rounded flex flex-row gap-1 justify-center ms-auto items-center">
-                            <PlusIcon size={20} />
-                            <span>Add</span>
+                        <SearchBox onSearch={() => {}} />
+                        <button className="px-4 py-2 bg-blue-500 text-white rounded flex flex-row gap-1 justify-center ms-auto items-center">
+                            Create
                         </button>
                     </div>
 
@@ -51,10 +45,16 @@ const Equipments = () => {
                                 <td>Man</td>
                                 <td>Senin, 12 Januari 2022</td>
                                 <td>
-                                    <StatusChips status="Holiday" />
+                                    <StatusChips
+                                        status="Holiday"
+                                        type={StatusChipType.success}
+                                    />
                                 </td>
                                 <td>
-                                    <StatusChips status="Trainer" />
+                                    <StatusChips
+                                        status="Trainer"
+                                        type={StatusChipType.danger}
+                                    />
                                 </td>
                                 <td>
                                     <div className="flex flex-row gap-2 my-auto">

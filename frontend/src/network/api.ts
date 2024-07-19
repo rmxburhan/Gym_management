@@ -1,13 +1,11 @@
 const base_url = 'http://localhost:5000/api/';
-import useAuth from '@/context/Auth';
 import axios from 'axios';
 
-const token = useAuth.getState().token;
 export const api = axios.create({
     baseURL: base_url,
     timeout: 1000,
     headers: {
-        Authorization: 'Bearer ' + token,
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     },
 });
 

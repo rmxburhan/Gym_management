@@ -21,6 +21,10 @@ const ClassPage = () => {
     const [confirmationVisible, setConfirmationVisible] =
         useState<boolean>(false);
     const [filter, setFilter] = useState('');
+    const [selectedData, setSelectedData] = useState<{
+        _id: string;
+        index: number;
+    }>();
 
     const openCreateModal = () => setCreateModalVisible(true);
 
@@ -28,6 +32,12 @@ const ClassPage = () => {
         setCreateModalVisible(false);
         getClassesData();
     };
+
+    const openConfirmationDelete = (id: string, index: number) => {
+        setSelectedData({ _id: id, index });
+        setConfirmationVisible(true);
+    };
+    const closeConfirmationDelete = () => setConfirmationVisible(false);
 
     const getClassesData = () => {
         getClasses().then((response) => {
@@ -51,18 +61,19 @@ const ClassPage = () => {
         return x.name.startsWith(filter);
     };
 
-    const deleteHandler = (id: string, index: number) => {
-        setConfirmationVisible(true);
-        return;
-        deleteClass(id).then((response) => {
-            if (response.status === 204) {
-                const data = [...classes];
-                data.splice(index, 1);
-                setClasses(data);
-            } else {
-                console.log('delete class failed');
-            }
-        });
+    const deleteHandler = () => {
+        if (selectedData) {
+            deleteClass(selectedData?._id).then((response) => {
+                if (response.status === 204) {
+                    const data = [...classes];
+                    data.splice(selectedData.index, 1);
+                    setClasses(data);
+                    closeConfirmationDelete();
+                } else {
+                    console.log('delete class failed');
+                }
+            });
+        }
     };
 
     return (
@@ -76,7 +87,7 @@ const ClassPage = () => {
                     <div className="flex flex-row mb-4">
                         <SearchBox onSearch={handleSearch} />
                         <button
-                            className="px-[18px] py-[12px] bg-indigo-800 text-white rounded flex flex-row gap-1 justify-center ms-auto items-center"
+                            className="px-4 py-2 bg-blue-500 text-white rounded flex flex-row gap-1 justify-center ms-auto items-center"
                             onClick={openCreateModal}
                         >
                             <span>Create</span>
@@ -116,7 +127,7 @@ const ClassPage = () => {
                                                 <button
                                                     className="p-2 bg-indigo-500 text-indigo-100 rounded"
                                                     onClick={() => {
-                                                        deleteHandler(
+                                                        openConfirmationDelete(
                                                             x._id,
                                                             index
                                                         );
@@ -148,11 +159,9 @@ const ClassPage = () => {
                 Icon={FileQuestionIcon}
                 body="Are you want to delete this class"
                 header="Delete confirmation?"
-                onClose={() => {
-                    setConfirmationVisible(false);
-                }}
+                onClose={closeConfirmationDelete}
                 visible={confirmationVisible}
-                onYes={() => {}}
+                onYes={deleteHandler}
             />
         </div>
     );
