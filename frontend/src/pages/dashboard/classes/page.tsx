@@ -1,21 +1,16 @@
 import { FileQuestionIcon, PencilIcon, Trash } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { deleteClass, getClasses } from '../../../network/api';
+import { useState } from 'react';
 import CreateClass from './create';
 import SearchBox from '@/components/SearchBox';
 import Confirmation from '@/components/Confirmation';
-
-type classData = {
-    _id: string;
-    name: string;
-    description: string;
-    date: Date;
-    maxParticipant: number;
-    trainerDetails: any[];
-};
+import useGet from '@/hooks/useGet';
+import { classData, getClassesResponse } from './data';
+import useDelete from '@/hooks/useDelete';
 
 const ClassPage = () => {
-    const [classes, setClasses] = useState<classData[]>([]);
+    const { data, refresh } = useGet<getClassesResponse>('classes');
+    const { remove: deleteClass } = useDelete('classes');
+
     const [createModalVisible, setCreateModalVisible] =
         useState<boolean>(false);
     const [confirmationVisible, setConfirmationVisible] =
@@ -27,10 +22,9 @@ const ClassPage = () => {
     }>();
 
     const openCreateModal = () => setCreateModalVisible(true);
-
     const closeCreateModal = () => {
         setCreateModalVisible(false);
-        getClassesData();
+        refresh();
     };
 
     const openConfirmationDelete = (id: string, index: number) => {
@@ -38,20 +32,6 @@ const ClassPage = () => {
         setConfirmationVisible(true);
     };
     const closeConfirmationDelete = () => setConfirmationVisible(false);
-
-    const getClassesData = () => {
-        getClasses().then((response) => {
-            if (response.status == 200) {
-                console.log(response);
-                const classesData = response.data.data.classes;
-                setClasses(classesData);
-            }
-        });
-    };
-
-    useEffect(() => {
-        getClassesData();
-    }, []);
 
     const handleSearch = (name: string) => {
         setFilter(name);
@@ -65,9 +45,7 @@ const ClassPage = () => {
         if (selectedData) {
             deleteClass(selectedData?._id).then((response) => {
                 if (response.status === 204) {
-                    const data = [...classes];
-                    data.splice(selectedData.index, 1);
-                    setClasses(data);
+                    refresh();
                     closeConfirmationDelete();
                 } else {
                     console.log('delete class failed');
@@ -93,7 +71,16 @@ const ClassPage = () => {
                             <span>Create</span>
                         </button>
                     </div>
-
+                    {/* <DataTable
+                        data={
+                            data
+                                ? data.classes.filter((x) =>
+                                      x.name.toLowerCase().startsWith(filter)
+                                  )
+                                : []
+                        }
+                        columns={columns}
+                    /> */}
                     <table className="table-auto w-full">
                         <thead className="bg-indigo-100 text-black">
                             <tr>
@@ -106,49 +93,46 @@ const ClassPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {classes?.filter(filterHandler).map((x, index) => {
-                                return (
-                                    <tr key={x._id}>
-                                        <td>{index + 1}</td>
-                                        <td>{x.name}</td>
-                                        <td>{x.trainerDetails[0].name}</td>
-                                        <td>
-                                            {new Date(
-                                                x.date.toString()
-                                            ).toLocaleDateString()}
-                                        </td>
-                                        <td>{x.maxParticipant.toString()}</td>
-                                        <td>
-                                            <div className="flex flex-row gap-2 my-auto">
-                                                <button className="p-2 bg-indigo-100 text-indigo-500 rounded">
-                                                    <PencilIcon size={20} />
-                                                </button>
+                            {data?.classes
+                                .filter(filterHandler)
+                                .map((x, index) => {
+                                    return (
+                                        <tr key={x._id}>
+                                            <td>{index + 1}</td>
+                                            <td>{x.name}</td>
+                                            <td>{x.trainerDetails[0].name}</td>
+                                            <td>
+                                                {new Date(
+                                                    x.date.toString()
+                                                ).toLocaleDateString()}
+                                            </td>
+                                            <td>
+                                                {x.maxParticipant.toString()}
+                                            </td>
+                                            <td>
+                                                <div className="flex flex-row gap-2 my-auto">
+                                                    <button className="p-2 bg-indigo-100 text-indigo-500 rounded">
+                                                        <PencilIcon size={20} />
+                                                    </button>
 
-                                                <button
-                                                    className="p-2 bg-indigo-500 text-indigo-100 rounded"
-                                                    onClick={() => {
-                                                        openConfirmationDelete(
-                                                            x._id,
-                                                            index
-                                                        );
-                                                    }}
-                                                >
-                                                    <Trash size={20} />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
+                                                    <button
+                                                        className="p-2 bg-indigo-500 text-indigo-100 rounded"
+                                                        onClick={() => {
+                                                            openConfirmationDelete(
+                                                                x._id,
+                                                                index
+                                                            );
+                                                        }}
+                                                    >
+                                                        <Trash size={20} />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                         </tbody>
                     </table>
-                    {classes.length === 0 ? (
-                        <div className="flex w-full p-4 border-b">
-                            <span>No Data</span>
-                        </div>
-                    ) : (
-                        ''
-                    )}
                 </div>
             </div>
             <CreateClass

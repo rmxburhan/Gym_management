@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router';
 import FaciilitiesCard from './landing_page/FaciilitiesCard';
 import HomeNavbar from './landing_page/HomeNavbar';
 import MembershipCard from './landing_page/MembershipCard';
-import './styles/Home.css';
+import './Home.css';
 const Home = () => {
     const navigate = useNavigate();
     return (

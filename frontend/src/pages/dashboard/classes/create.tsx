@@ -1,8 +1,8 @@
 import { FC, useState } from 'react';
 import Modal from '../../../components/Modal';
-import { createClass } from '../../../network/api';
 import useAuth from '../../../context/Auth';
 import { useNavigate } from 'react-router';
+import usePost from '@/hooks/usePost';
 
 interface payload {
     name: string;
@@ -17,6 +17,7 @@ interface Props {
     onClose: () => void;
 }
 const CreateClass: FC<Props> = ({ isModalVisible, onClose }) => {
+    const { post: createClass } = usePost('classes');
     const { logout } = useAuth();
     const [payload, setPayload] = useState<payload>({
         name: '',
@@ -41,11 +42,6 @@ const CreateClass: FC<Props> = ({ isModalVisible, onClose }) => {
                 if (response.status === 200) {
                     reset();
                     onClose();
-                } else if (response.status === 401) {
-                    logout();
-                    navigate('/login');
-                } else {
-                    console.warn('Create class failed', response);
                 }
             })
             .catch((error) => {

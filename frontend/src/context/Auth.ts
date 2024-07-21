@@ -1,6 +1,5 @@
 import { User } from 'lucide-react';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 type AuthDataProps = {
     token?: string;
     user?: User;

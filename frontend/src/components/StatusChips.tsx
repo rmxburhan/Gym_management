@@ -1,3 +1,4 @@
+import { ToyBrick } from 'lucide-react';
 import { FC } from 'react';
 
 export enum StatusChipType {
@@ -14,6 +15,7 @@ const StatusChips: FC<{ type: StatusChipType; status: string }> = ({
         'bg-red-100 text-red-800 rounded-full',
         'bg-yellow-100 text-yellow-800 rounded-full',
     ];
+    console.log(type);
     return (
         <div className="flex">
             <div className={`px-4 py-2 ${style[type]}`}>{status}</div>
