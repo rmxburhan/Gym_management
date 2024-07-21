@@ -1,8 +1,14 @@
 import { SearchIcon } from 'lucide-react';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 const SearchBox: FC<{ onSearch: (name: string) => void }> = ({ onSearch }) => {
     const [search, setSearch] = useState('');
+
+    // live search
+    // useEffect(() => {
+    //     onSearch(search);
+    // }, [search]);
+
     return (
         <div className="flex flex-row gap-2">
             <input

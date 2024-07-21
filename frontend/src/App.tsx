@@ -3,14 +3,14 @@ import Home from './pages/Home';
 import DashboardLayout from './pages/dashboard/DashboardLayout';
 import Dashboard from './pages/dashboard/Dashboard';
 import Member from './pages/dashboard/members/page';
-import Employee from './pages/dashboard/Employee';
+import Employee from './pages/dashboard/trainers/page.';
 import NoMatch from './components/NoMatch';
 import ClassPage from './pages/dashboard/classes/page';
-import Equipments from './pages/dashboard/equipments/Equpiment';
+import Equipments from './pages/dashboard/equipments/page';
 import Notifications from './pages/dashboard/Notifications';
 import AttendancesPage from './pages/dashboard/attendances/page';
 import Login from './pages/auth/Login';
-import Register from './pages/auth/Register';
+import Register from './pages/auth/register/page';
 import Authorization from './pages/auth/Authorization';
 import Membership from './pages/dashboard/membership/page';
 function App() {
