@@ -1,30 +1,19 @@
 import path from "path";
 import multer from "multer";
-import { Request } from "express";
 
-const storage = multer.diskStorage({
-  destination: "./storage/uploads",
-  filename: (req: Request, file: Express.Multer.File, cb: any) => {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
-  },
-});
+export const uploadSingle = (keyname: string) => {
+  const storagePublic = multer.diskStorage({
+    destination: "./public/images",
+    filename: (req, file, cb) => {
+      cb(
+        null,
+        file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+      );
+    },
+  });
 
-const storagePublic = multer.diskStorage({
-  destination: "./public/images",
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
-  },
-});
-
-export const uploadSingle = (keyname: string, isPulic: boolean = false) => {
   return multer({
-    storage: isPulic == false ? storage : storagePublic,
+    storage: storagePublic,
     fileFilter: (req, file, cb) => {
       checkFileType(file, cb);
     },
