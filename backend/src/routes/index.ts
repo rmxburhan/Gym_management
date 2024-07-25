@@ -10,7 +10,8 @@ import { Express } from "express";
 import authRoute from "./auth.routes";
 import userRoute from "./user.routes";
 import trainerRoute from "./trainer.routes";
-import notFoundHandler from "../middleware/notFoundHandler";
+import membershipRoute from "./membership.routes";
+import notFoundHandler from "../middleware/notFound.middleware";
 import seed from "../seed/seed";
 import errorhandlersMiddleware from "../middleware/errorhandlers.middleware";
 
@@ -18,6 +19,7 @@ export default (app: Express) => {
   app.use("/api/auth", authRoute);
   app.use("/api/user", userRoute);
   app.use("/api/trainers", trainerRoute);
+  app.use("/api/memberships", membershipRoute);
   app.get("/seed", seed);
   app.use(errorhandlersMiddleware);
   app.use(notFoundHandler);

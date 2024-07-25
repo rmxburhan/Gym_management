@@ -1,6 +1,6 @@
 import { model, Schema, Types } from "mongoose";
 
-export interface IUMembershipData extends Document {
+export interface IMembershipData extends Document {
   memberId: Types.ObjectId;
   membershipId: Types.ObjectId;
   registerDate: Date;
@@ -9,7 +9,7 @@ export interface IUMembershipData extends Document {
   deletedAt?: Date;
 }
 
-const membershipDataSchema = new Schema<IUMembershipData>(
+const membershipDataSchema = new Schema<IMembershipData>(
   {
     memberId: {
       type: Schema.Types.ObjectId,
