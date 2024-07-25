@@ -1,5 +1,5 @@
 import cron from "node-cron";
-import AttendanceCode from "../models/AttendanceCode";
+import AttendanceCode from "../models/attendancecode.model";
 import { addDays } from "date-fns";
 
 const insertCodeAttendance = async () => {
@@ -16,7 +16,7 @@ const insertCodeAttendance = async () => {
   }
 };
 
-const generateRandomCode = () => {
+const generateRandomCode = (): string => {
   const raw = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
   let result = "";
   const charactersLength = raw.length;

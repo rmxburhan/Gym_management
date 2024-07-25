@@ -1,7 +1,7 @@
 // import chalk  from "chalk'
 import express from "express";
 import dotenv from "dotenv";
-import attendanceCodeCronJob from "./cron_job/attendanceCode";
+import attendanceCodeCronJob from "./cron_job/code";
 import connectMonggose from "./startup/db";
 import startup from "./startup/index";
 import routes from "./routes";

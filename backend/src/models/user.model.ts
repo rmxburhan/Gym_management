@@ -1,6 +1,6 @@
 import { Document, model, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
-import { IUserMembership } from "./UserMembership";
+import { IUserMembership } from "./membershipdata";
 import { IMember, memberSchema } from "./member.model";
 import { IStaff, staffSchema } from "./staff.model";
 import { ITrainer, trainerSchema } from "./trainer.model";
