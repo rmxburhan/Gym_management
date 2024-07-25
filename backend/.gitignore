@@ -2,3 +2,6 @@ node_modules
 .env
 .vscode
 storage
+public
+request/test
+.vscode/settings.json
