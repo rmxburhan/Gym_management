@@ -3,9 +3,8 @@ import { model, Schema, Types } from "mongoose";
 export interface IClassSchema extends Document {
   name: string;
   description: string;
-  trainerId: Types.ObjectId;
+  trainer: Types.ObjectId;
   date: Date;
-  maxParticipant: number;
   deletedAt?: Date;
 }
 
@@ -19,17 +18,13 @@ const classSchema = new Schema<IClassSchema>(
       type: String,
       required: true,
     },
-    trainerId: {
+    trainer: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "User",
     },
     date: {
       type: Date,
-      required: true,
-    },
-    maxParticipant: {
-      type: Number,
       required: true,
     },
     deletedAt: {
@@ -40,9 +35,9 @@ const classSchema = new Schema<IClassSchema>(
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
-classSchema.virtual("trainerDetails", {
+classSchema.virtual("trainerDetail", {
   ref: "User",
-  localField: "trainerId",
+  localField: "trainer",
   foreignField: "_id",
 });
 

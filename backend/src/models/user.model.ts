@@ -1,6 +1,6 @@
 import { Document, model, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
-import { IUserMembership } from "./UserMembership";
+import { IMembershipData } from "./membershipdata.model";
 import { IMember, memberSchema } from "./member.model";
 import { IStaff, staffSchema } from "./staff.model";
 import { ITrainer, trainerSchema } from "./trainer.model";
@@ -41,7 +41,7 @@ export interface IUser extends Document {
   staffDetail?: IStaff | null;
   trainerDetail?: ITrainer | null;
   deletedAt?: Date;
-  membershipDetail?: IUserMembership[];
+  membershipDetail?: IMembershipData[];
   comparePassword: (password: string) => boolean;
 }
 

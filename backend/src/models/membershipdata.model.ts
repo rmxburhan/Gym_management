@@ -1,6 +1,6 @@
-import { model, Schema, SchemaType, Types } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 
-export interface IUserMembership extends Document {
+export interface IMembershipData extends Document {
   memberId: Types.ObjectId;
   membershipId: Types.ObjectId;
   registerDate: Date;
@@ -9,7 +9,7 @@ export interface IUserMembership extends Document {
   deletedAt?: Date;
 }
 
-const userMembershipSchema = new Schema<IUserMembership>(
+const membershipDataSchema = new Schema<IMembershipData>(
   {
     memberId: {
       type: Schema.Types.ObjectId,
@@ -42,5 +42,5 @@ const userMembershipSchema = new Schema<IUserMembership>(
   { timestamps: true }
 );
 
-const UserMembership = model("UserMembership", userMembershipSchema);
-export default UserMembership;
+const MembershipData = model("MembershipData", membershipDataSchema);
+export default MembershipData;

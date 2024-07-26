@@ -35,8 +35,7 @@ const authorize = (roles: string[]) => {
           message: "Unauthorized",
         });
       }
-      console.log(allowed);
-      if (!allowed) {
+      if (!roles.includes(user.role)) {
         return res.status(403).json({
           message: "Forbidden",
         });

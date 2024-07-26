@@ -1,6 +1,6 @@
 import { Document, model, Schema } from "mongoose";
 
-export interface IMembershipSchema extends Document {
+export interface IMembership extends Document {
   name: string;
   description: string;
   duration: number;
@@ -10,7 +10,7 @@ export interface IMembershipSchema extends Document {
   deletedAt?: Date;
 }
 
-const membershipSchema = new Schema<IMembershipSchema>(
+const membershipSchema = new Schema<IMembership>(
   {
     name: {
       type: String,
