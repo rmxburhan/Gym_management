@@ -1,0 +1,45 @@
+@id =
+GET {{baseUrl}}/equipments
+Authorization: Bearer {{token}}
+
+### GET : Equipment 
+GET {{baseUrl}}/equipments/{{id}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+
+###
+POST {{baseUrl}}/equipments/
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name" : "",
+    "qty" : 0
+}
+### 
+POST {{baseUrl}}/equipments/{{id}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+        "qty" : 0
+}
+
+###
+DELETE {{baseUrl}}/equipments/{{id}} HTTP/1.1
+Authorization: Bearer {{token}}
+
+### 
+POST {{baseUrl}}/equipments/{{id}}/logs
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "description" : "",
+    "category" : ""
+}
+
+###
+GET {{baseUrl}}/equipments/logs?equipmentId=66a2ff2d3d19c2948add58af
+Authorization: Bearer {{token}}

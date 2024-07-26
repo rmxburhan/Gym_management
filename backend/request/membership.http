@@ -1,0 +1,38 @@
+@id =66a20f9d6fc792c6fd3d888d
+GET {{baseUrl}}/memberships
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+### GET : get membership
+GET {{baseUrl}}/memberships/{{id}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+### POST : add membership
+POST {{baseUrl}}/memberships
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name" : "Rizal BUrhanudin",
+    "description" : "Sebuauh",
+    "price" : 2323
+}
+
+### PUT : update membership
+PUT {{baseUrl}}/memberships/{{id}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name" : "Monkey Monkeasasdyt"
+}
+
+### PATCH : update published
+PATCH {{baseUrl}}/memberships/{{id}}/publish
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+### DELETE : delete membership
+DELETE {{baseUrl}}/memberships/{{id}}
+Authorization: Bearer {{token}}

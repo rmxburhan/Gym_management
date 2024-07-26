@@ -1,0 +1,7 @@
+GET {{baseUrl}}/attendances
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "code" : "PgZDqO"
+}
