@@ -14,6 +14,7 @@ import membershipRoute from "./membership.routes";
 import attendanceRoute from "./attendance.routes";
 import classRoute from "./class.routes";
 import memberRoute from "./member.routes";
+import equipmentRoute from "./equipment.routes";
 import notFoundHandler from "../middleware/notFound.middleware";
 import seed from "../seed/seed";
 import errorhandlersMiddleware from "../middleware/errorhandlers.middleware";
@@ -26,6 +27,7 @@ export default (app: Express) => {
   app.use("/api/attendances", attendanceRoute);
   app.use("/api/classes", classRoute);
   app.use("/api/members", memberRoute);
+  app.use("/api/equipments", equipmentRoute);
   app.get("/seed", seed);
   app.use(errorhandlersMiddleware);
   app.use(notFoundHandler);

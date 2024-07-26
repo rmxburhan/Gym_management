@@ -27,15 +27,22 @@ const equipmentSchema = new Schema<IEquipment>(
       required: false,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      virtuals: true,
+    },
+    toObject: {
+      virtuals: true,
+    },
+  }
 );
 
-equipmentSchema.virtual("equipmentLogs", {
+equipmentSchema.virtual("log", {
   ref: "EquipmentLog",
   localField: "_id",
-  foreignField: "equipmentId",
+  foreignField: "equipment",
 });
 
 const Equipment = model("Equipment", equipmentSchema);
-
 export default Equipment;
