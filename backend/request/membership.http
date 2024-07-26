@@ -1,4 +1,4 @@
-@id =66a20f9d6fc792c6fd3d888d
+@id =
 GET {{baseUrl}}/memberships
 Authorization: Bearer {{token}}
 Content-Type: application/json
@@ -14,9 +14,9 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "name" : "Rizal BUrhanudin",
-    "description" : "Sebuauh",
-    "price" : 2323
+    "name" : "",
+    "description" : "",
+    "price" : 0
 }
 
 ### PUT : update membership
@@ -25,7 +25,7 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "name" : "Monkey Monkeasasdyt"
+    "name" : ""
 }
 
 ### PATCH : update published
