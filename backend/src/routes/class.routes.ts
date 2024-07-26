@@ -5,16 +5,33 @@ import {
   validateInputCreateClass,
   validateInputUpdateClass,
 } from "../validator/class.validator";
+import { RequestAuth } from "../types/request";
 const route = Router();
 
 route.get(
   "/",
-  authorize(["admin", "member"]),
+  authorize(["admin"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const classes = await classService.getClasses();
       return res.status(200).json({
         message: "Class success retrieved.",
+        data: classes,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+route.get(
+  "/upcoming",
+  authorize(["member", "admin"]),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const classes = await classService.getUpcomingClasses();
+      return res.status(200).json({
+        message: "Class data success retrieved",
         data: classes,
       });
     } catch (error) {
@@ -57,13 +74,14 @@ route.post(
       if (input.error) {
         throw input.error;
       }
-      const { name, description, trainer, date } = req.body;
+      const { name, description, trainer, date, maxParticipant } = req.body;
 
       const classData = await classService.addClass(
         name,
         description,
         trainer,
-        new Date(date)
+        new Date(date),
+        maxParticipant
       );
 
       if (!classData) {
@@ -72,6 +90,44 @@ route.post(
 
       return res.status(201).json({
         message: "Add class success.",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+route.post("/:id/register", authorize(["member"]), async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const user = (req as RequestAuth).user;
+    await classService.registerClass(id, user.id);
+    return res.status(200).json({
+      message: "You are now participated in the class",
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+route.post(
+  "/:id/cancel",
+  authorize(["member"]),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const user = (req as RequestAuth).user;
+
+      const success = await classService.unregisterClass(id, user.id);
+
+      if (!success) {
+        const error = new Error("Operation failed");
+        error.name = "BadRequest";
+        throw error;
+      }
+
+      return res.status(200).json({
+        message: "Cancel class succeed",
       });
     } catch (error) {
       next(error);
@@ -89,9 +145,16 @@ route.put(
       if (input.error) {
         throw input.error;
       }
-      const { name, description, trainer, date } = input.value;
+      const { name, description, trainer, date, maxParticipant } = input.value;
 
-      await classService.updateClass(id, name, description, trainer, date);
+      await classService.updateClass(
+        id,
+        name,
+        description,
+        trainer,
+        date,
+        maxParticipant
+      );
 
       return res.status(200).json({
         message: "Class has been updated",
