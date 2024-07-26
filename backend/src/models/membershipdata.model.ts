@@ -1,22 +1,21 @@
-import { model, Schema, Types } from "mongoose";
+import { Schema, Types } from "mongoose";
 
 export interface IMembershipData extends Document {
-  memberId: Types.ObjectId;
-  membershipId: Types.ObjectId;
+  member: Types.ObjectId;
+  membership: Types.ObjectId;
   registerDate: Date;
   expiresDate: Date;
   status: boolean;
-  deletedAt?: Date;
 }
 
-const membershipDataSchema = new Schema<IMembershipData>(
+export const membershipDataSchema = new Schema<IMembershipData>(
   {
-    memberId: {
+    member: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "User",
     },
-    membershipId: {
+    membership: {
       type: Schema.Types.ObjectId,
       ref: "Membership",
       required: true,
@@ -29,18 +28,10 @@ const membershipDataSchema = new Schema<IMembershipData>(
       type: Date,
       required: true,
     },
-    status: {
-      type: Boolean,
-      required: true,
-      default: true,
-    },
-    deletedAt: {
-      type: Date,
-      required: false,
-    },
   },
-  { timestamps: true }
+  { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
-const MembershipData = model("MembershipData", membershipDataSchema);
-export default MembershipData;
+membershipDataSchema.virtual("status").get(function () {
+  return this.expiresDate > new Date();
+});

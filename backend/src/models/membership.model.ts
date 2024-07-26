@@ -36,7 +36,7 @@ const membershipSchema = new Schema<IMembership>(
     },
     discountPrice: {
       type: Number,
-      required: false,
+      default: 0,
     },
     deletedAt: {
       type: Date,

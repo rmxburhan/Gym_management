@@ -4,6 +4,7 @@ import { IMembershipData } from "./membershipdata.model";
 import { IMember, memberSchema } from "./member.model";
 import { IStaff, staffSchema } from "./staff.model";
 import { ITrainer, trainerSchema } from "./trainer.model";
+import { IMembership } from "./membership.model";
 
 export interface IAddress extends Document {
   street: string;
@@ -41,7 +42,6 @@ export interface IUser extends Document {
   staffDetail?: IStaff | null;
   trainerDetail?: ITrainer | null;
   deletedAt?: Date;
-  membershipDetail?: IMembershipData[];
   comparePassword: (password: string) => boolean;
 }
 
@@ -106,30 +106,6 @@ const userSchema = new Schema<IUser>(
     },
   }
 );
-
-// userSchema.virtual("staffDetail", {
-//   ref: Staff,
-//   localField: "_id",
-//   foreignField: "userId",
-// });
-
-// userSchema.virtual("memberDetail", {
-//   ref: MemberDetail,
-//   localField: "_id",
-//   foreignField: "userId",
-// });
-
-// userSchema.virtual("trainerDetail", {
-//   ref: Trainer,
-//   localField: "_id",
-//   foreignField: "userId",
-// });
-
-// userSchema.virtual("membershipDetail", {
-//   ref: "UserMembership",
-//   localField: "_id",
-//   foreignField: "memberId",
-// });
 
 userSchema.set("toJSON", {
   transform: (doc, ret) => {

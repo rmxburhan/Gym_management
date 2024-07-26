@@ -1,12 +1,14 @@
 import { Document, Types } from "mongoose";
 import { Schema } from "mongoose";
 import { IAddress, addressSchema } from "./user.model";
+import { IMembershipData, membershipDataSchema } from "./membershipdata.model";
 
 export interface IMember extends Document {
   birthDate: Date;
   gender: "male" | "female";
   address: IAddress[];
   phoneNumber: string;
+  membership?: IMembershipData;
 }
 
 export const memberSchema = new Schema<IMember>(
@@ -26,6 +28,10 @@ export const memberSchema = new Schema<IMember>(
     phoneNumber: {
       type: String,
       required: true,
+    },
+    membership: {
+      type: membershipDataSchema,
+      required: false,
     },
   },
   { timestamps: true }
