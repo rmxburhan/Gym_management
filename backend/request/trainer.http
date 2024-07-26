@@ -1,0 +1,35 @@
+@id=
+GET {{baseUrl}}/trainers
+Authorization: Bearer {{token}}
+###
+GET {{baseUrl}}/trainers/{{id}}
+Authorization: Bearer {{token}}
+
+###
+POST {{baseUrl}}/trainers
+Authorization: Bearer {{token}}
+
+###
+POST {{baseUrl}}/trainers/{{id}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "addresses" : [
+        {
+            "street" : "",
+            "city" : "",
+            "zip" : "",
+            "state" : ""
+        },
+        {
+            "street" : "",
+            "city" : "",
+            "zip" : "",
+            "state" : ""
+        }
+    ]
+}
+### 
+DELETE {{baseUrl}}/trainers/{{id}}
+Authorization: Bearer {{token}}

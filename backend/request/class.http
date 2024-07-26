@@ -1,0 +1,36 @@
+@id=
+GET {{baseUrl}}/classes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+### GET : get class
+GET {{baseUrl}}/classes/{{id}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+### POST : Add class
+POST {{baseUrl}}/classes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name" : "",
+    "description" : "",
+    "trainer" : "",
+    "date" : ""
+}
+
+### PUT : Update class
+PUT {{baseUrl}}/classes/{{id}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name" : "",
+    "description" : ""
+}
+
+### DELETE : Delete class
+DELETE {{baseUrl}}/classes/{{id}}
+Authorization: Bearer {{token}}
+Content-Type: application/json

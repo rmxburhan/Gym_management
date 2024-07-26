@@ -1,0 +1,48 @@
+@id=
+GET {{baseUrl}}/members
+Authorization: Bearer {{token}}
+###
+GET {{baseUrl}}/members/{{id}}
+Authorization: Bearer {{token}}
+
+
+###
+POST {{baseUrl}}/members
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name" : "",
+    "email" : "",
+    "password" : "",
+    "addresses" : [
+        {
+            "street" : "",
+            "city" : "",
+            "zip" : "",
+            "state" : ""
+        },
+        {
+            "street" : "",
+            "city" : "",
+            "zip" : "",
+            "state" : ""
+        }
+    ],
+    "birthDate" : "",
+    "gender" : "", 
+    "phoneNumber" : ""
+}
+
+###
+POST {{baseUrl}}/members/{{id}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+
+{
+     "name" : ""
+}
+###
+DELETE {{baseUrl}}/members/{{id}}
+Authorization: Bearer {{token}}
