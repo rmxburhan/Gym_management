@@ -1,11 +1,3 @@
-// import profileRoute from "./profileRoute";
-// import attendanceRoute from "./attendanceIndex";
-// import classRoute from "./classRouteIndex";
-// import employeeRoute from "./employeeIndex";
-// import authorize from "../middleware/authorizationMiddleware";
-// import membershipRoute from "./membershipIndex";
-// import membersRoute from "./membersIndex";
-// import equipmentRoute from "./equipmentIndex";
 import { Express } from "express";
 import authRoute from "./auth.routes";
 import userRoute from "./user.routes";

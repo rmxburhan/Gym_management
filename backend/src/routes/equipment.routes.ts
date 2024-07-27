@@ -7,7 +7,6 @@ import {
   validateInputAddEquipmentLog,
   validateInputUpdateEquipment,
 } from "../validator/equipment.validator";
-import { Types } from "mongoose";
 import path from "path";
 import { existsSync, unlinkSync } from "fs";
 import { RequestAuth } from "../types/request";
@@ -55,10 +54,7 @@ route.post(
       });
     } catch (error) {
       if (req.file) {
-        const pathToFile = path.join(
-          process.cwd(),
-          req.file.path.split("public/")[1]
-        );
+        const pathToFile = path.join(process.cwd(), req.file.path);
         existsSync(pathToFile) ? unlinkSync(pathToFile) : undefined;
       }
       next(error);
@@ -139,10 +135,7 @@ route.post(
       });
     } catch (error) {
       if (req.file) {
-        const pathToFile = path.join(
-          process.cwd(),
-          req.file.path.split("public/")[1]
-        );
+        const pathToFile = path.join(process.cwd(), req.file.path);
         existsSync(pathToFile) ? unlinkSync(pathToFile) : undefined;
       }
       next(error);

@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import User, { IUser, UserQuery } from "../models/user.model";
 
 export const postRegister = async (user: IUser) => {
