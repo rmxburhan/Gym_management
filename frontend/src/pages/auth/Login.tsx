@@ -1,90 +1,96 @@
-import { useState } from 'react';
-import useAuth from '../../context/Auth';
 import { useNavigate } from 'react-router';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { FC } from 'react';
 import usePost from '@/hooks/usePost';
-import { isAxiosError } from 'axios';
-import LogoPlaceholder from '@/components/LogoPlaceholder';
-const Login = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const { setToken, setUser } = useAuth();
-    const navigate = useNavigate();
-    const { post, error, isLoading } = usePost('auth/login');
+import useAuth from '@/context/Auth';
 
-    const loginHandler = (e: any) => {
-        e.preventDefault();
-        post({ email, password })
+interface FormValues {
+    email: string;
+    password: string;
+}
+
+const Login: FC = () => {
+    const navigate = useNavigate();
+    const { post, error: submitError } = usePost('auth/login');
+    const { setToken, setUser } = useAuth();
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<FormValues>();
+
+    const onSubmit: SubmitHandler<FormValues> = (values: FormValues) => {
+        post({ email: values.email, password: values.password })
             .then((response) => {
                 if (response.status === 200) {
-                    const data = response.data.data;
+                    const data = response.data;
                     setToken(data.token);
-                    setUser(data.user);
-                    navigate('/dashboard');
+                    setUser(data.data);
+                    // navigate('/dashboard');
+                    alert('login success');
+                } else if (response.status === 422) {
+                    alert('Redirect to personal information form');
+                    // TODO : this is for member but i will do for admin first so keep remind me
                 }
             })
-            .catch((err) => {
-                if (isAxiosError(err)) {
-                }
-            });
+            .catch((err) => console.error);
     };
 
     return (
-        <div
-            className="flex justify-center items-center h-[100vh] hamburger"
-            id="login-page"
-        >
-            <div className="bg-white border rounded py-12 px-8 max-w-[500px] w-[500px] mx-auto self-center">
-                <LogoPlaceholder />
-                <h1 className="text-center text-2xl font-semibold mb-4 ">
-                    Login
-                </h1>
-
-                {error ? (
-                    <div className="bg-red-500 text-white p-4 text-sm rounded my-2 flex">
-                        <span>{error}</span>
-                        {/* <XIcon
-                            size={20}
-                            className="ms-auto"
-                            onClick={() => {
-                                error;
-                            }}
-                        /> */}
+        <div className="bg-gray-100 w-screen h-screen flex justify-center">
+            <div className="bg-white rounded self-center p-4 border">
+                <h2 className="text-xl font-bold w-[400px] mb-4">Login</h2>
+                <form onSubmit={handleSubmit(onSubmit)} className="text-sm">
+                    <div className="flex flex-col mb-4 gap-2">
+                        <label htmlFor="email">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            {...register('email', {
+                                required: 'Required',
+                                pattern: {
+                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                    message: 'Invalid email address',
+                                },
+                            })}
+                            className="rounded px-4 py-2"
+                        />
+                        {errors.email && (
+                            <p className="text-red-500 text-xs font-medium">
+                                {errors.email.message}
+                            </p>
+                        )}
                     </div>
-                ) : (
-                    ''
-                )}
 
-                <form className="flex flex-col gap-2" onSubmit={loginHandler}>
-                    <label htmlFor="email">Email</label>
-                    <input
-                        type="email"
-                        name="email"
-                        id="email"
-                        required
-                        className="mb-4 px-4 py-2 rounded"
-                        value={email}
-                        onChange={(e) => {
-                            setEmail(e.target.value);
-                        }}
-                    />
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        name="password"
-                        id="password"
-                        required
-                        className="mb-4 px-4 py-2 rounded"
-                        value={password}
-                        onChange={(e) => {
-                            setPassword(e.target.value);
-                        }}
-                    />
+                    <div className="flex flex-col mb-4 gap-2">
+                        <label htmlFor="password">Password</label>
+                        <input
+                            type="password"
+                            {...register('password', {
+                                required: 'Password is required',
+                            })}
+                            className="rounded px-4 py-2"
+                        />
+
+                        {errors.password && (
+                            <p className="text-red-500 text-xs font-medium">
+                                {errors.password.message}
+                            </p>
+                        )}
+                    </div>
+
+                    {submitError && (
+                        <p className="text-red-500 text-xs p-2 border-red-500 border mb-4 rounded">
+                            {submitError}
+                        </p>
+                    )}
 
                     <button
                         type="submit"
-                        className="btn px-8 py-4 rounded bg-black text-white font-semibold"
+                        className="w-full bg-black text-white rounded font-bold px-4 py-2"
                     >
-                        Login
+                        Submit
                     </button>
                 </form>
             </div>

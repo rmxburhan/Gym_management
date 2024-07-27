@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { api } from '../network/api';
 import { useNavigate } from 'react-router';
-import { isAxiosError } from 'axios';
+import { AxiosPromise, isAxiosError } from 'axios';
 
 const usePost = (url: string) => {
     const [isLoading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
-    const post = async (payload: any, id?: string): Promise<any | null> => {
+    const post = async (payload: any, id?: string) => {
         try {
             setLoading(true);
             const response = await api.post(url + `/${id || ''}`, payload);
@@ -21,7 +21,10 @@ const usePost = (url: string) => {
                     // navigate forbidden
                 } else {
                     if (error.response) {
-                        setError(error.response.data.message);
+                        setError(
+                            error.response.data.message ||
+                                error.response.data.errors
+                        );
                     } else {
                         setError(error.message);
                     }
