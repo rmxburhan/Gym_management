@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import User, { IUser, UserQuery } from "../models/user.model";
 
 export const postRegister = async (user: IUser) => {
@@ -24,8 +23,25 @@ export const getUser = async (query: UserQuery) => {
   return await User.findOne(query);
 };
 
+export const fillData = async (
+  userId: string,
+  gender: string,
+  addresses: any,
+  phoneNumber: string,
+  birthDate: Date
+) =>
+  await User.findByIdAndUpdate(userId, {
+    memberDetail: {
+      address: addresses,
+      phoneNumber,
+      gender,
+      birthDate,
+    },
+  });
+
 export default {
   postRegister,
   createUser,
   getUser,
+  fillData,
 };

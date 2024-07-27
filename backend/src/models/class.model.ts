@@ -1,14 +1,16 @@
 import { model, Schema, Types } from "mongoose";
 
-export interface IClassSchema extends Document {
+export interface IClass extends Document {
   name: string;
   description: string;
   trainer: Types.ObjectId;
+  maxParticipant: number;
+  participants: [Types.ObjectId];
   date: Date;
   deletedAt?: Date;
 }
 
-const classSchema = new Schema<IClassSchema>(
+const classSchema = new Schema<IClass>(
   {
     name: {
       type: String,
@@ -22,6 +24,15 @@ const classSchema = new Schema<IClassSchema>(
       type: Schema.Types.ObjectId,
       required: true,
       ref: "User",
+    },
+    maxParticipant: {
+      type: Number,
+      required: true,
+    },
+    participants: {
+      type: [Types.ObjectId],
+      ref: "User",
+      default: [],
     },
     date: {
       type: Date,

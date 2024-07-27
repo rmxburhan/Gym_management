@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import User, { IUser } from "../models/user.model";
+import { publicExistSync, publicRemoveSync } from "../utils/file";
 
 export const getTrainers = async (): Promise<IUser[] | null> =>
   await User.find({ role: "trainer", deletedAt: undefined }).sort({
@@ -17,6 +18,10 @@ export const deleteTrainer = async (id: string): Promise<IUser> => {
     const error = new Error("Delete trainer failed. Id not found");
     error.name = "NotFound";
     throw error;
+  }
+
+  if (user.profile && publicExistSync(user.profile)) {
+    publicRemoveSync(user.profile);
   }
 
   user.deletedAt = dayjs().toDate();
@@ -55,7 +60,7 @@ export const addTrainer = async (
   });
 
   if (profile) {
-    trainer.profile = profile.path;
+    trainer.profile = profile.path.split("public/")[1];
   }
 
   return await trainer.save();
@@ -89,7 +94,7 @@ export const updateTrainer = async (
   if (phoneNumber) trainer.trainerDetail!.phoneNumber = phoneNumber;
   if (identificationNumber)
     trainer.trainerDetail!.identificationNumber = identificationNumber;
-
+  if (profile) trainer.profile = profile.path.split("public/")[1];
   return await trainer.save();
 };
 

@@ -1,10 +1,18 @@
 import dayjs from "dayjs";
 import Membership, { IMembership } from "../models/membership.model";
+import Transaction from "../models/transaction.model";
+import { IUser } from "../models/user.model";
+import { nextDay } from "date-fns";
 
-export const getMemberships = async () =>
-  await Membership.find({ deletedAt: undefined }).sort({
+export const getMemberships = async (member?: boolean) => {
+  const filter: { deletedAt: undefined; published?: boolean } = {
+    deletedAt: undefined,
+  };
+  if (member) filter.published = true;
+  return await Membership.find(filter).sort({
     createdAt: -1,
   });
+};
 
 export const addMembership = async (
   name: string,
@@ -21,12 +29,16 @@ export const addMembership = async (
     discountPrice,
   });
 
-export const getMembershipById = async (id: string) =>
-  await Membership.findOne({
+export const getMembershipById = async (id: string, member?: boolean) => {
+  const filter: { _id: string; deletedAt: undefined; published?: boolean } = {
     _id: id,
     deletedAt: undefined,
-  });
+  };
 
+  if (member) filter.published = true;
+
+  return await Membership.findOne(filter);
+};
 export const patchPublishStatus = async (id: string): Promise<IMembership> => {
   const membership = await Membership.findOne({
     _id: id,
@@ -84,57 +96,45 @@ export const deleteMembership = async (id: string) => {
   return await membership.save();
 };
 
-// export const registerMembership = async (req: Request, res: Response) => {
-//   try {
-//     const { membershipId } = req.body;
-//     const user = (req as RequestAuth).user;
-//     const membershipExist = await Membership.findOne({
-//       deletedAt: undefined,
-//       _id: membershipId,
-//       published: true,
-//     });
+export const registerMembership = async (
+  user: IUser,
+  membershipId: string,
+  paymentType: string
+) => {
+  const membership = await Membership.findOne({
+    _id: membershipId,
+    deletedAt: undefined,
+    published: true,
+  });
 
-//     if (!membershipExist) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "Register membership failed, membership not found",
-//       });
-//     }
-//     const membershipAlreadyRegistered = await UserMembership.findOne({
-//       memberId: user._id,
-//       deletedAt: undefined,
-//       expiresDate: { $gt: new Date() },
-//     }).sort({ registerDate: -1 });
+  if (!membership) {
+    const error = new Error("Membership data not found");
+    error.name = "BadRequest";
+    throw error;
+  }
 
-//     console.log(membershipAlreadyRegistered);
+  const currentTransaction = await Transaction.findOne({
+    membership: membershipId,
+    $and: [{ status: "pending" }, { paymentExpire: { $gt: dayjs().toDate() } }],
+    member: user.id,
+  }).sort({ createdAt: -1 });
 
-//     if (membershipAlreadyRegistered) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "Member already registered in membership",
-//       });
-//     }
-
-//     const registerDate = new Date();
-//     const membershipData = new UserMembership({
-//       membershipId,
-//       memberId: user._id,
-//       registerDate,
-//       expiresDate: addDays(registerDate, membershipExist.duration),
-//     });
-//     await membershipData.save();
-//     return res.status(200).json({
-//       success: true,
-//       message: "Membership has been registered",
-//     });
-//   } catch (error: any) {
-//     if (error)
-//       return res.status(500).json({
-//         success: false,
-//         error: error.message,
-//       });
-//   }
-// };
+  if (currentTransaction) {
+    const error = new Error(
+      "You are have pending transaction first cancel first to make a new transaction"
+    );
+    error.name = "BadRequest";
+    throw error;
+  }
+  return await Transaction.create({
+    member: user.id,
+    membership: membership.id,
+    paymentType,
+    totalPayment: membership.price - membership.discountPrice,
+    status: "pending",
+    paymentExpire: dayjs().add(1, "day"),
+  });
+};
 
 export default {
   getMemberships,
@@ -143,4 +143,5 @@ export default {
   patchPublishStatus,
   updateMembership,
   deleteMembership,
+  registerMembership,
 };

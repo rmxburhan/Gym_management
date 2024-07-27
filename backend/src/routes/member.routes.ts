@@ -7,6 +7,7 @@ import {
 } from "../validator/member.validator";
 import path from "path";
 import { existsSync, unlinkSync } from "fs";
+import { uploadSingle } from "../utils/upload";
 
 const route = Router();
 
@@ -36,6 +37,7 @@ route.get(
 route.post(
   "/",
   authorize(["admin"]),
+  uploadSingle("profile"),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       var input = validateInputAddMember.validate(req.body);
@@ -107,6 +109,7 @@ route.get(
 route.post(
   "/:id",
   authorize(["admin"]),
+  uploadSingle("profile"),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;

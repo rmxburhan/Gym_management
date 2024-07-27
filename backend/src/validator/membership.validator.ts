@@ -16,3 +16,8 @@ export const validateUpdateMembershipInput = Joi.object({
   discountPrice: Joi.number().optional(),
   published: Joi.boolean().optional(),
 });
+
+export const validateInputRegisterMembership = Joi.object({
+  membershipId: Joi.string().required(),
+  paymentType: Joi.string().required(),
+});
