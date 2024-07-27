@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, Router } from "express";
 import {
-  registerValidationRules,
   validateInputFillData,
+  validateRegisterInput,
 } from "../validator/user.validator";
 import userService from "../services/user.service";
 import { validationResult } from "express-validator";
@@ -98,21 +98,16 @@ route.put(
 
 route.post(
   "/register",
-  registerValidationRules,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        const error = new Error(errors.array()[0].msg);
-        error.name = "BadRequest";
-        throw error;
-      }
+      const { error, value } = validateRegisterInput.validate(req.body);
+      if (error) throw error;
 
       const {
         name,
         email,
         password,
-      }: { name: string; email: string; password: string } = req.body;
+      }: { name: string; email: string; password: string } = value;
 
       const userData = userService.createUser({
         name,
