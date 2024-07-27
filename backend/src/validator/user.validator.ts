@@ -33,3 +33,10 @@ export const addressValidationSchema = Joi.object({
   state: Joi.string().max(250).required(),
   zip: Joi.string().min(4).required(),
 });
+
+export const validateInputFillData = Joi.object({
+  birthDate: Joi.date().required(),
+  gender: Joi.string().required(),
+  addresses: Joi.array().min(1).items(addressValidationSchema).required(),
+  phoneNumber: Joi.string().required(),
+});

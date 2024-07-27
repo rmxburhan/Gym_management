@@ -101,15 +101,6 @@ export const registerMembership = async (
   membershipId: string,
   paymentType: string
 ) => {
-  if (
-    !user.memberDetail?.membership ||
-    user.memberDetail.membership?.expiresDate > dayjs().toDate()
-  ) {
-    const error = new Error("You have membership active");
-    error.name = "BadRequest";
-    throw error;
-  }
-
   const membership = await Membership.findOne({
     _id: membershipId,
     deletedAt: undefined,

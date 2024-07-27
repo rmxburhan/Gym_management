@@ -49,4 +49,22 @@ route.get(
   }
 );
 
+route.post(
+  "/:id/activate",
+  authorize(["admin"]),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const transaction = await transactionService.acceptPayment(id);
+
+      return res.status(200).json({
+        message: "Payment success saved",
+        data: transaction,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 export default route;

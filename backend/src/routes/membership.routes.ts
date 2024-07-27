@@ -71,9 +71,18 @@ route.post(
         throw error;
       }
       const { membershipId, paymentType } = value;
-      if (user.memberDetail) {
+      if (!user.memberDetail) {
         const error = new Error("Please fill your detail information first.");
         error.name = "Unprocessable";
+        throw error;
+      }
+
+      if (
+        user.memberDetail.membership &&
+        user.memberDetail.membership.status == true
+      ) {
+        const error = new Error("You have membership active");
+        error.name = "BadRequest";
         throw error;
       }
 
@@ -187,13 +196,5 @@ route.patch(
     }
   }
 );
-
-// route.post(
-//   "/register",
-//   authorize(["member"]),
-//   registerMembershipValidationRules(),
-//   validate,
-//   registerMembership
-// );
 
 export default route;

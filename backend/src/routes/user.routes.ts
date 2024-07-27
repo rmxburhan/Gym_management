@@ -1,17 +1,20 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { registerValidationRules } from "../validator/user.validator";
+import {
+  registerValidationRules,
+  validateInputFillData,
+} from "../validator/user.validator";
 import userService from "../services/user.service";
 import { validationResult } from "express-validator";
 import { RequestAuth } from "../types/request";
 import authorize from "../middleware/authorization.middleware";
 import { uploadSingle } from "../utils/upload";
 import path from "path";
-import { exists, existsSync, unlinkSync } from "fs";
+import { existsSync, unlinkSync } from "fs";
 
 const route = Router();
 
 route.get(
-  "/user",
+  "/",
   authorize(["admin", "member", "trainer", "staff"]),
   (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -27,7 +30,7 @@ route.get(
 );
 
 route.post(
-  "/user/profile",
+  "/profile",
   authorize(["admin", "member", "trainer", "staff"]),
   uploadSingle("profile"),
   async (req: Request, res: Response, next: NextFunction) => {
@@ -51,6 +54,43 @@ route.post(
           unlinkSync(pathToFile);
         }
       }
+      next(error);
+    }
+  }
+);
+
+// for updating user information
+// route.patch()
+
+route.put(
+  "/detail",
+  authorize(["member"]),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = (req as RequestAuth).user;
+
+      if (user.memberDetail) {
+        const error = new Error("Request cannot be proceed");
+        error.name = "BadRequest";
+        throw error;
+      }
+
+      const { error, value } = validateInputFillData.validate(req.body);
+      if (error) throw error;
+      const { gender, addresses, phoneNumber, birthDate } = value;
+
+      const data = userService.fillData(
+        user.id,
+        gender,
+        addresses,
+        phoneNumber,
+        new Date(birthDate)
+      );
+
+      return res.status(200).json({
+        message: "Personal information has been filled",
+      });
+    } catch (error) {
       next(error);
     }
   }

@@ -8,7 +8,7 @@ export interface IMember extends Document {
   gender: "male" | "female";
   address: IAddress[];
   phoneNumber: string;
-  membership?: IMembershipData;
+  membership?: IMembershipData | null;
 }
 
 export const memberSchema = new Schema<IMember>(

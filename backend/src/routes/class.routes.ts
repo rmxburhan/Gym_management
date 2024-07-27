@@ -6,6 +6,7 @@ import {
   validateInputUpdateClass,
 } from "../validator/class.validator";
 import { RequestAuth } from "../types/request";
+import authorizememberactive from "../middleware/memberactive.middleware";
 const route = Router();
 
 route.get(
@@ -27,6 +28,7 @@ route.get(
 route.get(
   "/upcoming",
   authorize(["member", "admin"]),
+  authorizememberactive,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const classes = await classService.getUpcomingClasses();
@@ -43,6 +45,7 @@ route.get(
 route.get(
   "/:id",
   authorize(["admin", "trainer", "member"]),
+  authorizememberactive,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
@@ -97,22 +100,28 @@ route.post(
   }
 );
 
-route.post("/:id/register", authorize(["member"]), async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const user = (req as RequestAuth).user;
-    await classService.registerClass(id, user.id);
-    return res.status(200).json({
-      message: "You are now participated in the class",
-    });
-  } catch (error) {
-    next(error);
+route.post(
+  "/:id/register",
+  authorize(["member"]),
+  authorizememberactive,
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const user = (req as RequestAuth).user;
+      await classService.registerClass(id, user.id);
+      return res.status(200).json({
+        message: "You are now participated in the class",
+      });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 route.post(
   "/:id/cancel",
   authorize(["member"]),
+  authorizememberactive,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
