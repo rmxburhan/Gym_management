@@ -1,23 +1,17 @@
 import { NextFunction, Request, Response, Router } from "express";
 
-import { loginValidationRules } from "../validator/auth.validator";
-import { validationResult } from "express-validator";
+import { validateLoginInput } from "../validator/auth.validator";
 import tokenService from "../services/token.service";
 import authService from "../services/auth.service";
 const route = Router();
 
 route.post(
   "/login",
-  loginValidationRules,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        const error = Error(errors.array()[0].msg);
-        error.name = "BadRequest";
-        throw error;
-      }
-      const { email, password }: { email: string; password: string } = req.body;
+      const { error, value } = validateLoginInput.validate(req.body);
+      if (error) throw error;
+      const { email, password }: { email: string; password: string } = value;
 
       const user = await authService.postLogin({ email, password });
       const token = tokenService.generateToken(user);

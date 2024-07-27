@@ -10,7 +10,7 @@ export default (
   if (error) {
     if (Joi.isError(error)) {
       return res.status(400).json({
-        errors: error.details,
+        errors: error.details[0].message,
       });
     } else {
       return res.status(500).json({

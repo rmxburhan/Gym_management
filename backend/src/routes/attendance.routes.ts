@@ -4,6 +4,7 @@ import authorize from "../middleware/authorization.middleware";
 import attendanceService from "../services/attendance.service";
 import { RequestAuth } from "../types/request";
 import { validatePostCheckIn } from "../validator/attendance.validator";
+import authorizememberactive from "../middleware/memberactive.middleware";
 const route = Router();
 
 route.get(
@@ -56,6 +57,7 @@ route.get(
 route.post(
   "/checkin",
   authorize(["member"]),
+  authorizememberactive,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = (req as RequestAuth).user;
@@ -85,6 +87,7 @@ route.post(
 route.post(
   "/checkout",
   authorize(["member"]),
+  authorizememberactive,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = (req as RequestAuth).user;
