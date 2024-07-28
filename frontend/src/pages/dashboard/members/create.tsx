@@ -1,9 +1,8 @@
 import Modal from '@/components/Modal';
-import { FC, useEffect, useState } from 'react';
-import { createMemberRequest, updateMemberRequest } from './data';
+import { FC, useState } from 'react';
+import { createMemberRequest } from './data';
 import usePost from '@/hooks/usePost';
 import { isAxiosError } from 'axios';
-import { genderType } from '@/network/api';
 
 interface Props {
     visible: boolean;
