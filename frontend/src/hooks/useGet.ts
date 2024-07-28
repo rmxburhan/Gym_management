@@ -22,7 +22,7 @@ const useGet = <T>(url: string): FetchState<T> => {
     const refresh = () => {
         api.get<T>(url)
             .then((response: any) => {
-                setData(response.data.data);
+                setData(response.data);
             })
             .catch((error) => {
                 if (error.response?.status == 401) {

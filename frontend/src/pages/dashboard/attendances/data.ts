@@ -1,28 +1,39 @@
-import { Member } from '../members/data';
-
-export interface Attendance {
-    _id: string;
-    userId: string;
-    checkInTime: Date;
-    checkOutTime?: Date;
-    memberDetail?: Member[];
-}
-
-export interface AttendanceCode {
-    _id: string;
-    code: string;
-    createdIn: Date;
-    expiresIn: Date;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
 export interface getCodeResponse {
-    code: AttendanceCode;
+    message: string;
+    code: string;
 }
 
 export interface getAttendances {
-    todayCheckIn: number;
-    todayUnCheckOut: number;
-    attendances: Attendance[];
+    message: string;
+    data: [
+        {
+            _id: string;
+            userId: {
+                _id: string;
+                name: string;
+                profile: string;
+                email: string;
+            };
+            checkInTime: string;
+            checkOutTime: string;
+        }
+    ];
+}
+
+export interface getCountsAttendance {
+    message: string;
+    data: {
+        todayCheckIn: number;
+        notCheckOut: number;
+    };
+}
+
+export interface getStats {
+    message: string;
+    data: [
+        {
+            date: string;
+            count: number;
+        }
+    ];
 }

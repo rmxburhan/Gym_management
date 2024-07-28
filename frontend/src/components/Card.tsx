@@ -20,17 +20,13 @@ export const Card: React.FC<CardProps> = ({
 }) => {
     return (
         <div
-            className={`border rounded-lg p-6 transition-all ${
-                active
-                    ? 'border-indigo-500 bg-indigo-100'
-                    : 'border-gray-300 bg-white'
-            } shadow-lg hover:shadow-xl overflow-hidden`}
+            className={`border rounded-xl p-6 transition-all ${
+                active ? 'border bg-slate-950' : 'border-gray-300 bg-white'
+            } overflow-hidden`}
         >
-            <div className="flex items-center mb-4">
-                <Icon className="text-indigo-500 w-6 h-6 mr-2" />
-                <h3 className="text-xl font-semibold text-indigo-800">
-                    {title}
-                </h3>
+            <div className="flex items-center mb-2">
+                <Icon className="text-black w-6 h-6 mr-2" />
+                <h3 className="text-xl font-semibold text-black">{title}</h3>
                 {alert && <span className="ml-2 text-red-500">*</span>}
             </div>
             <p className="text-gray-600">{description}</p>
