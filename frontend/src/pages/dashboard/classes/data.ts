@@ -1,16 +1,20 @@
-import { Trainer } from '../trainers/data';
-
 export interface getClassesResponse {
-    classes: classData[];
+    message: string;
+    data: Class[];
 }
 
-export interface classData {
+export interface Class {
     _id: string;
     name: string;
     description: string;
-    date: Date;
+    date: string;
     maxParticipant: number;
-    trainerDetails: Trainer[];
+    trainer: {
+        _id: string;
+        name: string;
+        profile: string;
+    };
+    participants: [];
     createdAt: string;
     updatedAt: string;
 }

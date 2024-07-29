@@ -30,7 +30,7 @@ const DashboardLayout: React.FC = () => {
         },
         { icon: Users, title: 'Members', path: '/dashboard/members' },
         { icon: Users, title: 'Trainer', path: '/dashboard/employees' },
-        { icon: Users, title: 'Staff', path: '/dashboard/staffs' },
+        // { icon: Users, title: 'Staff', path: '/dashboard/staffs' },
         { icon: CalendarDays, title: 'Class', path: '/dashboard/classes' },
         { icon: Dumbbell, title: 'Equipment', path: '/dashboard/equipments' },
         { icon: Package, title: 'Memberships', path: '/dashboard/memberships' },

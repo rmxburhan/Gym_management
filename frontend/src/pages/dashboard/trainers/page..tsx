@@ -1,13 +1,12 @@
-import { PencilIcon, Trash, TrashIcon } from 'lucide-react';
-import StatusChips, { StatusChipType } from '@/components/StatusChips';
-import Name from '@/components/Name';
+import { TrashIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { getEmployee } from '@/network/api';
-import { Trainer } from './data';
+import { Trainer, getTrainersResponse } from './data';
 import SearchBox from '@/components/SearchBox';
 import Confirmation from '@/components/Confirmation';
-import useDelete from '@/hooks/useDelete';
-import CreateTrainer from './create';
+import { DataTable } from '@/components/ui/data-table';
+import useGet from '@/hooks/useGet';
+import { columns } from './columns';
 
 const EmployeePage = () => {
     const [filter, setFilter] = useState<string>('');
@@ -37,32 +36,8 @@ const EmployeePage = () => {
         }
     };
 
-    useEffect(() => {
-        getEmployee()
-            .then((response: any) => {
-                if (response.status == 200) {
-                    console.log(response);
-                    const employees = response.data.data.employees.map(
-                        (x: any) => {
-                            return {
-                                _id: x._id,
-                                name: x.name,
-                                email: x.email,
-                                dateOfBirth: new Date(
-                                    x.dateOfBirth
-                                ).toLocaleDateString(),
-                                gender: x.gender,
-                                image: x.image,
-                                address: x.address,
-                                role: x.role,
-                            };
-                        }
-                    );
-                    setEmployee(employees);
-                }
-            })
-            .catch();
-    }, []);
+    const { data, error, isLoading } = useGet<getTrainersResponse>('trainers');
+
     return (
         <div>
             <h1 className="text-4xl font-semibold mb-8">Employee</h1>
@@ -77,74 +52,22 @@ const EmployeePage = () => {
                                 setFilter(name);
                             }}
                         />
-                        <button className="px-4 py-2 bg-blue-500 text-white rounded flex flex-row gap-1 justify-center ms-auto items-center">
+                        <button className="px-3 py-1 bg-slate-950 text-xs font-semibold text-white rounded flex flex-row gap-1 justify-center ms-auto items-center">
                             Create
                         </button>
                     </div>
-
-                    <table className="table-auto w-full">
-                        <thead className="bg-indigo-100 text-black">
-                            <tr>
-                                <th>No.</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Gender</th>
-                                <th>Join date</th>
-                                <th>Status</th>
-                                <th>Type</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {employee
-                                .filter((x) => {
-                                    return x.name
-                                        .toLowerCase()
-                                        .startsWith(filter?.toLowerCase());
-                                })
-                                .map((x, index) => {
-                                    return (
-                                        <tr>
-                                            <td>{index + 1}.</td>
-                                            <td>
-                                                <Name
-                                                    name={x.name}
-                                                    imageUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQae9FkVDq-pht9_nec324ZbRxcuV7juKPPvA&s"
-                                                />
-                                            </td>
-                                            <td>{x.email}</td>
-                                            <td>{x.gender}</td>
-                                            <td>{x.dateOfBirth}</td>
-                                            <td>
-                                                <StatusChips
-                                                    status="Holiday"
-                                                    type={
-                                                        StatusChipType.success
-                                                    }
-                                                />
-                                            </td>
-                                            <td>
-                                                <StatusChips
-                                                    status="Trainer"
-                                                    type={StatusChipType.danger}
-                                                />
-                                            </td>
-                                            <td>
-                                                <div className="flex flex-row gap-2 my-auto">
-                                                    <button className="p-2 bg-indigo-100 text-indigo-500 rounded">
-                                                        <PencilIcon size={20} />
-                                                    </button>
-
-                                                    <button className="p-2 bg-indigo-500 text-indigo-100 rounded">
-                                                        <Trash size={20} />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                        </tbody>
-                    </table>
+                    <DataTable
+                        data={
+                            data
+                                ? data?.data.filter((x) => {
+                                      return x.name
+                                          .toLowerCase()
+                                          .startsWith(filter.toLowerCase());
+                                  })
+                                : []
+                        }
+                        columns={columns}
+                    />
                 </div>
             </div>
             <Confirmation

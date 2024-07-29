@@ -23,12 +23,12 @@ const SearchBox: FC<{ onSearch: (name: string) => void }> = ({ onSearch }) => {
                 }}
             />
             <button
-                className="flex flex-row items-center bg-slate-950 text-white rounded text-xs font-semibold"
+                className="flex flex-row items-center bg-slate-950 text-white rounded text-sm font-semibold"
                 onClick={() => {
                     onSearch(search);
                 }}
             >
-                <SearchIcon size={16} className="me-2 " /> Search
+                <SearchIcon size={16} className="me-2" /> Search
             </button>
         </div>
     );
