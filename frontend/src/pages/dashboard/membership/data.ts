@@ -18,7 +18,8 @@ export interface Membership {
 }
 
 export interface getMembershipResponse {
-    memberships: Membership[];
+    message: string;
+    data: Membership[];
 }
 
 export interface createMembershipRequest {

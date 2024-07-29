@@ -1,5 +1,5 @@
 import { SearchIcon } from 'lucide-react';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 
 const SearchBox: FC<{ onSearch: (name: string) => void }> = ({ onSearch }) => {
     const [search, setSearch] = useState('');
@@ -15,7 +15,7 @@ const SearchBox: FC<{ onSearch: (name: string) => void }> = ({ onSearch }) => {
                 type="text"
                 name="search"
                 id="searchQuery"
-                className="px-4 py-2 border bg-white rounded outline-none focus:border-blue-500"
+                className="px-2 py-1 border bg-white rounded outline-none focus:border-slate-950 text-sm"
                 placeholder="Searh..."
                 value={search}
                 onChange={(e) => {
@@ -23,12 +23,12 @@ const SearchBox: FC<{ onSearch: (name: string) => void }> = ({ onSearch }) => {
                 }}
             />
             <button
-                className="flex flex-row items-center bg-blue-500 text-white rounded"
+                className="flex flex-row items-center bg-slate-950 text-white rounded text-sm font-semibold"
                 onClick={() => {
                     onSearch(search);
                 }}
             >
-                <SearchIcon size={18} className="me-2" /> Search
+                <SearchIcon size={16} className="me-2" /> Search
             </button>
         </div>
     );

@@ -1,19 +1,31 @@
-import { UserMembership } from '../membership/data';
-
 export interface getMembersResponseData {
-    members: Member[];
+    message: string;
+    data: Member[];
 }
 
 export type Member = {
     _id: string;
     name: string;
     email: string;
-    dateOfBirth: Date;
-    gender: string;
-    image: string;
-    address: string;
+    profile: string;
     role: string;
-    membershipDetail: UserMembership[];
+    memberDetail?: {
+        gender: string;
+        birthDate: string;
+        address: {
+            street: string;
+            city: string;
+            zip: string;
+            state: string;
+        };
+        membership?: {
+            _id: string;
+            registerDate: string;
+            expiresDate: string;
+            membership: string;
+            status: boolean;
+        };
+    };
 };
 
 export type updateMemberRequest = {

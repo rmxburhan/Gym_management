@@ -3,9 +3,11 @@ export interface Trainer {
     name: string;
     email: string;
     password: string;
-    dateOfBirth: string;
-    gender: string;
-    image: string;
-    address: string;
+    profile: string;
     role: string;
+}
+
+export interface getTrainersResponse {
+    message: string;
+    data: Trainer[];
 }

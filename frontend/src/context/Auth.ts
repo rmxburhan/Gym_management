@@ -11,9 +11,7 @@ type AuthDataProps = {
 type User = {
     name: string;
     email: string;
-    dateOfBirth: Date;
-    image: string;
-    address: string;
+    profile: string;
     role: string;
 };
 

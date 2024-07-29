@@ -1,124 +1,180 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 import AttendanceCode, {
-  IAttendanceCode,
-} from "../models/attendancecode.model";
-import Attendance from "../models/attendance.model";
-import User from "../models/user.model";
+    IAttendanceCode,
+} from '../models/attendancecode.model';
+import Attendance from '../models/attendance.model';
+import User from '../models/user.model';
+import { endOfDay, endOfToday, startOfDay, startOfToday } from 'date-fns';
 
 export const getCode = async (): Promise<IAttendanceCode | null> =>
-  await AttendanceCode.findOne({
-    expiresIn: { $gte: dayjs().toDate() },
-  }).sort({ createdAt: -1 });
+    await AttendanceCode.findOne({
+        expiresIn: { $gte: dayjs().toDate() },
+    }).sort({ createdAt: -1 });
 
 export const getAttendances = async (query?: {
-  today?: string;
-  dateStart?: string;
-  dateEnd?: string;
-  userId?: string;
-  checkout?: string;
+    today?: string;
+    dateStart?: string;
+    dateEnd?: string;
+    userId?: string;
+    checkout?: string;
 }) => {
-  const filter: { checkInTime?: any; userId?: any; checkOutTime?: any } = {};
+    const filter: { checkInTime?: any; userId?: any; checkOutTime?: any } = {};
 
-  const filterDate: { $gte?: any; $lte?: any } = {};
-  if (query?.dateStart) {
-    console.log(query.dateStart);
-    try {
-      const startDateFilter = new Date(query.dateStart.toString());
-      filterDate["$gte"] = startDateFilter.setHours(0, 0, 0, 0);
-      filter.checkInTime = filterDate;
-    } catch (error) {}
-  }
-  if (query?.dateEnd) {
-    console.log(query.dateEnd);
-    try {
-      const endDateFilter = new Date(query.dateEnd.toString());
-      filterDate["$lte"] = endDateFilter.setHours(23, 59, 59, 599);
-      filter.checkInTime = filterDate;
-    } catch (error) {}
-  }
-
-  if (query?.today == "true" || query?.today == "1") {
-    console.log(typeof query.today);
-    console.log(query.today);
-    const dateNow = new Date();
-    filter.checkInTime = {
-      $gte: dateNow.setHours(0, 0, 0, 0),
-      $lte: dateNow.setHours(23, 59, 59, 599),
-    };
-  }
-
-  if (query?.userId) {
-    console.log(query.userId);
-    const member = await User.findOne({
-      _id: query.userId,
-      deletedAt: undefined,
-    });
-
-    if (member) {
-      filter.userId = member.id;
+    const filterDate: { $gte?: any; $lte?: any } = {};
+    if (query?.dateStart) {
+        console.log(query.dateStart);
+        try {
+            const startDateFilter = new Date(query.dateStart.toString());
+            filterDate['$gte'] = startDateFilter.setHours(0, 0, 0, 0);
+            filter.checkInTime = filterDate;
+        } catch (error) {}
     }
-  }
+    if (query?.dateEnd) {
+        console.log(query.dateEnd);
+        try {
+            const endDateFilter = new Date(query.dateEnd.toString());
+            filterDate['$lte'] = endDateFilter.setHours(23, 59, 59, 599);
+            filter.checkInTime = filterDate;
+        } catch (error) {}
+    }
 
-  if (query?.checkout == "true" || query?.checkout == "false") {
-    filter.checkOutTime = undefined;
-  } else if (query?.checkout == "false" || query?.checkout == "0") {
-    filter.checkOutTime = { $exists: true };
-  }
-  return await Attendance.find(filter).sort({ createdAt: -1 });
+    if (query?.today == 'true' || query?.today == '1') {
+        console.log(typeof query.today);
+        console.log(query.today);
+        const dateNow = new Date();
+        filter.checkInTime = {
+            $gte: dateNow.setHours(0, 0, 0, 0),
+            $lte: dateNow.setHours(23, 59, 59, 599),
+        };
+    }
+
+    if (query?.userId) {
+        console.log(query.userId);
+        const member = await User.findOne({
+            _id: query.userId,
+            deletedAt: undefined,
+        });
+
+        if (member) {
+            filter.userId = member.id;
+        }
+    }
+
+    if (query?.checkout == 'true' || query?.checkout == 'false') {
+        filter.checkOutTime = undefined;
+    } else if (query?.checkout == 'false' || query?.checkout == '0') {
+        filter.checkOutTime = { $exists: true };
+    }
+    return await Attendance.find(filter)
+        .sort({ createdAt: -1 })
+        .populate('userId', 'name profile email');
 };
 
 export const postCheckIn = async (id: string, code: string) => {
-  const codeValid = await AttendanceCode.findOne({
-    expiresIn: { $gt: Date.now() },
-  }).sort({ createdAt: -1 });
+    const codeValid = await AttendanceCode.findOne({
+        expiresIn: { $gt: Date.now() },
+    }).sort({ createdAt: -1 });
 
-  if (!codeValid || codeValid?.code !== code) {
-    const error = new Error("Code invalid");
-    error.name = "BadRequest";
-    throw error;
-  }
+    if (!codeValid || codeValid?.code !== code) {
+        const error = new Error('Code invalid');
+        error.name = 'BadRequest';
+        throw error;
+    }
 
-  const dateToday = new Date();
-  const startHour = new Date(dateToday.setHours(0, 0, 0, 0));
-  const endHour = new Date(dateToday.setHours(23, 59, 59, 999));
+    const dateToday = new Date();
+    const startHour = new Date(dateToday.setHours(0, 0, 0, 0));
+    const endHour = new Date(dateToday.setHours(23, 59, 59, 999));
 
-  const alreadyCheckIn = await Attendance.findOne({
-    checkInTime: { $gte: startHour, $lte: endHour },
-    userId: id,
-    checkOutTime: undefined,
-  });
+    const alreadyCheckIn = await Attendance.findOne({
+        checkInTime: { $gte: startHour, $lte: endHour },
+        userId: id,
+        checkOutTime: undefined,
+    });
 
-  if (alreadyCheckIn) {
-    const error = new Error("You already checkIn");
-    error.name = "BadRequest";
-    throw error;
-  }
+    if (alreadyCheckIn) {
+        const error = new Error('You already checkIn');
+        error.name = 'BadRequest';
+        throw error;
+    }
 
-  return await Attendance.create({
-    userId: id,
-    checkInTime: dayjs().toDate(),
-  });
+    return await Attendance.create({
+        userId: id,
+        checkInTime: dayjs().toDate(),
+    });
 };
 
 export const postCheckOut = async (id: string) => {
-  const startHour = new Date(new Date().setHours(0, 0, 0, 0));
-  const endHour = new Date(new Date().setHours(23, 59, 59, 999));
+    const startHour = new Date(new Date().setHours(0, 0, 0, 0));
+    const endHour = new Date(new Date().setHours(23, 59, 59, 999));
 
-  const attendance = await Attendance.findOne({
-    userId: id,
-    checkInTime: { $gte: startHour, $lte: endHour },
-    checkOutTime: undefined,
-  }).sort({ createdAt: -1 });
+    const attendance = await Attendance.findOne({
+        userId: id,
+        checkInTime: { $gte: startHour, $lte: endHour },
+        checkOutTime: undefined,
+    }).sort({ createdAt: -1 });
 
-  if (!attendance) {
-    const error = new Error("Check out failed, Please checkIn first");
-    error.name = "BadRequest";
-    throw error;
-  }
+    if (!attendance) {
+        const error = new Error('Check out failed, Please checkIn first');
+        error.name = 'BadRequest';
+        throw error;
+    }
 
-  attendance.checkOutTime = new Date();
-  return await attendance.save();
+    attendance.checkOutTime = new Date();
+    return await attendance.save();
 };
+
+export const getCount = async (): Promise<{
+    todayCheckIn: number;
+    notCheckOut: number;
+}> => {
+    const today = await Attendance.find({
+        checkInTime: { $gte: startOfToday(), $lte: endOfToday() },
+    });
+    const checkIn = today.length;
+    const checkOut = today.filter((x) => x.checkOutTime === undefined).length;
+    return {
+        todayCheckIn: checkIn,
+        notCheckOut: checkOut,
+    };
+};
+
+export const getStats = async (startDate: string, endDate: string) =>
+    await Attendance.aggregate([
+        {
+            $match: {
+                checkInTime: {
+                    $gte: startOfDay(new Date(startDate)),
+                    $lte: endOfDay(new Date(endDate)),
+                },
+            },
+        },
+        {
+            $project: {
+                dateString: {
+                    $dateToString: {
+                        format: '%Y-%m-%d',
+                        date: '$checkInTime',
+                    },
+                },
+            },
+        },
+        {
+            $group: {
+                _id: '$dateString',
+                count: { $sum: 1 },
+            },
+        },
+        {
+            $sort: { _id: 1 },
+        },
+        {
+            $project: {
+                date: '$_id',
+                count: 1,
+                _id: 0,
+            },
+        },
+    ]);
 
 // export const getMyAttendencesHistory = async (
 //   req: Request,
@@ -167,8 +223,10 @@ export const postCheckOut = async (id: string) => {
 // };
 
 export default {
-  getCode,
-  getAttendances,
-  postCheckIn,
-  postCheckOut,
+    getCode,
+    getAttendances,
+    postCheckIn,
+    postCheckOut,
+    getCount,
+    getStats,
 };

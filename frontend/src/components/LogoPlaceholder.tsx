@@ -5,7 +5,7 @@ const LogoPlaceholder = () => {
             height="35px"
             viewBox="0 0 202 40"
             fill="none"
-            className="mx-auto mb-6"
+            className="mx-auto "
             xmlns="http://www.w3.org/2000/svg"
         >
             <path

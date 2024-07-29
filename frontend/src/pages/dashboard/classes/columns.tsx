@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 
-import { classData } from './data';
-export const columns: ColumnDef<classData>[] = [
+import { Class } from './data';
+export const columns: ColumnDef<Class>[] = [
     {
         accessorKey: 'name',
         header: 'Name',
@@ -18,8 +18,7 @@ export const columns: ColumnDef<classData>[] = [
         id: 'trainerDetail',
         header: 'Trianer',
         cell: ({ row }) => {
-            const trainer = row.original.trainerDetails[0];
-
+            const trainer = row.original.trainer;
             return <span>{trainer.name}</span>;
         },
     },

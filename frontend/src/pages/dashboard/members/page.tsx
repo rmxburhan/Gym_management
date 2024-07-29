@@ -1,16 +1,17 @@
-import { FileQuestionIcon, PencilIcon, Trash } from 'lucide-react';
-import StatusChips, { StatusChipType } from '../../../components/StatusChips';
-import Name from '../../../components/Name';
-import useGet from '@/hooks/useGet';
-import { getMembersResponseData } from './data';
+import { FileQuestionIcon } from 'lucide-react';
 import SearchBox from '@/components/SearchBox';
 import { useState } from 'react';
 import CreateMember from './create';
 import Confirmation from '@/components/Confirmation';
 import useDelete from '@/hooks/useDelete';
+import { DataTable } from '@/components/ui/data-table';
+import { getMembersResponseData } from './data';
+import useGet from '@/hooks/useGet';
+import { columsn } from './colums';
 
 const MemberPage = () => {
-    const { data, refresh } = useGet<getMembersResponseData>('members');
+    const { data: membersData, isLoading } =
+        useGet<getMembersResponseData>('members');
 
     const [filter, setFilter] = useState('');
     const [createModalVisible, setCreateModal] = useState<boolean>(false);
@@ -24,7 +25,7 @@ const MemberPage = () => {
     const closeCreateModal = () => setCreateModal(false);
     const openCreateModal = () => setCreateModal(true);
 
-    const { remove, error, isLoading } = useDelete('members');
+    const { remove, error } = useDelete('members');
 
     const openConfirmationModal = (id: string, index: number) => {
         setSelectedMember({ memberId: id, index });
@@ -37,7 +38,7 @@ const MemberPage = () => {
             remove(selectedMember?.memberId || '').then((response) => {
                 if (response.status === 204) {
                     closeCreateModal();
-                    refresh();
+                    // refresh();
                 }
             });
         } catch (error) {
@@ -60,7 +61,7 @@ const MemberPage = () => {
                             }}
                         />
                         <button
-                            className="px-4 py-2 bg-blue-500 text-white rounded flex flex-row gap-1 justify-center ms-auto items-center"
+                            className="px-3 py-2 bg-slate-950 text-white rounded flex flex-row gap-1 justify-center ms-auto items-center"
                             onClick={openCreateModal}
                         >
                             Create
@@ -75,83 +76,17 @@ const MemberPage = () => {
                         ''
                     )}
 
-                    <table className="table-auto w-full">
-                        <thead className="bg-indigo-100 text-black">
-                            <tr>
-                                <th>No.</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Gender</th>
-                                <th>Join date</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data?.members
-                                .filter((x) => {
-                                    return x.name
-                                        .toLowerCase()
-                                        .startsWith(filter.toLowerCase());
-                                })
-                                .map((x, index) => {
-                                    console.log(x);
-                                    return (
-                                        <tr>
-                                            <td>{index + 1}.</td>
-                                            <td>
-                                                <Name
-                                                    name={x.name}
-                                                    imageUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQae9FkVDq-pht9_nec324ZbRxcuV7juKPPvA&s"
-                                                />
-                                            </td>
-                                            <td>{x.email}</td>
-                                            <td>{x.gender}</td>
-                                            <td>
-                                                {new Date(
-                                                    x.dateOfBirth
-                                                ).toLocaleDateString()}
-                                            </td>
-                                            <td>
-                                                {x.membershipDetail.length !==
-                                                0 ? (
-                                                    <StatusChips
-                                                        status="active"
-                                                        type={
-                                                            StatusChipType.success
-                                                        }
-                                                    />
-                                                ) : (
-                                                    <StatusChips
-                                                        status="inactive"
-                                                        type={
-                                                            StatusChipType.warning
-                                                        }
-                                                    />
-                                                )}
-                                            </td>
-                                            <td className="flex flex-row gap-2">
-                                                <button className="p-2 bg-indigo-100 text-indigo-500 rounded">
-                                                    <PencilIcon size={20} />
-                                                </button>
-
-                                                <button
-                                                    className="p-2 bg-indigo-500 text-indigo-100 rounded"
-                                                    onClick={() => {
-                                                        openConfirmationModal(
-                                                            x._id,
-                                                            index
-                                                        );
-                                                    }}
-                                                >
-                                                    <Trash size={20} />
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                        </tbody>
-                    </table>
+                    {!isLoading && (
+                        <DataTable
+                            data={
+                                membersData?.data.filter((x) =>
+                                    x.name.toLowerCase().startsWith(filter)
+                                ) || []
+                            }
+                            columns={columsn}
+                        />
+                    )}
+                    {isLoading && <p className="text-center">Loading...</p>}
                 </div>
             </div>
             <CreateMember
