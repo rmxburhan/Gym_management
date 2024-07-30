@@ -39,17 +39,5 @@ export const equipmentLogSchema = new Schema<IEquipmentLog>(
   }
 );
 
-equipmentLogSchema.virtual("adminDetail", {
-  ref: "User",
-  localField: "admin",
-  foreignField: "_id",
-});
-
-equipmentLogSchema.virtual("equipmentDetail", {
-  ref: "Equipment",
-  localField: "equipment",
-  foreignField: "_id",
-});
-
 const EquipmentLog = model("EquipmentLog", equipmentLogSchema);
 export default EquipmentLog;

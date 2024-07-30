@@ -14,7 +14,8 @@ route.get(
   authorize(["admin"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const classes = await classService.getClasses();
+      const { trainerId }: { trainerId?: string } = req.query;
+      const classes = await classService.getClasses(trainerId);
       return res.status(200).json({
         message: "Class success retrieved.",
         data: classes,

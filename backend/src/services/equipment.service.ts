@@ -2,7 +2,6 @@ import { existsSync, unlinkSync } from "fs";
 import Equipment from "../models/equipment.model";
 import path from "path";
 import EquipmentLog from "../models/equipment.log.model";
-import { NextFunction } from "express";
 
 export const getEquipments = async () =>
   await Equipment.find().sort({ createdAt: -1 });
@@ -12,7 +11,8 @@ export const getEquipment = async (id: string) =>
     .sort({ createdAt: -1 })
     .populate({
       path: "log",
-      populate: [{ path: "adminDetail", select: "name profile" }],
+      options: { sort: { createdAt: -1 } },
+      populate: [{ path: "admin", select: "name profile" }],
     });
 
 export const addEquipment = async (
@@ -89,8 +89,8 @@ export const addLog = async (
 
 export const getLog = async (id: string) =>
   await EquipmentLog.findById(id)
-    .populate({ path: "adminDetail", select: "name profile" })
-    .populate("equipmentDetail", "name image");
+    .populate({ path: "admin", select: "name profile" })
+    .populate("equipment", "name image");
 
 export const getLogs = async (query?: { equipmentId?: string }) => {
   const filter: { equipment?: string } = {};
@@ -98,8 +98,8 @@ export const getLogs = async (query?: { equipmentId?: string }) => {
   if (query?.equipmentId) filter.equipment = query.equipmentId;
   return await EquipmentLog.find(filter)
     .sort({ createdAt: -1 })
-    .populate({ path: "adminDetail", select: "name profile" })
-    .populate("equipmentDetail", "name image");
+    .populate({ path: "admin", select: "name profile" })
+    .populate("equipment", "name image");
 };
 
 export default {
