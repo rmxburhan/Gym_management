@@ -1,166 +1,182 @@
-import { FC, useState } from 'react';
-import Modal from '../../../components/Modal';
-import useAuth from '../../../context/Auth';
-import { useNavigate } from 'react-router';
+import { FC, useEffect, useState } from 'react';
 import usePost from '@/hooks/usePost';
+import useHide from '@/context/SideBarState';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { postClassPayload } from './data';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import ComboBox from '@/components/ui/combobox';
+import useGet from '@/hooks/useGet';
+import { getTrainersResponse } from '../trainers/data';
+import { useNavigate } from 'react-router';
 
-interface payload {
-    name: string;
-    description: string;
-    date: string;
-    maxParticipant: number;
-    trainerId: string;
-}
-
-interface Props {
-    isModalVisible: boolean;
-    onClose: () => void;
-}
-const CreateClass: FC<Props> = ({ isModalVisible, onClose }) => {
-    const { post: createClass } = usePost('classes');
-    const { logout } = useAuth();
-    const [payload, setPayload] = useState<payload>({
-        name: '',
-        description: '',
-        maxParticipant: 0,
-        date: '',
-        trainerId: '',
-    });
-
+const CreateClass: FC = () => {
+    const { setActiveSideBar } = useHide();
+    const { post: createClass, error, isLoading } = usePost('classes');
+    const {
+        data: trainersData,
+        // error: errorGetTrainers,
+        // isLoading: isLoadingTrainer,
+    } = useGet<getTrainersResponse>('trainers');
     const navigate = useNavigate();
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setValue,
+    } = useForm<postClassPayload>();
 
-    const onChangeHandler = (e: any) => {
-        const data = { ...payload, [e.target.name]: e.target.value };
-        setPayload(data);
-    };
-
-    const submitHandler = (e: any) => {
-        e.preventDefault();
-        createClass(payload)
-            .then((response: any) => {
-                console.log('create class response', response);
-                if (response.status === 200) {
-                    reset();
-                    onClose();
+    const onSubmit: SubmitHandler<postClassPayload> = (
+        values: postClassPayload
+    ) => {
+        createClass(values)
+            .then((response) => {
+                console.log(response);
+                if (response.status === 200 || response.status === 201) {
+                    alert('Success create class');
+                    navigate('/dashboard/classes');
+                    navigate;
+                } else {
+                    alert('Failed to create class');
                 }
             })
-            .catch((error) => {
-                alert(error.message);
-            });
+            .catch((err) => console.error);
     };
 
-    const reset = () => {
-        const data = {
-            ...payload,
-            name: '',
-            description: '',
-            maxParticipant: 0,
-            date: '',
-            trainerId: '',
-        };
-        setPayload(data);
-    };
+    const onSelectTrainer = (value: string) => setValue('trainer', value);
+
+    useEffect(() => setActiveSideBar('/dashboard/classes'), []);
 
     return (
         <>
-            <Modal
-                isModalVisible={isModalVisible}
-                onClose={onClose}
-                closeButton={true}
-            >
-                <h2 className="text-2xl font-bold text-black">Create</h2>
-                <form onSubmit={submitHandler} className="flex flex-col">
-                    <label
-                        htmlFor="name"
-                        className="text-md text-black font-semibold my-2"
-                    >
-                        Name
-                    </label>
-                    <input
-                        className="rounded px-4 py-2"
-                        type="text"
-                        name="name"
-                        id="name"
-                        required
-                        value={payload?.name}
-                        onChange={onChangeHandler}
-                    />
-                    <label
-                        htmlFor="description"
-                        className="text-md text-black font-semibold my-2"
-                    >
-                        Description
-                    </label>
-                    <input
-                        className="rounded px-4 py-2"
-                        type="text"
-                        name="description"
-                        id="description"
-                        required
-                        value={payload?.description}
-                        onChange={onChangeHandler}
-                    />
-                    <label
-                        htmlFor="trainerId"
-                        className="text-md text-black font-semibold my-2"
-                    >
-                        Trainer
-                    </label>
-                    <input
-                        className="rounded px-4 py-2"
-                        type="text"
-                        name="trainerId"
-                        id="trainerId"
-                        required
-                        value={payload.trainerId}
-                        onChange={onChangeHandler}
-                    />
-                    <label
-                        htmlFor="maxParticipant"
-                        className="text-md text-black font-semibold my-2"
-                    >
-                        Max participant
-                    </label>
-                    <input
-                        className="rounded px-4 py-2"
-                        type="number"
-                        name="maxParticipant"
-                        id="maxParticipant"
-                        required
-                        value={payload.maxParticipant}
-                        onChange={onChangeHandler}
-                    />
-                    <label
-                        htmlFor="date"
-                        className="text-md text-black font-semibold my-2"
-                    >
-                        Date
-                    </label>
-                    <input
-                        className="rounded px-4 py-2"
-                        type="date"
-                        name="date"
-                        id="date"
-                        required
-                        value={payload.date.toString()}
-                        onChange={onChangeHandler}
-                    />
-                    <div className="flex flex-row gap-4">
-                        <button
-                            type="button"
-                            className="ms-auto bg-indigo-100 text-indigo-800 px-6 py-2 rounded border-none mt-4"
-                            onClick={reset}
-                        >
-                            Reset
-                        </button>
-                        <input
-                            type="submit"
-                            value="Save"
-                            className="bg-indigo-800 text-indigo-100 px-6 py-2 rounded border-none mt-4"
+            <h2 className="text-3xl font-medium text-black mb-8">
+                Create class
+            </h2>
+            <div className="bg-white px-4 py-6 rounded-xl border w-full max-w-xl">
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="flex flex-col"
+                >
+                    <div className="grid w-full items-center gap-1.5 mb-4">
+                        <Label htmlFor="name">Name</Label>
+                        <Input
+                            type="text"
+                            id="name"
+                            {...register('name', {
+                                required: 'Name is required',
+                            })}
                         />
+                        <span className="text-xs text-gray-500">
+                            Name of the class
+                        </span>
+                        {errors.name && (
+                            <p className="text-xs text-red-600 font-semibold">
+                                {errors.name.message}
+                            </p>
+                        )}
                     </div>
+                    <div className="grid w-full items-center gap-1.5 mb-4">
+                        <Label htmlFor="description">Description</Label>
+                        <Input
+                            type="text"
+                            id="description"
+                            {...register('description', {
+                                required: 'Description is required',
+                            })}
+                        />
+                        <span className="text-xs text-gray-500">
+                            Fill the description for your class so the member
+                            know activity during the class
+                        </span>
+                        {errors.description && (
+                            <p className="text-xs text-red-600 font-medium">
+                                {errors.description.message}
+                            </p>
+                        )}
+                    </div>
+                    <div className="grid w-full items-center gap-1.5 mb-4">
+                        <Label htmlFor="trainer">Trainer</Label>
+                        <ComboBox
+                            datas={
+                                trainersData?.data
+                                    ? trainersData?.data.map((x) => {
+                                          return {
+                                              value: x._id,
+                                              label: x.name,
+                                          };
+                                      })
+                                    : []
+                            }
+                            onSelect={onSelectTrainer}
+                            displayText="Select trainer..."
+                            searchPlaceHolder="Search trainer name..."
+                            {...register('trainer', {
+                                required: 'Trainer cannot be empty',
+                            })}
+                        />
+                        <span className="text-xs text-gray-500">
+                            Select trainer who will become mentor in the class
+                        </span>
+                        {errors.trainer && (
+                            <p className="text-xs text-red-600 font-medium">
+                                {errors.trainer.message}
+                            </p>
+                        )}
+                    </div>
+                    <div className="grid w-full items-center gap-1.5 mb-4">
+                        <Label htmlFor="maxParticipant">Max participant</Label>
+                        <Input
+                            type="number"
+                            id="maxParticipant"
+                            min="0"
+                            {...register('maxParticipant', {
+                                required: 'Max participant cannot be empty',
+                                valueAsNumber: true,
+                                min: 0,
+                            })}
+                        />
+
+                        <span className="text-xs text-gray-500">
+                            Max participants in a class
+                        </span>
+                        {errors.maxParticipant && (
+                            <p className="text-xs text-red-600 font-medium">
+                                {errors.maxParticipant.message}
+                            </p>
+                        )}
+                    </div>
+                    <div className="grid w-full items-center gap-1.5 mb-4">
+                        <Label htmlFor="date">Date</Label>
+                        <Input
+                            type="date"
+                            id="date"
+                            {...register('date', {
+                                required: true,
+                            })}
+                        />
+                        <span className="text-xs text-gray-500">
+                            Date when the class will be started
+                        </span>
+                        {errors.date && (
+                            <p className="text-xs text-red-600 font-medium">
+                                {errors.date.message}
+                            </p>
+                        )}
+                    </div>
+                    {isLoading && (
+                        <p className="mb-1.5 p-1 text-center">Loading...</p>
+                    )}
+                    {error && (
+                        <p className="mb-1.5 text-white p-2 text-center bg-red-500 text-xs font-medium rounded">
+                            {error}
+                        </p>
+                    )}
+                    <Button type="submit" className="font-medium">
+                        Submit
+                    </Button>
                 </form>
-            </Modal>
+            </div>
         </>
     );
 };

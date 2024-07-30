@@ -3,6 +3,9 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { FC } from 'react';
 import usePost from '@/hooks/usePost';
 import useAuth from '@/context/Auth';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
 interface FormValues {
     email: string;
@@ -27,14 +30,16 @@ const Login: FC = () => {
                     const data = response.data;
                     setToken(data.token);
                     setUser(data.data);
-                    // navigate('/dashboard');
-                    alert('login success');
+                    navigate('/dashboard');
+                    // alert('login success');
                 } else if (response.status === 422) {
                     alert('Redirect to personal information form');
                     // TODO : this is for member but i will do for admin first so keep remind me
                 }
             })
-            .catch((err) => console.error);
+            .catch((err) => {
+                console.error(err);
+            });
     };
 
     return (
@@ -43,8 +48,8 @@ const Login: FC = () => {
                 <h2 className="text-xl font-bold w-[400px] mb-4">Login</h2>
                 <form onSubmit={handleSubmit(onSubmit)} className="text-sm">
                     <div className="flex flex-col mb-4 gap-2">
-                        <label htmlFor="email">Email</label>
-                        <input
+                        <Label htmlFor="email">Email</Label>
+                        <Input
                             type="email"
                             id="email"
                             {...register('email', {
@@ -54,7 +59,6 @@ const Login: FC = () => {
                                     message: 'Invalid email address',
                                 },
                             })}
-                            className="rounded px-4 py-2"
                         />
                         {errors.email && (
                             <p className="text-red-500 text-xs font-medium">
@@ -64,13 +68,12 @@ const Login: FC = () => {
                     </div>
 
                     <div className="flex flex-col mb-4 gap-2">
-                        <label htmlFor="password">Password</label>
-                        <input
+                        <Label htmlFor="password">Password</Label>
+                        <Input
                             type="password"
                             {...register('password', {
                                 required: 'Password is required',
                             })}
-                            className="rounded px-4 py-2"
                         />
 
                         {errors.password && (
@@ -86,12 +89,9 @@ const Login: FC = () => {
                         </p>
                     )}
 
-                    <button
-                        type="submit"
-                        className="w-full bg-black text-white rounded font-bold px-4 py-2"
-                    >
+                    <Button type="submit" className="w-full">
                         Submit
-                    </button>
+                    </Button>
                 </form>
             </div>
         </div>

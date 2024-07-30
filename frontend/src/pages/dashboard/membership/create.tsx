@@ -1,133 +1,165 @@
-import Modal from '@/components/Modal';
 import usePost from '@/hooks/usePost';
-import { FC, useState } from 'react';
+import React, { useEffect } from 'react';
 import { createMembershipRequest } from './data';
-import { isAxiosError } from 'axios';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
+import useHide from '@/context/SideBarState';
 
-interface Props {
-    visible: boolean;
-    onClose: () => void;
-}
-
-const CreateMembership: FC<Props> = ({ visible, onClose }) => {
-    if (!visible) return '';
-
+const CreateMembership: React.FC = () => {
+    const { setActiveSideBar } = useHide();
     const { error, post: createMembership } = usePost('memberships');
-    const [payload, setPayload] = useState<createMembershipRequest>({
-        description: '',
-        duration: 0,
-        name: '',
-        price: 0,
-    });
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<createMembershipRequest>();
+    const navigate = useNavigate();
 
-    const submitHandler = (e: any) => {
-        e.preventDefault();
-        createMembership(payload)
+    const submitHandler: SubmitHandler<createMembershipRequest> = (
+        values: createMembershipRequest
+    ) => {
+        createMembership(values)
             .then((response) => {
-                if (response.status === 200) {
-                    onClose();
+                if (response.status === 200 || response.status === 201) {
+                    alert('Create membership success');
+                    navigate('/dashboard/memberships');
+                } else {
+                    alert('Failed create memberships');
                 }
             })
             .catch((err) => {
-                if (isAxiosError(err)) {
-                    console.error(err);
-                }
+                console.error(err);
             });
     };
 
-    const reset = () => {
-        const newPayload = {
-            ...payload,
-            description: '',
-            duration: 0,
-            name: '',
-            price: 0,
-        };
+    useEffect(() => setActiveSideBar('/dashboard/memberships'), []);
 
-        setPayload(newPayload);
-    };
-
-    const onChangeHandler = (e: any) => {
-        const newPayload = { ...payload, [e.target.name]: e.target.value };
-        setPayload(newPayload);
-    };
     return (
-        <Modal onClose={onClose} isModalVisible={visible} closeButton={true}>
-            <div className="w-[600px]">
-                <h2 className="text-2xl font-bold mb-2">Create</h2>
-                {error ? (
-                    <div className="bg-red-500 text-white p-4 rounded mb-2">
-                        {error}
+        <div className="px-4">
+            <h2 className="text-2xl font-bold mb-4">Create membership</h2>
+            <div className="max-w-[600px] bg-white px-4 py-6 border rounded-xl">
+                <form
+                    onSubmit={handleSubmit(submitHandler)}
+                    className="flex flex-col gap-1.5"
+                >
+                    <div className="grid gap-1.5 mb-2">
+                        <Label htmlFor="name" className="">
+                            Name
+                        </Label>
+                        <Input
+                            id="name"
+                            type="text"
+                            {...register('name', {
+                                required: 'Name is required',
+                            })}
+                        />
+                        {errors.name && (
+                            <p className="text-red-600 text-xs">
+                                {errors.name.message}
+                            </p>
+                        )}
+                        <p className="text-muted-foreground text-xs">
+                            Name or title of the membership
+                        </p>
                     </div>
-                ) : (
-                    ''
-                )}
-                <form onSubmit={submitHandler} className="flex flex-col">
-                    <label htmlFor="name" className="mb-2">
-                        Name
-                    </label>
-                    <input
-                        name="name"
-                        id="name"
-                        type="text"
-                        required
-                        value={payload.name}
-                        onChange={onChangeHandler}
-                        className="rounded mb-2 px-4 py-2"
-                    />
-                    <label htmlFor="description" className="mb-2">
-                        Description
-                    </label>
-                    <textarea
-                        name="description"
-                        id="description"
-                        required
-                        value={payload.description}
-                        onChange={onChangeHandler}
-                        className="rounded mb-2 px-4 py-2 border border-black outline-none"
-                    />
-                    <label htmlFor="price" className="mb-2">
-                        Price
-                    </label>
-                    <input
-                        name="price"
-                        id="price"
-                        type="number"
-                        required
-                        value={payload.price}
-                        onChange={onChangeHandler}
-                        className="rounded mb-2 px-4 py-2"
-                    />
-                    <label htmlFor="duration" className="mb-2">
-                        Duration (days)
-                    </label>
-                    <input
-                        name="duration"
-                        id="duration"
-                        type="text"
-                        required
-                        value={payload.duration}
-                        onChange={onChangeHandler}
-                        className="rounded mb-2 px-4 py-2"
-                    />
-                    <div className="flex flex-row gap-2 justify-end mt-2">
-                        <button
-                            type="button"
-                            onClick={reset}
-                            className="bg-gray-100 text-gray-800 px-4 py-2 rounded"
-                        >
-                            Reset
-                        </button>
-                        <button
-                            type="submit"
-                            className="bg-indigo-500 text-white rounded"
-                        >
-                            Save
-                        </button>
+                    <div className="grid gap-1.5 mb-2">
+                        <Label htmlFor="description" className="">
+                            Description
+                        </Label>
+                        <Textarea
+                            id="description"
+                            {...register('description', {
+                                required: 'Description is required',
+                            })}
+                        />
+                        {errors.description && (
+                            <p className="text-red-600 text-xs">
+                                {errors.description.message}
+                            </p>
+                        )}
+                        <p className="text-muted-foreground text-xs">
+                            Detail about your membership
+                        </p>
                     </div>
+                    <div className="grid gap-1.5 mb-2">
+                        <Label htmlFor="price" className="">
+                            Price
+                        </Label>
+                        <Input
+                            id="price"
+                            type="number"
+                            {...register('price', {
+                                min: 0,
+                                required: 'Price is required',
+                            })}
+                        />
+                        {errors.price && (
+                            <p className="text-red-600 text-xs">
+                                {errors.price.message}
+                            </p>
+                        )}
+                        <p className="text-muted-foreground text-xs">
+                            Price of the membership in format IDR
+                        </p>
+                    </div>
+                    <div className="grid gap-1.5 mb-2">
+                        <Label htmlFor="discountPrice" className="">
+                            Discounted Price
+                        </Label>
+                        <Input
+                            id="discountPrice"
+                            type="number"
+                            {...register('discountPrice', {
+                                min: 0,
+                            })}
+                        />
+                        {errors.discountPrice && (
+                            <p className="text-red-600 text-xs">
+                                {errors.discountPrice.message}
+                            </p>
+                        )}
+                        <p className="text-muted-foreground text-xs">
+                            Price if you want to place discount in your
+                            membership the price field needed for display how
+                            much you discounted price
+                        </p>
+                    </div>
+                    <div className="grid gap-1.5 mb-2">
+                        <Label htmlFor="duration" className="">
+                            Duration (days)
+                        </Label>
+                        <Input
+                            id="duration"
+                            type="text"
+                            {...register('duration', {
+                                required: 'Description is required',
+                            })}
+                        />
+                        {errors.duration && (
+                            <p className="text-red-600 text-xs">
+                                {errors.duration.message}
+                            </p>
+                        )}
+                        <p className="text-muted-foreground text-xs">
+                            Duration of membership (how many days the membership
+                            active since registration)
+                        </p>
+                    </div>
+                    {error ? (
+                        <div className="bg-red-600 text-white p-2 rounded  text-xs text-center">
+                            {error}
+                        </div>
+                    ) : (
+                        ''
+                    )}
+                    <Button type="submit">Save</Button>
                 </form>
             </div>
-        </Modal>
+        </div>
     );
 };
 

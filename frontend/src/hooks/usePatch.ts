@@ -3,31 +3,18 @@ import { api } from '../network/api';
 import { useNavigate } from 'react-router';
 import { isAxiosError } from 'axios';
 
-export enum PostContentType {
-    FormData,
-    Json,
-}
-
-const usePost = (url: string, type: PostContentType = PostContentType.Json) => {
+const usePatch = (url: string) => {
     const [isLoading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
-    const post = async (payload: any, extensionUrl?: string) => {
+    const patch = async (payload: any, extensionUrl?: string) => {
         try {
             setError('');
             setLoading(true);
-            const response = await api.post(
+            const response = await api.patch(
                 url + `/${extensionUrl || ''}`,
-                payload,
-                {
-                    headers: {
-                        'Content-Type':
-                            type == PostContentType.Json
-                                ? 'application/json'
-                                : 'multipart/form-data',
-                    },
-                }
+                payload
             );
             return response;
         } catch (error: any) {
@@ -56,7 +43,7 @@ const usePost = (url: string, type: PostContentType = PostContentType.Json) => {
     return {
         isLoading,
         error,
-        post,
+        patch,
     };
 };
-export default usePost;
+export default usePatch;

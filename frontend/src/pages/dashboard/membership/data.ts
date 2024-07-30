@@ -27,4 +27,5 @@ export interface createMembershipRequest {
     price: number;
     description: string;
     duration: number;
+    discountPrice: number;
 }

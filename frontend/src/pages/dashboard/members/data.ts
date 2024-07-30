@@ -1,3 +1,5 @@
+import { addressSchema } from '../trainers/data';
+
 export interface getMembersResponseData {
     message: string;
     data: Member[];
@@ -41,8 +43,9 @@ export type createMemberRequest = {
     name: string;
     email: string;
     password: string;
-    dateOfBirth: string;
-    gender: string;
-    image?: string;
-    address: string;
+    birthDate: string;
+    gender: 'male' | 'female';
+    profile?: FileList | null;
+    phoneNumber: string;
+    addresses: [addressSchema];
 };

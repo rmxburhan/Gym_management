@@ -11,6 +11,7 @@ const usePut = (url: string) => {
     const update = async (payload: any): Promise<any | null> => {
         setLoading(true);
         try {
+            setError('');
             const response = await axios.put(url, payload);
             return response;
         } catch (error) {

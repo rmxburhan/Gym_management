@@ -1,29 +1,49 @@
-import { PencilIcon, Trash } from 'lucide-react';
-import StatusChips, { StatusChipType } from '@/components/StatusChips';
-import Name from '@/components/Name';
 import SearchBox from '@/components/SearchBox';
 import { useState } from 'react';
 import useGet from '@/hooks/useGet';
 import { getEquipmentsResponse } from './data';
 import { DataTable } from '@/components/ui/data-table';
-import { columns } from './columns';
+import { columnsInit } from './columns';
+import Confirmation from '@/components/Confirmation';
+import { FileQuestionIcon } from 'lucide-react';
+import useDelete from '@/hooks/useDelete';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router';
 
 const Equipments = () => {
-    const { data } = useGet<getEquipmentsResponse>('equipments');
-
-    const [createModalVisibility, setCreateModalVisibility] =
-        useState<boolean>(false);
+    const { data, refresh } = useGet<getEquipmentsResponse>('equipments');
+    const { error, isLoading, remove } = useDelete('equipments');
+    const navigate = useNavigate();
     const [deleteConfirmationVisibility, setDeleteConfirmationVisibility] =
         useState<boolean>(false);
     const [filter, setFilter] = useState<string>('');
-    const openCreateModal = () => setCreateModalVisibility(true);
-    const closeCreateModal = () => setCreateModalVisibility(false);
+    const [selectedItem, setSelectedItem] = useState<{
+        id: string;
+        index: number;
+    } | null>(null);
 
     const closeConfirmationDelete = () =>
         setDeleteConfirmationVisibility(false);
-    const openConfirmationDelete = () => setDeleteConfirmationVisibility(true);
+    const openConfirmationDelete = (id: string, index: number) => {
+        setSelectedItem({ id, index });
+        setDeleteConfirmationVisibility(true);
+    };
 
-    const deleteHandler = () => {};
+    const deleteHandler = () => {
+        if (selectedItem) {
+            remove(selectedItem?.id)
+                .then((response) => {
+                    if (response?.status == 204) {
+                        closeConfirmationDelete();
+                        alert('Data deleted');
+                        refresh();
+                    } else {
+                        alert('Data failed delete');
+                    }
+                })
+                .catch((err) => console.error(err));
+        }
+    };
 
     return (
         <div>
@@ -34,95 +54,42 @@ const Equipments = () => {
                     className="border w-full px-6 py-8 rounded-3xl bg-white mb-8"
                 >
                     <div className="flex flex-row mb-4">
-                        <SearchBox onSearch={() => {}} />
-                        <button className="px-4 py-2 bg-blue-500 text-white rounded flex flex-row gap-1 justify-center ms-auto items-center">
+                        <SearchBox
+                            onSearch={(value: string) => {
+                                setFilter(value);
+                            }}
+                        />
+                        <Button
+                            className="ms-auto"
+                            onClick={() => navigate('create')}
+                        >
                             Create
-                        </button>
+                        </Button>
                     </div>
-                    {/* <DataTable columns={columns} data={data ? data.equipments.} /> */}
-                    <table className="table-auto w-full">
-                        <thead className="bg-indigo-100 text-black">
-                            <tr>
-                                <th>No.</th>
-                                <th>Name</th>
-                                <th>Qty</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data?.equipments
-                                .filter((x) =>
-                                    x.name.toLowerCase().startsWith(filter)
-                                )
-                                .map((x, index) => {
-                                    return (
-                                        <tr>
-                                            <td>{index + 1}.</td>
-                                            <td>{x.name}</td>
-                                            <td>{x.qty}</td>
-                                            <td>
-                                                <div className="flex flex-row gap-2 my-auto">
-                                                    <button className="p-2 bg-indigo-100 text-indigo-500 rounded">
-                                                        <PencilIcon size={20} />
-                                                    </button>
-
-                                                    <button className="p-2 bg-indigo-500 text-indigo-100 rounded">
-                                                        <Trash size={20} />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                        </tbody>
-                    </table>
-                </div>
-
-                <div
-                    id="table-container"
-                    className="border w-full px-6 py-8 rounded-3xl bg-white"
-                >
-                    <h2 className="text-xl font-semibold mb-4">
-                        Equipment Logs
-                    </h2>
-                    <table className="table-auto w-full">
-                        <thead className="bg-indigo-100 text-black">
-                            <tr>
-                                <th>No.</th>
-                                <th>Name</th>
-                                <th>Qty</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data?.equipments
-                                .filter((x) =>
-                                    x.name.toLowerCase().startsWith(filter)
-                                )
-                                .map((x, index) => {
-                                    return (
-                                        <tr>
-                                            <td>{index + 1}.</td>
-                                            <td>{x.name}</td>
-                                            <td>{x.qty}</td>
-                                            <td>
-                                                <div className="flex flex-row gap-2 my-auto">
-                                                    <button className="p-2 bg-indigo-100 text-indigo-500 rounded">
-                                                        <PencilIcon size={20} />
-                                                    </button>
-
-                                                    <button className="p-2 bg-indigo-500 text-indigo-100 rounded">
-                                                        <Trash size={20} />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                        </tbody>
-                    </table>
+                    <DataTable
+                        columns={columnsInit({
+                            deleteMethod: openConfirmationDelete,
+                        })}
+                        data={
+                            data
+                                ? data.data.filter((x) =>
+                                      x.name
+                                          .toLowerCase()
+                                          .startsWith(filter.toLowerCase())
+                                  )
+                                : []
+                        }
+                    />
                 </div>
             </div>
+            <Confirmation
+                Icon={FileQuestionIcon}
+                body="Do you want to delete this equipments data"
+                header="Delete confirmation?"
+                onClose={closeConfirmationDelete}
+                onYes={deleteHandler}
+                visible={deleteConfirmationVisibility}
+            />
         </div>
     );
 };

@@ -2,9 +2,7 @@ export interface Equipment {
     _id: string;
     name: string;
     qty: number;
-    image: string;
-    createdAt: string;
-    updatedAt: string;
+    image?: string;
 }
 
 export interface EquipmentLog {
@@ -17,5 +15,12 @@ export interface EquipmentLog {
 }
 
 export interface getEquipmentsResponse {
-    equipments: Equipment[];
+    message: string;
+    data: Equipment[];
+}
+
+export interface createEquipmentsRequest {
+    name: string;
+    qty: string;
+    image?: FileList | null;
 }

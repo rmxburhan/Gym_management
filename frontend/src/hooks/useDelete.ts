@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { isAxiosError } from 'axios';
+import { useState } from 'react';
+import { AxiosResponse, isAxiosError } from 'axios';
 import { useNavigate } from 'react-router';
 import { api } from '@/network/api';
 
@@ -9,17 +9,10 @@ const useDelete = (url: string) => {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (error) {
-            setTimeout(() => {
-                setError(null);
-            }, 5000);
-        }
-    }, [error]);
-
-    const remove = async (id: string): Promise<any | null> => {
+    const remove = async (id: string): Promise<AxiosResponse | any> => {
         setLoading(true);
         try {
+            setError('');
             const response = await api.delete(url + `/${id}`);
             return response;
         } catch (error) {
@@ -27,8 +20,12 @@ const useDelete = (url: string) => {
                 if (error.response?.status === 401) {
                     navigate('/login');
                 } else if (error.response?.status === 403) {
+                    // show forbidden
                 } else {
-                    setError(error.response?.data.message);
+                    setError(
+                        error.response?.data.message ||
+                            error.response?.data.errors
+                    );
                 }
             }
         } finally {

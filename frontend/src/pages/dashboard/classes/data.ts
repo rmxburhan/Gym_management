@@ -1,7 +1,5 @@
-export interface getClassesResponse {
-    message: string;
-    data: Class[];
-}
+import useDelete from '@/hooks/useDelete';
+import usePost from '@/hooks/usePost';
 
 export interface Class {
     _id: string;
@@ -17,4 +15,17 @@ export interface Class {
     participants: [];
     createdAt: string;
     updatedAt: string;
+}
+
+export interface getClassesResponse {
+    message: string;
+    data: Class[];
+}
+
+export interface postClassPayload {
+    name: string;
+    description: string;
+    date: string;
+    maxParticipant: number;
+    trainer: string;
 }

@@ -1,26 +1,28 @@
 import { TrashIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { getEmployee } from '@/network/api';
-import { Trainer, getTrainersResponse } from './data';
+import { useState } from 'react';
+import { getTrainersResponse } from './data';
 import SearchBox from '@/components/SearchBox';
 import Confirmation from '@/components/Confirmation';
 import { DataTable } from '@/components/ui/data-table';
 import useGet from '@/hooks/useGet';
-import { columns } from './columns';
+import { columnsInit } from './columns';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router';
+import useDelete from '@/hooks/useDelete';
 
-const EmployeePage = () => {
+const TrainerPage = () => {
+    const { data, error, isLoading, refresh } =
+        useGet<getTrainersResponse>('trainers');
+    const { remove, error: errorDeleteTrainer } = useDelete('trainers');
+    const navigate = useNavigate();
+
     const [filter, setFilter] = useState<string>('');
-    const [employee, setEmployee] = useState<Trainer[]>([]);
     const [deleteModalVisibility, setDeleteModalVisibility] =
-        useState<boolean>(false);
-    const [createModalVisibility, setCreateModalVisibility] =
         useState<boolean>(false);
     const [selectedMember, setSelectedMember] = useState<{
         id: string;
         index: number;
     } | null>(null);
-
-    // const {remove} = useDelete("trainers");
 
     const openDeleteModal = (id: string, index: number) => {
         setSelectedMember({ id, index });
@@ -28,15 +30,21 @@ const EmployeePage = () => {
     };
     const cloesDeleteModal = () => setDeleteModalVisibility(false);
 
-    const openCreateModal = () => setCreateModalVisibility(true);
-    const closeCreateModal = () => setCreateModalVisibility(false);
-
     const deleteHandler = () => {
         if (selectedMember) {
+            remove(selectedMember.id)
+                .then((response) => {
+                    if (response.status === 204) {
+                        refresh();
+                        cloesDeleteModal();
+                        alert('Delete trainer success');
+                    } else {
+                        alert('Delete trainer failed');
+                    }
+                })
+                .catch((err) => console.error(err));
         }
     };
-
-    const { data, error, isLoading } = useGet<getTrainersResponse>('trainers');
 
     return (
         <div>
@@ -52,10 +60,26 @@ const EmployeePage = () => {
                                 setFilter(name);
                             }}
                         />
-                        <button className="px-3 py-1 bg-slate-950 text-xs font-semibold text-white rounded flex flex-row gap-1 justify-center ms-auto items-center">
+                        <Button
+                            onClick={() => {
+                                navigate('create');
+                            }}
+                            className="ms-auto"
+                        >
                             Create
-                        </button>
+                        </Button>
                     </div>
+                    {errorDeleteTrainer && (
+                        <p className="bg-red-600 text-sm text-white p-2 rounded mb-2">
+                            {errorDeleteTrainer}
+                        </p>
+                    )}
+                    {error && (
+                        <p className="text-sm text-white bg-red-600 rounded p-2 mb-2">
+                            {error}
+                        </p>
+                    )}
+
                     <DataTable
                         data={
                             data
@@ -66,8 +90,17 @@ const EmployeePage = () => {
                                   })
                                 : []
                         }
-                        columns={columns}
+                        columns={columnsInit({
+                            deleteHandler: openDeleteModal,
+                            updateHandler: () => {},
+                        })}
                     />
+
+                    {isLoading && (
+                        <p className="text-sm text-center font-medium">
+                            Loading...
+                        </p>
+                    )}
                 </div>
             </div>
             <Confirmation
@@ -82,4 +115,4 @@ const EmployeePage = () => {
     );
 };
 
-export default EmployeePage;
+export default TrainerPage;

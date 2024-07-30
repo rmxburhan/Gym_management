@@ -1,31 +1,31 @@
 import { FileQuestionIcon } from 'lucide-react';
 import SearchBox from '@/components/SearchBox';
 import { useState } from 'react';
-import CreateMember from './create';
 import Confirmation from '@/components/Confirmation';
 import useDelete from '@/hooks/useDelete';
 import { DataTable } from '@/components/ui/data-table';
 import { getMembersResponseData } from './data';
 import useGet from '@/hooks/useGet';
-import { columsn } from './colums';
+import { columnsInit } from './colums';
+import { useNavigate } from 'react-router';
+import { Button } from '@/components/ui/button';
 
 const MemberPage = () => {
-    const { data: membersData, isLoading } =
-        useGet<getMembersResponseData>('members');
+    const {
+        data: membersData,
+        isLoading,
+        refresh,
+    } = useGet<getMembersResponseData>('members');
+    const { remove, error } = useDelete('members');
+    const navigate = useNavigate();
 
     const [filter, setFilter] = useState('');
-    const [createModalVisible, setCreateModal] = useState<boolean>(false);
     const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
         useState<boolean>(false);
     const [selectedMember, setSelectedMember] = useState<{
         memberId: string;
         index: number;
     } | null>(null);
-
-    const closeCreateModal = () => setCreateModal(false);
-    const openCreateModal = () => setCreateModal(true);
-
-    const { remove, error } = useDelete('members');
 
     const openConfirmationModal = (id: string, index: number) => {
         setSelectedMember({ memberId: id, index });
@@ -37,8 +37,11 @@ const MemberPage = () => {
         try {
             remove(selectedMember?.memberId || '').then((response) => {
                 if (response.status === 204) {
-                    closeCreateModal();
-                    // refresh();
+                    closeConfirmationModal();
+                    refresh();
+                    alert('Member deleted');
+                } else {
+                    alert('Failed to delete member');
                 }
             });
         } catch (error) {
@@ -60,16 +63,16 @@ const MemberPage = () => {
                                 setFilter(name);
                             }}
                         />
-                        <button
-                            className="px-3 py-2 bg-slate-950 text-white rounded flex flex-row gap-1 justify-center ms-auto items-center"
-                            onClick={openCreateModal}
+                        <Button
+                            className="ms-auto"
+                            onClick={() => navigate('create')}
                         >
                             Create
-                        </button>
+                        </Button>
                     </div>
 
                     {error ? (
-                        <div className="bg-red-500 rounded-t p-4 text-sm text-white transition-all duration-200">
+                        <div className="bg-red-500 rounded-t p-2 text-xs text-white transition-all duration-200 rounded mb-2">
                             {error}
                         </div>
                     ) : (
@@ -83,16 +86,15 @@ const MemberPage = () => {
                                     x.name.toLowerCase().startsWith(filter)
                                 ) || []
                             }
-                            columns={columsn}
+                            columns={columnsInit({
+                                deleteHandler: openConfirmationModal,
+                                updateHandler: () => {},
+                            })}
                         />
                     )}
                     {isLoading && <p className="text-center">Loading...</p>}
                 </div>
             </div>
-            <CreateMember
-                visible={createModalVisible}
-                onClose={closeCreateModal}
-            />
             <Confirmation
                 onYes={deleteHandler}
                 onClose={closeConfirmationModal}
