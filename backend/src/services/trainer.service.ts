@@ -98,9 +98,13 @@ export const updateTrainer = async (
   return await trainer.save();
 };
 
+export const getTrainer = async (id: string) =>
+  await User.findOne({ _id: id, role: "trainer", deletedAt: undefined });
+
 export default {
   getTrainers,
   deleteTrainer,
   addTrainer,
   updateTrainer,
+  getTrainer,
 };
