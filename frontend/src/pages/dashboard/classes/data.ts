@@ -1,6 +1,3 @@
-import useDelete from '@/hooks/useDelete';
-import usePost from '@/hooks/usePost';
-
 export interface Class {
     _id: string;
     name: string;
@@ -20,6 +17,10 @@ export interface Class {
 export interface getClassesResponse {
     message: string;
     data: Class[];
+}
+export interface getClassResponse {
+    message: string;
+    data: Class;
 }
 
 export interface postClassPayload {

@@ -1,7 +1,7 @@
 import { TrashIcon } from 'lucide-react';
 import { useState } from 'react';
 import useGet from '@/hooks/useGet';
-import { getMembershipResponse } from './data';
+import { getMembershipsResponse } from './data';
 import SearchBox from '@/components/SearchBox';
 import Confirmation from '@/components/Confirmation';
 import useDelete from '@/hooks/useDelete';
@@ -10,11 +10,11 @@ import { DataTable } from '@/components/ui/data-table';
 import { columnsInit } from './columns';
 import { Button } from '@/components/ui/button';
 import usePatch from '@/hooks/usePatch';
-import { Navigate, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 const MembershipPage = () => {
     const { data: membershipDatas, refresh } =
-        useGet<getMembershipResponse>('memberships');
+        useGet<getMembershipsResponse>('memberships');
     const { remove } = useDelete('memberships');
     const { patch: setStatusMemership } = usePatch('memberships');
     const navigate = useNavigate();
@@ -115,6 +115,7 @@ const MembershipPage = () => {
                         columns={columnsInit({
                             publishHandler: openPublishModal,
                             deleteHandler: openDeleteModal,
+                            updateHandler: (id: string) => navigate(id),
                         })}
                     />
                 </div>

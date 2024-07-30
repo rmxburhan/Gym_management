@@ -77,6 +77,7 @@ const ClassPage = () => {
                         }
                         columns={columnsInit({
                             deleteMethod: openConfirmationDelete,
+                            updateMethod: (id: string) => navigate(id),
                         })}
                     />
                 </div>

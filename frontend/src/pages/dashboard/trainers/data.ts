@@ -3,14 +3,16 @@ export interface Trainer {
     name: string;
     email: string;
     password: string;
-    profile: string;
+    profile?: string;
+    trainerDetail: {
+        identificationNumber: string;
+        phoneNumber: string;
+        bank: string;
+        bankNumber: string;
+        address: [addressSchema];
+    };
     role: string;
     createdAt: string;
-}
-
-export interface getTrainersResponse {
-    message: string;
-    data: Trainer[];
 }
 
 export interface addressSchema {
@@ -19,6 +21,16 @@ export interface addressSchema {
     state: string;
     street: string;
 }
+
+export interface getTrainersResponse {
+    message: string;
+    data: Trainer[];
+}
+export interface getTrainerResponse {
+    message: string;
+    data: Trainer;
+}
+
 export interface createTrainerRequest {
     name: string;
     email: string;

@@ -11,9 +11,14 @@ import {
 interface Props {
     publishHandler: (id: string, index: number) => void;
     deleteHandler: (id: string, index: number) => void;
+    updateHandler: (id: string, index: number) => void;
 }
 
-export const columnsInit = ({ publishHandler, deleteHandler }: Props) => {
+export const columnsInit = ({
+    publishHandler,
+    deleteHandler,
+    updateHandler,
+}: Props) => {
     const columns: ColumnDef<Membership>[] = [
         {
             accessorKey: 'name',
@@ -74,7 +79,12 @@ export const columnsInit = ({ publishHandler, deleteHandler }: Props) => {
                 const published = row.original.published;
                 return (
                     <div className="flex flex-row">
-                        <Button className="p-0 w-[40px] me-2">
+                        <Button
+                            className="p-0 w-[40px] me-2"
+                            onClick={() =>
+                                updateHandler(row.original._id, row.index)
+                            }
+                        >
                             <FileIcon size={18} />
                         </Button>
                         <Button

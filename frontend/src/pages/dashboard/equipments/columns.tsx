@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 
 interface Props {
     deleteMethod: (id: string, index: number) => void;
+    updateMethod: (id: string, index: number) => void;
 }
 
-export const columnsInit = ({ deleteMethod }: Props) => {
+export const columnsInit = ({ deleteMethod, updateMethod }: Props) => {
     const columns: ColumnDef<Equipment>[] = [
         {
             accessorKey: 'name',
@@ -39,7 +40,10 @@ export const columnsInit = ({ deleteMethod }: Props) => {
                 const data = row.original;
                 return (
                     <div className="flex flex-row">
-                        <Button className="p-0 w-[40px] me-2">
+                        <Button
+                            className="p-0 w-[40px] me-2"
+                            onClick={() => updateMethod(data._id, row.index)}
+                        >
                             <FileIcon size={18} />
                         </Button>
                         <Button

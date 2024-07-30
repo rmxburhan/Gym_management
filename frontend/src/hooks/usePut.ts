@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import { useNavigate } from 'react-router';
+import { api } from '@/network/api';
 
 const usePut = (url: string) => {
     const [isLoading, setLoading] = useState<boolean>(false);
@@ -12,7 +13,7 @@ const usePut = (url: string) => {
         setLoading(true);
         try {
             setError('');
-            const response = await axios.put(url, payload);
+            const response = await api.put(url, payload);
             return response;
         } catch (error) {
             if (isAxiosError(error)) {

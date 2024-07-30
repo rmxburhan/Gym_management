@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Popover, PopoverTrigger, PopoverContent } from './popover';
 import {
     Command,
@@ -16,6 +16,7 @@ interface Props {
     onSelect: (value: string) => void;
     searchPlaceHolder: string;
     displayText: string;
+    value?: string;
 }
 
 const ComboBox: FC<Props> = ({
@@ -23,6 +24,7 @@ const ComboBox: FC<Props> = ({
     onSelect,
     searchPlaceHolder,
     displayText,
+    value: selectedValue,
 }) => {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState('');
@@ -30,6 +32,12 @@ const ComboBox: FC<Props> = ({
     useEffect(() => {
         onSelect(value);
     }, [value]);
+
+    useEffect(() => {
+        if (selectedValue) {
+            setValue(selectedValue);
+        }
+    }, [selectedValue]);
 
     return (
         <Popover open={open} onOpenChange={setOpen}>

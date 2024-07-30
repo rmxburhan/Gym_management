@@ -57,7 +57,6 @@ const DashboardLayout: React.FC = () => {
                             <SideBarItem
                                 text={item.title}
                                 Icon={item.icon}
-                                alert={false}
                                 active={activeSideBar === item.path}
                             />
                         </Link>

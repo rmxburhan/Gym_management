@@ -88,7 +88,7 @@ const MemberPage = () => {
                             }
                             columns={columnsInit({
                                 deleteHandler: openConfirmationModal,
-                                updateHandler: () => {},
+                                updateHandler: (id: string) => navigate(id),
                             })}
                         />
                     )}

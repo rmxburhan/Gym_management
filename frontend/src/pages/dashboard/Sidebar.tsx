@@ -67,14 +67,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 interface SideBarItemProps {
     Icon: LucideIcon;
     text: string;
-    alert: boolean;
     active: boolean;
 }
 
 export const SideBarItem: React.FC<SideBarItemProps> = ({
     Icon,
     text,
-    alert,
     active,
 }) => {
     const { isHide } = useHide();

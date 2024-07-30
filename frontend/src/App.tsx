@@ -17,6 +17,7 @@ import Trainer from './pages/dashboard/trainers/page.';
 import CreateTrainer from './pages/dashboard/trainers/create';
 import CreateMember from './pages/dashboard/members/create';
 import CreateEquipment from './pages/dashboard/equipments/create';
+
 function App() {
     return (
         <>
@@ -34,6 +35,7 @@ function App() {
                             />
                             <Route path="members">
                                 <Route path="" element={<Member />} />
+                                <Route path=":id" element={<CreateMember />} />
                                 <Route
                                     path="create"
                                     element={<CreateMember />}
@@ -42,12 +44,17 @@ function App() {
                             <Route path="memberships">
                                 <Route path="" element={<Membership />} />
                                 <Route
+                                    path=":id"
+                                    element={<CreateMembership />}
+                                />
+                                <Route
                                     path="create"
                                     element={<CreateMembership />}
                                 />
                             </Route>
                             <Route path="classes">
                                 <Route path="" element={<ClassPage />} />
+                                <Route path=":id" element={<CreateClass />} />
                                 <Route
                                     path="create"
                                     element={<CreateClass />}
@@ -55,6 +62,7 @@ function App() {
                             </Route>
                             <Route path="trainers">
                                 <Route path="" element={<Trainer />} />
+                                <Route path=":id" element={<CreateTrainer />} />
                                 <Route
                                     path="create"
                                     element={<CreateTrainer />}
@@ -62,6 +70,10 @@ function App() {
                             </Route>
                             <Route path="equipments">
                                 <Route path="" element={<Equipments />} />
+                                <Route
+                                    path=":id"
+                                    element={<CreateEquipment />}
+                                />
                                 <Route
                                     path="create"
                                     element={<CreateEquipment />}

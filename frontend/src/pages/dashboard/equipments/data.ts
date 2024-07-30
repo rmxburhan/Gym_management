@@ -7,11 +7,19 @@ export interface Equipment {
 
 export interface EquipmentLog {
     _id: string;
-    equipmentId: string;
-    adminId: string;
-    descriptionn: string;
+    equipment:
+        | string
+        | {
+              _id: string;
+              name: string;
+          };
+    admin: {
+        _id: string;
+        name: string;
+    };
+    description: string;
     category: string;
-    qty?: number;
+    createdAt: string;
 }
 
 export interface getEquipmentsResponse {
@@ -19,8 +27,24 @@ export interface getEquipmentsResponse {
     data: Equipment[];
 }
 
+export interface getEquipmentResponse {
+    message: string;
+    data: {
+        _id: string;
+        name: string;
+        qty: number;
+        image?: string;
+        log: EquipmentLog[];
+    };
+}
+
 export interface createEquipmentsRequest {
     name: string;
-    qty: string;
+    qty: number;
     image?: FileList | null;
+}
+
+export interface addEquipmentLogRequest {
+    description: string;
+    category: string;
 }

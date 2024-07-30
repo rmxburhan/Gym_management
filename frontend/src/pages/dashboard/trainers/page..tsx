@@ -92,7 +92,7 @@ const TrainerPage = () => {
                         }
                         columns={columnsInit({
                             deleteHandler: openDeleteModal,
-                            updateHandler: () => {},
+                            updateHandler: (id: string) => navigate(id),
                         })}
                     />
 

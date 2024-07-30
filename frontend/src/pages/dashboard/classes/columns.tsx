@@ -6,9 +6,10 @@ import { FileIcon, TrashIcon } from 'lucide-react';
 
 interface Props {
     deleteMethod: (id: string, index: number) => void;
+    updateMethod: (id: string, index: number) => void;
 }
 
-export const columnsInit = ({ deleteMethod }: Props) => {
+export const columnsInit = ({ deleteMethod, updateMethod }: Props) => {
     const columns: ColumnDef<Class>[] = [
         {
             accessorKey: 'name',
@@ -37,7 +38,12 @@ export const columnsInit = ({ deleteMethod }: Props) => {
                 const data = row.original;
                 return (
                     <div className="flex flex-row">
-                        <Button className="w-[40px] p-0 me-2">
+                        <Button
+                            className="w-[40px] p-0 me-2"
+                            onClick={() => {
+                                updateMethod(data._id, row.index);
+                            }}
+                        >
                             <FileIcon size={18} />
                         </Button>
                         <Button

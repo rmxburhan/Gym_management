@@ -17,9 +17,14 @@ export interface Membership {
     discountPrice?: number;
 }
 
-export interface getMembershipResponse {
+export interface getMembershipsResponse {
     message: string;
     data: Membership[];
+}
+
+export interface getMembershipResponse {
+    message: string;
+    data: Membership;
 }
 
 export interface createMembershipRequest {
@@ -27,5 +32,5 @@ export interface createMembershipRequest {
     price: number;
     description: string;
     duration: number;
-    discountPrice: number;
+    discountPrice?: number | undefined;
 }

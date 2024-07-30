@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router';
 
 const Equipments = () => {
     const { data, refresh } = useGet<getEquipmentsResponse>('equipments');
-    const { error, isLoading, remove } = useDelete('equipments');
+    const { remove } = useDelete('equipments');
     const navigate = useNavigate();
     const [deleteConfirmationVisibility, setDeleteConfirmationVisibility] =
         useState<boolean>(false);
@@ -69,6 +69,7 @@ const Equipments = () => {
                     <DataTable
                         columns={columnsInit({
                             deleteMethod: openConfirmationDelete,
+                            updateMethod: (id: string) => navigate(id),
                         })}
                         data={
                             data
