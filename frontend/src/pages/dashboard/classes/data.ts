@@ -1,8 +1,3 @@
-export interface getClassesResponse {
-    message: string;
-    data: Class[];
-}
-
 export interface Class {
     _id: string;
     name: string;
@@ -17,4 +12,21 @@ export interface Class {
     participants: [];
     createdAt: string;
     updatedAt: string;
+}
+
+export interface getClassesResponse {
+    message: string;
+    data: Class[];
+}
+export interface getClassResponse {
+    message: string;
+    data: Class;
+}
+
+export interface postClassPayload {
+    name: string;
+    description: string;
+    date: string;
+    maxParticipant: number;
+    trainer: string;
 }

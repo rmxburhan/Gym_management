@@ -1,7 +1,4 @@
-export interface getMembersResponseData {
-    message: string;
-    data: Member[];
-}
+import { addressSchema } from '../trainers/data';
 
 export type Member = {
     _id: string;
@@ -12,12 +9,15 @@ export type Member = {
     memberDetail?: {
         gender: string;
         birthDate: string;
-        address: {
-            street: string;
-            city: string;
-            zip: string;
-            state: string;
-        };
+        phoneNumber: string;
+        address: [
+            {
+                street: string;
+                city: string;
+                zip: string;
+                state: string;
+            }
+        ];
         membership?: {
             _id: string;
             registerDate: string;
@@ -27,6 +27,16 @@ export type Member = {
         };
     };
 };
+
+export interface getMembersResponseData {
+    message: string;
+    data: Member[];
+}
+
+export interface getMemberResponseData {
+    message: string;
+    data: Member;
+}
 
 export type updateMemberRequest = {
     name?: string;
@@ -41,8 +51,9 @@ export type createMemberRequest = {
     name: string;
     email: string;
     password: string;
-    dateOfBirth: string;
-    gender: string;
-    image?: string;
-    address: string;
+    birthDate: string;
+    gender: 'male' | 'female';
+    profile?: FileList | null;
+    phoneNumber: string;
+    addresses: [addressSchema];
 };

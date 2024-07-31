@@ -1,82 +1,82 @@
 import { TrashIcon } from 'lucide-react';
 import { useState } from 'react';
 import useGet from '@/hooks/useGet';
-import { getMembershipResponse } from './data';
+import { getMembershipsResponse } from './data';
 import SearchBox from '@/components/SearchBox';
-import CreateMembership from './create';
 import Confirmation from '@/components/Confirmation';
 import useDelete from '@/hooks/useDelete';
 import { isAxiosError } from 'axios';
-import usePost from '@/hooks/usePost';
 import { DataTable } from '@/components/ui/data-table';
-import { columns } from './columns';
+import { columnsInit } from './columns';
+import { Button } from '@/components/ui/button';
+import usePatch from '@/hooks/usePatch';
+import { useNavigate } from 'react-router';
 
 const MembershipPage = () => {
     const { data: membershipDatas, refresh } =
-        useGet<getMembershipResponse>('memberships');
-    const { remove, error: removeError, isLoading } = useDelete('memberships');
-    const { post: setStatusMemership, error: publishError } = usePost(
-        'memberships/publish'
-    );
+        useGet<getMembershipsResponse>('memberships');
+    const { remove } = useDelete('memberships');
+    const { patch: setStatusMemership } = usePatch('memberships');
+    const navigate = useNavigate();
 
     const [deleteModalVisibility, setDeleteModalVisibility] =
         useState<boolean>(false);
     const [publishModalVisibility, setPublishModalVisibility] =
         useState<boolean>(false);
-    const [createModalVisibility, setCreateModalVisibility] =
-        useState<boolean>(false);
 
-    const [selectedMember, setSelectedMember] = useState<{
+    const [selectedMembership, setSelectedMembership] = useState<{
         id: string;
         index: number;
     } | null>(null);
     const [filter, setFilter] = useState<string>('');
 
-    const openCreateModal = () => setCreateModalVisibility(true);
-    const closeCreateModal = () => setCreateModalVisibility(false);
-
     const openDeleteModal = (id: string, index: number) => {
-        setSelectedMember({ id, index });
+        setSelectedMembership({ id, index });
         setDeleteModalVisibility(true);
     };
-    const closeDeleteModal = () => setDeleteModalVisibility(false);
-
     const openPublishModal = (id: string, index: number) => {
-        setSelectedMember({ id, index });
+        setSelectedMembership({ id, index });
         setPublishModalVisibility(true);
     };
+
+    const closeDeleteModal = () => setDeleteModalVisibility(false);
     const closePublishModal = () => setPublishModalVisibility(false);
 
     const deleteHandler = () => {
-        if (selectedMember) {
-            remove(selectedMember.id)
+        if (selectedMembership) {
+            remove(selectedMembership.id)
                 .then((response) => {
                     if (response.status === 204) {
                         refresh();
+                        alert('Equipment Deleted');
                         closeDeleteModal();
                     }
                 })
                 .catch((err) => {
                     console.error(err);
                     if (isAxiosError(err)) {
-                        ///
                     }
                 });
         }
     };
 
-    const setStatusMemebershipHandler = (id: string) => {
-        setStatusMemership(null, id)
-            .then((response) => {
-                if (response.status === 200) {
-                    refresh();
-                }
-            })
-            .catch((err) => {
-                console.error(err);
-                if (isAxiosError(err)) {
-                }
-            });
+    const setStatusMemebershipHandler = () => {
+        if (selectedMembership) {
+            setStatusMemership(null, `${selectedMembership?.id}/publish`)
+                .then((response) => {
+                    console.log(response);
+                    if (response.status === 200) {
+                        refresh();
+                        alert('Status changed');
+                        closePublishModal();
+                    }
+                })
+                .catch((err) => {
+                    console.error(err);
+                    if (isAxiosError(err)) {
+                    }
+                });
+        }
     };
 
     return (
@@ -93,12 +93,14 @@ const MembershipPage = () => {
                                 setFilter(name);
                             }}
                         />
-                        <button
-                            className="px-4 py-2 bg-slate-950 text-white text-sm font-semibold rounded flex flex-row gap-1 justify-center ms-auto items-center"
-                            onClick={openCreateModal}
+                        <Button
+                            className="ms-auto items-center font-medium"
+                            onClick={() => {
+                                navigate('create');
+                            }}
                         >
-                            <span>Create</span>
-                        </button>
+                            Create
+                        </Button>
                     </div>
                     <DataTable
                         data={
@@ -110,14 +112,14 @@ const MembershipPage = () => {
                                   )
                                 : []
                         }
-                        columns={columns}
+                        columns={columnsInit({
+                            publishHandler: openPublishModal,
+                            deleteHandler: openDeleteModal,
+                            updateHandler: (id: string) => navigate(id),
+                        })}
                     />
                 </div>
             </div>
-            <CreateMembership
-                onClose={closeCreateModal}
-                visible={createModalVisibility}
-            />
             <Confirmation
                 Icon={TrashIcon}
                 header="Delete confirmation"
@@ -125,6 +127,14 @@ const MembershipPage = () => {
                 onClose={closeDeleteModal}
                 onYes={deleteHandler}
                 visible={deleteModalVisibility}
+            />
+            <Confirmation
+                Icon={TrashIcon}
+                header="Change status confirmation?"
+                body="Do you want to change the status of this membership?"
+                onClose={closePublishModal}
+                onYes={setStatusMemebershipHandler}
+                visible={publishModalVisibility}
             />
         </div>
     );

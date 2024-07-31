@@ -23,7 +23,7 @@ route.get(
   authorize(["admin"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const trainers = trainerService.getTrainers();
+      const trainers = await trainerService.getTrainers();
       return res.status(200).json({
         message: "Trainer data success retrieved",
         data: trainers,
@@ -102,6 +102,29 @@ route.post(
           unlinkSync(path.join(process.cwd(), req.file.path));
         }
       }
+      next(error);
+    }
+  }
+);
+
+route.get(
+  "/:id",
+  authorize(["admin"]),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const data = await trainerService.getTrainer(id);
+      if (!data) {
+        const error = new Error("Get trainer failed. Id not found");
+        error.name = "NotFound";
+        throw error;
+      }
+
+      return res.status(200).json({
+        message: "Trainer data success retrieved",
+        data,
+      });
+    } catch (error) {
       next(error);
     }
   }

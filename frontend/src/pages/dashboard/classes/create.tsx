@@ -1,166 +1,37 @@
-import { FC, useState } from 'react';
-import Modal from '../../../components/Modal';
-import useAuth from '../../../context/Auth';
-import { useNavigate } from 'react-router';
-import usePost from '@/hooks/usePost';
+import useHide from '@/context/SideBarState';
+import { FC, useEffect, useState } from 'react';
+import ClassForm from './form';
+import { useParams } from 'react-router';
+import { Class, getClassResponse } from './data';
+import { api } from '@/network/api';
 
-interface payload {
-    name: string;
-    description: string;
-    date: string;
-    maxParticipant: number;
-    trainerId: string;
-}
+const CreateClass: FC = () => {
+    const { id } = useParams();
+    const { setActiveSideBar } = useHide();
+    const [classData, setClassData] = useState<Class | null>(null);
 
-interface Props {
-    isModalVisible: boolean;
-    onClose: () => void;
-}
-const CreateClass: FC<Props> = ({ isModalVisible, onClose }) => {
-    const { post: createClass } = usePost('classes');
-    const { logout } = useAuth();
-    const [payload, setPayload] = useState<payload>({
-        name: '',
-        description: '',
-        maxParticipant: 0,
-        date: '',
-        trainerId: '',
-    });
-
-    const navigate = useNavigate();
-
-    const onChangeHandler = (e: any) => {
-        const data = { ...payload, [e.target.name]: e.target.value };
-        setPayload(data);
-    };
-
-    const submitHandler = (e: any) => {
-        e.preventDefault();
-        createClass(payload)
-            .then((response: any) => {
-                console.log('create class response', response);
+    const getClass = () => {
+        api.get('classes/' + id)
+            .then((response) => {
                 if (response.status === 200) {
-                    reset();
-                    onClose();
+                    const data: getClassResponse = response.data;
+                    setClassData(data.data);
+                } else {
                 }
             })
-            .catch((error) => {
-                alert(error.message);
-            });
+            .catch((err) => console.error(err));
     };
 
-    const reset = () => {
-        const data = {
-            ...payload,
-            name: '',
-            description: '',
-            maxParticipant: 0,
-            date: '',
-            trainerId: '',
-        };
-        setPayload(data);
-    };
-
+    useEffect(() => setActiveSideBar('/dashboard/classes'), []);
+    useEffect(() => {
+        getClass();
+    }, [id]);
     return (
         <>
-            <Modal
-                isModalVisible={isModalVisible}
-                onClose={onClose}
-                closeButton={true}
-            >
-                <h2 className="text-2xl font-bold text-black">Create</h2>
-                <form onSubmit={submitHandler} className="flex flex-col">
-                    <label
-                        htmlFor="name"
-                        className="text-md text-black font-semibold my-2"
-                    >
-                        Name
-                    </label>
-                    <input
-                        className="rounded px-4 py-2"
-                        type="text"
-                        name="name"
-                        id="name"
-                        required
-                        value={payload?.name}
-                        onChange={onChangeHandler}
-                    />
-                    <label
-                        htmlFor="description"
-                        className="text-md text-black font-semibold my-2"
-                    >
-                        Description
-                    </label>
-                    <input
-                        className="rounded px-4 py-2"
-                        type="text"
-                        name="description"
-                        id="description"
-                        required
-                        value={payload?.description}
-                        onChange={onChangeHandler}
-                    />
-                    <label
-                        htmlFor="trainerId"
-                        className="text-md text-black font-semibold my-2"
-                    >
-                        Trainer
-                    </label>
-                    <input
-                        className="rounded px-4 py-2"
-                        type="text"
-                        name="trainerId"
-                        id="trainerId"
-                        required
-                        value={payload.trainerId}
-                        onChange={onChangeHandler}
-                    />
-                    <label
-                        htmlFor="maxParticipant"
-                        className="text-md text-black font-semibold my-2"
-                    >
-                        Max participant
-                    </label>
-                    <input
-                        className="rounded px-4 py-2"
-                        type="number"
-                        name="maxParticipant"
-                        id="maxParticipant"
-                        required
-                        value={payload.maxParticipant}
-                        onChange={onChangeHandler}
-                    />
-                    <label
-                        htmlFor="date"
-                        className="text-md text-black font-semibold my-2"
-                    >
-                        Date
-                    </label>
-                    <input
-                        className="rounded px-4 py-2"
-                        type="date"
-                        name="date"
-                        id="date"
-                        required
-                        value={payload.date.toString()}
-                        onChange={onChangeHandler}
-                    />
-                    <div className="flex flex-row gap-4">
-                        <button
-                            type="button"
-                            className="ms-auto bg-indigo-100 text-indigo-800 px-6 py-2 rounded border-none mt-4"
-                            onClick={reset}
-                        >
-                            Reset
-                        </button>
-                        <input
-                            type="submit"
-                            value="Save"
-                            className="bg-indigo-800 text-indigo-100 px-6 py-2 rounded border-none mt-4"
-                        />
-                    </div>
-                </form>
-            </Modal>
+            <h2 className="text-2xl font-semibold mb-4">
+                {id ? 'Class detail' : 'Add class'}
+            </h2>
+            <ClassForm classData={classData} />
         </>
     );
 };

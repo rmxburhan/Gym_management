@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight, LogOut, LucideIcon } from 'lucide-react';
 import React from 'react';
 import useHide from '../../context/SideBarState';
 import useAuth from '@/context/Auth';
+import { useNavigate } from 'react-router';
 interface SidebarProps {
     children: React.ReactNode;
 }
@@ -9,6 +10,7 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
     const { logout } = useAuth();
     const { isHide, setHide } = useHide();
+    const navigate = useNavigate();
     return (
         <aside
             className={`sidebar flex flex-col ${
@@ -45,6 +47,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
                     id="btn-logout"
                     onClick={() => {
                         logout();
+                        navigate('/login');
                     }}
                 >
                     <LogOut size={20} />
@@ -64,14 +67,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 interface SideBarItemProps {
     Icon: LucideIcon;
     text: string;
-    alert: boolean;
     active: boolean;
 }
 
 export const SideBarItem: React.FC<SideBarItemProps> = ({
     Icon,
     text,
-    alert,
     active,
 }) => {
     const { isHide } = useHide();

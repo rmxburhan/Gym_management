@@ -1,198 +1,98 @@
-import Modal from '@/components/Modal';
-import { FC, useState } from 'react';
-import { createMemberRequest } from './data';
-import usePost from '@/hooks/usePost';
+import { useParams } from 'react-router';
+import MemberForm from './form';
+import { useEffect, useState } from 'react';
+import { Member, getMemberResponseData } from './data';
+import { api } from '@/network/api';
 import { isAxiosError } from 'axios';
+import { Attendances, getAttendances } from '../attendances/data';
+import { DataTable } from '@/components/ui/data-table';
+import { columns } from './columns-attendances';
 
-interface Props {
-    visible: boolean;
-    onClose: () => void;
-}
-
-const CreateMember: FC<Props> = ({ visible, onClose }) => {
-    const [payload, setPayload] = useState<createMemberRequest>({
-        address: '',
-        dateOfBirth: '',
-        email: '',
-        password: '',
-        gender: 'male',
-        name: '',
-    });
-    const { post } = usePost('members');
+const CreateMember = () => {
+    const { id } = useParams();
+    const [member, setMember] = useState<Member | null>(null);
+    const [attendances, setAttendances] = useState<Attendances[]>([]);
     const [error, setError] = useState<string | null>(null);
-    const submitHandler = (e: any) => {
-        e.preventDefault();
-        post(payload)
+    const getMember = () => {
+        api.get('members/' + id, {
+            headers: {
+                Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+        })
             .then((response) => {
                 if (response.status === 200) {
-                    onClose();
+                    const data: getMemberResponseData = response.data;
+                    setMember(data.data);
+                } else {
+                    setError('Error loading member');
                 }
             })
-            .catch((error) => {
-                if (isAxiosError(error)) {
-                    if (error.response?.status === 400) {
-                        const errorList = error.response.data.errors;
-                        const errorMessage = errorList
-                            .map((x: any) => x.msg)
-                            .join('<br/>');
-                        setError(errorMessage);
-                    }
+            .catch((err) => {
+                if (isAxiosError(err)) {
+                    setError(
+                        err.response?.data.message || err.response?.data.errors
+                    );
+                }
+            });
+    };
+    const getAttendances = () => {
+        api.get('attendances/?memberId=' + id, {
+            headers: {
+                Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+        })
+            .then((response) => {
+                if (response.status === 200) {
+                    const data: getAttendances = response.data;
+                    setAttendances(data.data);
+                } else {
+                    setError('Error loading member attendances');
+                }
+            })
+            .catch((err) => {
+                if (isAxiosError(err)) {
+                    setError(
+                        err.response?.data.message || err.response?.data.errors
+                    );
                 }
             });
     };
 
-    const onChangeHandler = (e: any) => {
-        const newPayload = { ...payload, [e.target.name]: e.target.value };
-        setPayload(newPayload);
-    };
+    useEffect(() => {
+        if (id) {
+            console.log(id);
+            getMember();
+        }
+    }, [id]);
 
-    const reset = () => {
-        setPayload({
-            password: '',
-            email: '',
-            address: '',
-            dateOfBirth: '',
-            gender: 'male',
-            name: '',
-            image: '',
-        });
-    };
+    useEffect(() => {
+        if (member) {
+            getAttendances();
+        }
+    }, [member]);
 
     return (
-        <Modal isModalVisible={visible} onClose={onClose} closeButton={true}>
-            <div className="min-w-[700px]">
-                <h2 className="text-2xl font-bold text-black">Create</h2>
-                {error ? (
-                    <div className="bg-red-500 text-white p-4 text-sm my-2 rounded">
-                        {error}
+        <div className="px-4 text-sm">
+            <h2 className="text-2xl font-bold mb-4">
+                {id ? 'Member Detail' : 'Add Member'}
+            </h2>
+            {error && (
+                <p className="bg-red-600 p-2 text-center text-white text-xs">
+                    {error}
+                </p>
+            )}
+            <div className="flex flex-row gap-4">
+                <div className="max-w-[600px] ">
+                    <MemberForm member={member} />
+                </div>
+                <div className="flex flex-col gap-2 flex-1">
+                    <div className="bg-white rounded-xl border px-4 py-6">
+                        <DataTable columns={columns} data={attendances} />
                     </div>
-                ) : (
-                    ''
-                )}
-                <form onSubmit={submitHandler} className="flex flex-col p-1">
-                    <label
-                        htmlFor="name"
-                        className="text-md text-black font-semibold my-2"
-                    >
-                        Name
-                    </label>
-                    <input
-                        className="rounded px-4 py-2"
-                        type="text"
-                        name="name"
-                        id="name"
-                        required
-                        value={payload?.name}
-                        onChange={onChangeHandler}
-                    />
-                    <label
-                        htmlFor="email"
-                        className="text-md text-black font-semibold my-2"
-                    >
-                        Email
-                    </label>
-                    <input
-                        className="rounded px-4 py-2"
-                        type="email"
-                        name="email"
-                        id="email"
-                        required
-                        value={payload?.email}
-                        onChange={onChangeHandler}
-                    />
-                    <label
-                        htmlFor="password"
-                        className="text-md text-black font-semibold my-2"
-                    >
-                        Password
-                    </label>
-                    <input
-                        className="rounded px-4 py-2"
-                        type="password"
-                        name="password"
-                        id="password"
-                        required
-                        value={payload?.password}
-                        onChange={onChangeHandler}
-                    />
-                    <label
-                        htmlFor="dateOfBirth"
-                        className="text-md text-black font-semibold my-2"
-                    >
-                        Birth Date
-                    </label>
-                    <input
-                        className="rounded px-4 py-2"
-                        type="date"
-                        name="dateOfBirth"
-                        id="dateOfBirth"
-                        required
-                        value={payload?.dateOfBirth.toString()}
-                        onChange={onChangeHandler}
-                    />
-                    <label
-                        htmlFor="gender"
-                        className="text-md text-black font-semibold my-2"
-                    >
-                        Gender
-                    </label>
-                    <select
-                        name="gender"
-                        id="gender"
-                        value={payload?.gender}
-                        required
-                        className="px-4 py-2 rounded border"
-                        onChange={onChangeHandler}
-                    >
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                    </select>
-                    <label
-                        htmlFor="image"
-                        className="text-md text-black font-semibold my-2"
-                    >
-                        Image
-                    </label>
-                    <input
-                        className="rounded px-4 py-2"
-                        type="file"
-                        name="image"
-                        id="image"
-                        required
-                        value={payload?.image}
-                        onChange={onChangeHandler}
-                    />
-                    <label
-                        htmlFor="address"
-                        className="text-md text-black font-semibold my-2"
-                    >
-                        Address
-                    </label>
-                    <textarea
-                        className="rounded px-4 py-2 border-black border"
-                        name="address"
-                        id="address"
-                        required
-                        value={payload?.address}
-                        onChange={onChangeHandler}
-                    />
-                    <div className="flex flex-row gap-4">
-                        <button
-                            type="button"
-                            className="ms-auto bg-indigo-100 text-indigo-800 px-6 py-2 rounded border-none mt-4"
-                            onClick={reset}
-                        >
-                            Reset
-                        </button>
-                        <input
-                            type="submit"
-                            value="Save"
-                            className="bg-indigo-800 text-indigo-100 px-6 py-2 rounded border-none mt-4"
-                        />
-                    </div>
-                </form>
+                    <div className="bg-white rounded-xl border px-4 py-6"></div>
+                </div>
             </div>
-        </Modal>
+        </div>
     );
 };
 

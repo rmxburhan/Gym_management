@@ -58,11 +58,16 @@ export const getClass = async (id: string) =>
     { path: "participants", select: "name profile" },
   ]);
 
-export const getClasses = async () =>
-  await Class.find({ deletedAt: undefined }).populate({
+export const getClasses = async (trainer?: string) => {
+  const filter: { trainer?: string; deletedAt: any } = {
+    deletedAt: undefined,
+  };
+  if (trainer) filter.trainer = trainer;
+  return await Class.find(filter).populate({
     path: "trainer",
     select: "name profile id",
   });
+};
 
 export const getUpcomingClasses = async () => {
   return await Class.find({

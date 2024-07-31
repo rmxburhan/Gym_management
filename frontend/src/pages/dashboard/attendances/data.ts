@@ -2,22 +2,21 @@ export interface getCodeResponse {
     message: string;
     code: string;
 }
+export interface Attendances {
+    _id: string;
+    userId: {
+        _id: string;
+        name: string;
+        profile: string;
+        email: string;
+    };
+    checkInTime: string;
+    checkOutTime: string;
+}
 
 export interface getAttendances {
     message: string;
-    data: [
-        {
-            _id: string;
-            userId: {
-                _id: string;
-                name: string;
-                profile: string;
-                email: string;
-            };
-            checkInTime: string;
-            checkOutTime: string;
-        }
-    ];
+    data: [Attendances];
 }
 
 export interface getCountsAttendance {

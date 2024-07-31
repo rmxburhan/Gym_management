@@ -28,12 +28,12 @@ const DashboardLayout: React.FC = () => {
             title: 'Attendances',
             path: '/dashboard/attendances',
         },
-        { icon: Users, title: 'Members', path: '/dashboard/members' },
-        { icon: Users, title: 'Trainer', path: '/dashboard/employees' },
+        { icon: Users, title: 'Member', path: '/dashboard/members' },
+        { icon: Users, title: 'Trainer', path: '/dashboard/trainers' },
         // { icon: Users, title: 'Staff', path: '/dashboard/staffs' },
         { icon: CalendarDays, title: 'Class', path: '/dashboard/classes' },
         { icon: Dumbbell, title: 'Equipment', path: '/dashboard/equipments' },
-        { icon: Package, title: 'Memberships', path: '/dashboard/memberships' },
+        { icon: Package, title: 'Membership', path: '/dashboard/memberships' },
         {
             icon: BellIcon,
             title: 'Notifications',
@@ -57,7 +57,6 @@ const DashboardLayout: React.FC = () => {
                             <SideBarItem
                                 text={item.title}
                                 Icon={item.icon}
-                                alert={false}
                                 active={activeSideBar === item.path}
                             />
                         </Link>
