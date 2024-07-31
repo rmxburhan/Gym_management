@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../network/api';
 import { useNavigate } from 'react-router';
+import useAuth from '@/context/Auth';
 
 interface FetchState<T> {
     data: T | null;
@@ -14,7 +15,7 @@ const useGet = <T>(url: string): FetchState<T> => {
     const [data, setData] = useState<T | null>(null);
     const [isLoading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-
+    const { logout } = useAuth();
     useEffect(() => {
         refresh();
     }, [url]);
@@ -27,6 +28,7 @@ const useGet = <T>(url: string): FetchState<T> => {
             })
             .catch((error) => {
                 if (error.response?.status == 401) {
+                    logout();
                     navigate('/login');
                 }
                 setError(error.message);

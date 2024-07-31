@@ -17,6 +17,9 @@ import Trainer from './pages/dashboard/trainers/page.';
 import CreateTrainer from './pages/dashboard/trainers/create';
 import CreateMember from './pages/dashboard/members/create';
 import CreateEquipment from './pages/dashboard/equipments/create';
+import Authorization from './pages/auth/Authorization';
+import NotAuthorizated from './pages/auth/NotAuthorizated';
+import Logout from './pages/auth/Logout';
 
 function App() {
     return (
@@ -24,9 +27,12 @@ function App() {
             <Router>
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route /*element={<Authorization role="admin" />}*/>
+                    <Route path="/logout" element={<Logout />} />
+                    <Route element={<NotAuthorizated />}>
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                    </Route>
+                    <Route element={<Authorization role="admin" />}>
                         <Route path="/dashboard" element={<DashboardLayout />}>
                             <Route path="" element={<Dashboard />} />
                             <Route

@@ -6,6 +6,7 @@ import useAuth from '@/context/Auth';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 interface FormValues {
     email: string;
@@ -44,50 +45,60 @@ const Login: FC = () => {
 
     return (
         <div className="bg-gray-100 w-screen h-screen flex justify-center">
-            <div className="bg-white rounded self-center p-4 border">
-                <h2 className="text-xl font-bold w-[400px] mb-4">Login</h2>
-                <form onSubmit={handleSubmit(onSubmit)} className="text-sm">
-                    <div className="flex flex-col mb-4 gap-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                            type="email"
-                            id="email"
-                            {...register('email', {
-                                required: 'Required',
-                                pattern: {
-                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                    message: 'Invalid email address',
-                                },
-                            })}
-                        />
-                        {errors.email && (
-                            <p className="text-red-500 text-xs font-medium">
-                                {errors.email.message}
-                            </p>
-                        )}
-                    </div>
+            <div className="bg-white rounded self-center p-4 border  max-w-[400px] w-full mx-4">
+                <h2 className="text-xl font-bold mb-4">Login</h2>
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="text-sm grid gap-1.5"
+                >
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                        type="email"
+                        id="email"
+                        {...register('email', {
+                            required: 'Email is required',
+                            pattern: {
+                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                message: 'Invalid email address',
+                            },
+                        })}
+                        className="mb-2"
+                    />
+                    {errors.email && (
+                        <p className="text-red-500 text-xs font-medium mb-2">
+                            {errors.email.message}
+                        </p>
+                    )}
 
-                    <div className="flex flex-col mb-4 gap-2">
-                        <Label htmlFor="password">Password</Label>
-                        <Input
-                            type="password"
-                            {...register('password', {
-                                required: 'Password is required',
-                            })}
-                        />
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                        type="password"
+                        {...register('password', {
+                            required: 'Password is required',
+                        })}
+                        className="mb-2"
+                    />
 
-                        {errors.password && (
-                            <p className="text-red-500 text-xs font-medium">
-                                {errors.password.message}
-                            </p>
-                        )}
-                    </div>
+                    {errors.password && (
+                        <p className="text-red-500 text-xs font-medium mb-2">
+                            {errors.password.message}
+                        </p>
+                    )}
 
                     {submitError && (
-                        <p className="text-red-500 text-xs p-2 border-red-500 border mb-4 rounded">
+                        <p className="text-red-500 text-xs p-2 border-red-500 border rounded mb-2">
                             {submitError}
                         </p>
                     )}
+                    <p className="text-xs text-center mb-2">
+                        Not have an account?
+                        <Link
+                            to="/register"
+                            className="text-blue-500 underline"
+                        >
+                            <span> Register</span>
+                        </Link>
+                    </p>
 
                     <Button type="submit" className="w-full">
                         Submit

@@ -1,5 +1,4 @@
 import { User } from 'lucide-react';
-import { useNavigate } from 'react-router';
 import { create } from 'zustand';
 type AuthDataProps = {
     token?: string;
@@ -12,7 +11,7 @@ type AuthDataProps = {
 type User = {
     name: string;
     email: string;
-    profile: string;
+    profile?: string;
     role: string;
 };
 const useAuth = create<AuthDataProps>((set) => {

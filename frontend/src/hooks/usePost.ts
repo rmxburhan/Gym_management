@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { api } from '../network/api';
 import { useNavigate } from 'react-router';
 import { isAxiosError } from 'axios';
+import useAuth from '@/context/Auth';
 
 export enum PostContentType {
     FormData,
@@ -12,7 +13,7 @@ const usePost = (url: string, type: PostContentType = PostContentType.Json) => {
     const [isLoading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
-
+    const { logout } = useAuth();
     const post = async (payload: any, extensionUrl?: string) => {
         try {
             setError('');
@@ -33,6 +34,7 @@ const usePost = (url: string, type: PostContentType = PostContentType.Json) => {
         } catch (error: any) {
             if (isAxiosError(error)) {
                 if (error.response?.status === 401) {
+                    logout();
                     navigate('/login');
                 } else if (error.response?.status === 403) {
                     // navigate forbidden
