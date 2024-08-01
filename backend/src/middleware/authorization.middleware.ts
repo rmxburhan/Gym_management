@@ -43,6 +43,7 @@ const authorize = (roles: string[]) => {
       (req as RequestAuth).user = user;
       next();
     } catch (error: any) {
+      error.name = "Unauthorize";
       errorhandlersMiddleware(error, req, res, next);
     }
   };
