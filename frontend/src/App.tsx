@@ -20,6 +20,11 @@ import CreateEquipment from './pages/dashboard/equipments/create';
 import Authorization from './pages/auth/Authorization';
 import NotAuthorizated from './pages/auth/NotAuthorizated';
 import Logout from './pages/auth/Logout';
+import HomePage from './pages/member/home/page';
+import Layout from './pages/member/Layout';
+import ClassesPage from './pages/member/classes/page';
+import Profile from './pages/member/profile/page';
+import NewsPage from './pages/member/news/page';
 
 function App() {
     return (
@@ -32,6 +37,15 @@ function App() {
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
                     </Route>
+                    <Route element={<Authorization role="member" />} path="app">
+                        <Route element={<Layout />}>
+                            <Route path="home" element={<HomePage />} />
+                            <Route path="classes" element={<ClassesPage />} />
+                            <Route path="profile" element={<Profile />} />
+                            <Route path="news" element={<NewsPage />} />
+                        </Route>
+                    </Route>
+
                     <Route element={<Authorization role="admin" />}>
                         <Route path="/dashboard" element={<DashboardLayout />}>
                             <Route path="" element={<Dashboard />} />
