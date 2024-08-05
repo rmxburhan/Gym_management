@@ -118,7 +118,7 @@ route.post(
 
       const user = await userService.postRegister(userData);
 
-      return res.status(200).json({
+      return res.status(201).json({
         message: "Register success",
       });
     } catch (error) {

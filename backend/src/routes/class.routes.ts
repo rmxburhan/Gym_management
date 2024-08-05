@@ -26,6 +26,38 @@ route.get(
   }
 );
 
+route.post(
+  "/",
+  authorize(["admin"]),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const input = validateInputCreateClass.validate(req.body);
+      if (input.error) {
+        throw input.error;
+      }
+      const { name, description, trainer, date, maxParticipant } = req.body;
+
+      const classData = await classService.addClass(
+        name,
+        description,
+        trainer,
+        new Date(date),
+        maxParticipant
+      );
+
+      if (!classData) {
+        throw new Error("Add class failed.");
+      }
+
+      return res.status(201).json({
+        message: "Add class success.",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 route.get(
   "/upcoming",
   authorize(["member", "admin"]),
@@ -62,38 +94,6 @@ route.get(
       return res.status(200).json({
         message: "Get class success",
         data: classdata,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-route.post(
-  "/",
-  authorize(["admin"]),
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const input = validateInputCreateClass.validate(req.body);
-      if (input.error) {
-        throw input.error;
-      }
-      const { name, description, trainer, date, maxParticipant } = req.body;
-
-      const classData = await classService.addClass(
-        name,
-        description,
-        trainer,
-        new Date(date),
-        maxParticipant
-      );
-
-      if (!classData) {
-        throw new Error("Add class failed.");
-      }
-
-      return res.status(201).json({
-        message: "Add class success.",
       });
     } catch (error) {
       next(error);

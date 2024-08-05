@@ -49,6 +49,9 @@ route.get(
   }
 );
 
+/**
+ * This is just for testing use 3rd payment api ASAP bro
+ */
 route.post(
   "/:id/activate",
   authorize(["admin"]),

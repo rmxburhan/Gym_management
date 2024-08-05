@@ -93,7 +93,7 @@ route.post(
         throw new Error("Add trainer failed");
       }
 
-      return res.status(200).json({
+      return res.status(201).json({
         message: "Add tariner success",
       });
     } catch (error) {
