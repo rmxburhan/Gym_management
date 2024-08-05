@@ -11,9 +11,11 @@ import {
     TooltipTrigger,
 } from '@/components/ui/tooltip';
 import ActionBar from '@/components/ActionBar';
+import { useNavigate } from 'react-router';
 
 const HomePage = () => {
     const { setActiveSideBar } = useHide();
+    const navigate = useNavigate();
     useEffect(() => {
         setActiveSideBar('/app/home');
     }, []);
@@ -26,7 +28,10 @@ const HomePage = () => {
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Button className="fixed bottom-24 right-10 px-0 w-[60px] h-[60px] rounded-full">
+                            <Button
+                                className="fixed bottom-24 right-10 px-0 w-[60px] h-[60px] rounded-full"
+                                onClick={() => navigate('/app/attendances')}
+                            >
                                 <Clock />
                             </Button>
                         </TooltipTrigger>

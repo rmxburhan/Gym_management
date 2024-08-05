@@ -1,14 +1,18 @@
 import { ChevronLeft } from 'lucide-react';
 import React from 'react';
 
-const ActionBar: React.FC<{ backButton?: boolean; logo?: boolean }> = ({
-    backButton = false,
-    logo = false,
-}) => {
+const ActionBar: React.FC<{
+    backButton?: boolean;
+    logo?: boolean;
+    title?: string;
+}> = ({ backButton = false, logo = false, title }) => {
     return (
-        <div className="h-16 border-b mb-4 flex items-center px-3 bg-white sticky top-0 z-20">
+        <div className="h-16 border-b mb-4 flex items-center px-3 bg-white sticky top-0 z-20 gap-4">
             {backButton && (
-                <div className="hover:bg-gray-200 p-1 rounded-full">
+                <div
+                    className="hover:bg-gray-200 p-1 rounded-full"
+                    onClick={() => history.back()}
+                >
                     <ChevronLeft />
                 </div>
             )}
@@ -17,6 +21,7 @@ const ActionBar: React.FC<{ backButton?: boolean; logo?: boolean }> = ({
                     MA'GYM
                 </p>
             )}
+            {title && <p className="text-lg font-semibold">{title}</p>}
         </div>
     );
 };

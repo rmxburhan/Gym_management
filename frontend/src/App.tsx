@@ -25,6 +25,7 @@ import Layout from './pages/member/Layout';
 import ClassesPage from './pages/member/classes/page';
 import Profile from './pages/member/profile/page';
 import NewsPage from './pages/member/news/page';
+import CheckInPage from './pages/member/attendances/page';
 
 function App() {
     return (
@@ -43,6 +44,10 @@ function App() {
                             <Route path="classes" element={<ClassesPage />} />
                             <Route path="profile" element={<Profile />} />
                             <Route path="news" element={<NewsPage />} />
+                            <Route
+                                path="attendances"
+                                element={<CheckInPage />}
+                            />
                         </Route>
                     </Route>
 
