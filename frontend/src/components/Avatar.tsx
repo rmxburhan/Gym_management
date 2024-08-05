@@ -1,12 +1,19 @@
+import { cn } from '@/lib/utils';
 import { FC } from 'react';
 
 interface AvatarProps {
     imageUrl: string;
+    className?: string;
 }
 
-const Avatar: FC<AvatarProps> = ({ imageUrl }) => {
+const Avatar: FC<AvatarProps> = ({ imageUrl, className }) => {
     return (
-        <div className="rounded-full border-2 w-[60px] h-[60px]">
+        <div
+            className={cn(
+                'rounded-full border-2 ',
+                className ? className : 'w-[50px] h-[50px]'
+            )}
+        >
             <img
                 src={imageUrl}
                 alt=""
