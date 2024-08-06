@@ -6,9 +6,9 @@ type NotificationItemProps = {
 
 const NotificationItem: FC<NotificationItemProps> = ({ text }) => {
     return (
-        <div id="notification-item" className="border-b px-8 py-6">
-            <p>{text}</p>
-            <span className="text-gray-800 italic text-sm">
+        <div id="notification-item" className="border-b px-4 py-3">
+            <p className="text-sm font-medium">{text}</p>
+            <span className="text-gray-800 italic text-xs">
                 Senin, 21 January 2022
             </span>
         </div>

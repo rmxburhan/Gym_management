@@ -106,7 +106,7 @@ export const columnsInit = ({
                             </Button>
                         ) : (
                             <Button
-                                className="rounded bg-red-500 hover:bg-red-500 border text-white  font-medium p-0 w-[40px]"
+                                className="rounded bg-red-600 hover:bg-red-600 border text-white  font-medium p-0 w-[40px]"
                                 onClick={() => {
                                     publishHandler(row.original._id, row.index);
                                 }}

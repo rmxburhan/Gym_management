@@ -26,7 +26,7 @@ const CreateMembership = () => {
     useEffect(() => setActiveSideBar('/dashboard/memberships'), []);
 
     return (
-        <div className="px-4">
+        <div className="px-4 pt-4">
             <h2 className="text-2xl font-semibold mb-4">
                 {id ? 'Membership detail' : 'Add membership'}
             </h2>

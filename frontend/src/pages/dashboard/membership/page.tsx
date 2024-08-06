@@ -1,5 +1,5 @@
 import { TrashIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useGet from '@/hooks/useGet';
 import { getMembershipsResponse } from './data';
 import SearchBox from '@/components/SearchBox';
@@ -11,6 +11,7 @@ import { columnsInit } from './columns';
 import { Button } from '@/components/ui/button';
 import usePatch from '@/hooks/usePatch';
 import { useNavigate } from 'react-router';
+import useHide from '@/context/SideBarState';
 
 const MembershipPage = () => {
     const { data: membershipDatas, refresh } =
@@ -18,6 +19,7 @@ const MembershipPage = () => {
     const { remove } = useDelete('memberships');
     const { patch: setStatusMemership } = usePatch('memberships');
     const navigate = useNavigate();
+    const { setActiveSideBar } = useHide();
 
     const [deleteModalVisibility, setDeleteModalVisibility] =
         useState<boolean>(false);
@@ -79,9 +81,11 @@ const MembershipPage = () => {
         }
     };
 
+    useEffect(() => setActiveSideBar('/dashboard/memberships'), []);
+
     return (
-        <div>
-            <h2 className="text-4xl font-bold text-black mb-8">Membership</h2>
+        <div className="px-4 pt-4">
+            <h2 className="text-3xl font-bold text-black mb-4">Membership</h2>
             <div className="flex flex-col">
                 <div
                     id="table-container"

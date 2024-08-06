@@ -7,6 +7,7 @@ import { Trainer, getTrainerResponse } from './data';
 import { Class, getClassesResponse } from '../classes/data';
 import { DataTable } from '@/components/ui/data-table';
 import { columns } from './columns-classes';
+import { CalendarDaysIcon } from 'lucide-react';
 
 const CreateTrainer: FC = () => {
     const { id } = useParams();
@@ -60,15 +61,22 @@ const CreateTrainer: FC = () => {
     }, [id]);
 
     return (
-        <div className="px-4 text-sm">
-            <h2 className="text-2xl font-semibold mb-4">
+        <div className="px-4 pt-4 text-sm">
+            <h2 className="text-3xl font-semibold mb-4">
                 {trainer ? 'Trainer detail' : 'Add Trainer'}
             </h2>
             <div className="flex flex-row gap-4">
                 <TrainerForm trainer={trainer} />
-                <div className="flex flex-col flex-1">
-                    <div className="bg-white px-4 py-6 rounded-xl border">
-                        <p className="text-xl font-medium mb-2">Classes data</p>
+                <div className="flex flex-col flex-1 gap-2">
+                    <div className="flex">
+                        <div className="flex flex-row bg-white rounded-md border divide-x">
+                            <button className="p-2 font-semibold flex flex-row items-center gap-2">
+                                <CalendarDaysIcon size={18} />
+                                Class data
+                            </button>
+                        </div>
+                    </div>
+                    <div className="bg-white rounded-md">
                         <DataTable columns={columns} data={classes} />
                     </div>
                 </div>

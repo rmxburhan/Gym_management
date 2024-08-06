@@ -26,6 +26,7 @@ import ClassesPage from './pages/member/classes/page';
 import Profile from './pages/member/profile/page';
 import NewsPage from './pages/member/news/page';
 import CheckInPage from './pages/member/attendances/page';
+import ReportPage from './pages/dashboard/reports/page';
 
 function App() {
     return (
@@ -108,6 +109,7 @@ function App() {
                                 path="notifications"
                                 element={<Notifications />}
                             />
+                            <Route path="reports" element={<ReportPage />} />
                         </Route>
                     </Route>
                     <Route path="*" element={<NoMatch />} />

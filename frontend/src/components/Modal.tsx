@@ -21,12 +21,12 @@ const Modal: React.FC<props> = ({
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
             <div
                 className={
-                    'rounded-xl p-3 pb-4 bg-white border-2 flex flex-col max-h-[85%]'
+                    'rounded-xl p-3 pb-4 bg-white border-2 flex flex-col max-w-[600px] w-full mx-4'
                 }
             >
                 {closeButton ? (
                     <button
-                        className="bg-red-800 text-red-100 p-1 rounded text-[12px] ms-auto"
+                        className="bg-red-600 text-red-100 p-1 rounded text-[12px] ms-auto"
                         onClick={onClose}
                     >
                         {' '}
@@ -35,7 +35,7 @@ const Modal: React.FC<props> = ({
                 ) : (
                     ''
                 )}
-                <div className="pt-4 o overflow-y-scroll">{children}</div>
+                <div className="overflow-hidden">{children}</div>
             </div>
         </div>
     );

@@ -1,5 +1,5 @@
 import { TrashIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getTrainersResponse } from './data';
 import SearchBox from '@/components/SearchBox';
 import Confirmation from '@/components/Confirmation';
@@ -9,12 +9,14 @@ import { columnsInit } from './columns';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router';
 import useDelete from '@/hooks/useDelete';
+import useHide from '@/context/SideBarState';
 
 const TrainerPage = () => {
     const { data, error, isLoading, refresh } =
         useGet<getTrainersResponse>('trainers');
     const { remove, error: errorDeleteTrainer } = useDelete('trainers');
     const navigate = useNavigate();
+    const { setActiveSideBar } = useHide();
 
     const [filter, setFilter] = useState<string>('');
     const [deleteModalVisibility, setDeleteModalVisibility] =
@@ -46,9 +48,11 @@ const TrainerPage = () => {
         }
     };
 
+    useEffect(() => setActiveSideBar('/dashboard/trainers'), []);
+
     return (
-        <div>
-            <h1 className="text-4xl font-semibold mb-8">Employee</h1>
+        <div className="px-4 pt-4">
+            <h1 className="text-3xl font-semibold mb-4">Trainers</h1>
             <div className="flex flex-col">
                 <div
                     id="table-container"

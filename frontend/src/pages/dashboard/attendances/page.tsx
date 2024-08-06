@@ -9,8 +9,18 @@ import {
 } from './data';
 import UserList from '@/components/UserList';
 import dayjs from 'dayjs';
+import {
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
+} from '@/components/ui/chart';
+import { chartConfig } from './chart-config';
+import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis } from 'recharts';
+import useHide from '@/context/SideBarState';
+import { useEffect } from 'react';
 
 const AttendancesPage = () => {
+    const { setActiveSideBar } = useHide();
     const { data: code } = useGet<getCodeResponse>('attendances/code');
     const {
         data: attendances,
@@ -28,9 +38,12 @@ const AttendancesPage = () => {
             .toString()}&endDate=${new Date().toString()}`
     );
     const { data: count } = useGet<getCountsAttendance>('attendances/count');
+    useEffect(() => {
+        setActiveSideBar('/dashboard/attendances');
+    }, []);
     return (
-        <div>
-            <h2 className="text-black font-bold text-4xl mb-8 col-span-4">
+        <div className="px-4 pt-4">
+            <h2 className="text-black font-bold text-3xl mb-4 col-span-4">
                 Attendances
             </h2>
             <div className="grid max-md:grid-cols-1 max-lg:grid-cols-2 max-xl:grid-cols-3 grid-cols-4 gap-4 max-xl:mb-0 md:mb-4 lg:mb-0 xl:mb-4 ">
@@ -76,19 +89,28 @@ const AttendancesPage = () => {
                         Member attendances
                     </h3>
                     {!isLoadingAttendances &&
-                        attendances?.data.map((x) => {
-                            return (
-                                <UserList
-                                    key={x._id}
-                                    name={x.userId.name}
-                                    id={x.userId._id}
-                                    profile={x.userId.profile}
-                                    memberId={x.userId.email}
-                                    checkInTime={x.checkInTime}
-                                    checkOutTime={x.checkOutTime}
-                                />
-                            );
-                        })}
+                        attendances?.data
+                            .map((x) => {
+                                return (
+                                    <UserList
+                                        key={x._id}
+                                        name={x.userId.name}
+                                        id={x.userId._id}
+                                        profile={x.userId.profile}
+                                        memberId={x.userId.email}
+                                        checkInTime={x.checkInTime}
+                                        checkOutTime={x.checkOutTime}
+                                    />
+                                );
+                            })
+                            .join('')}
+                    {attendances ? (
+                        attendances.data.length >= 1 ? undefined : (
+                            <div className="p-8 text-sm text-center">
+                                Empty.
+                            </div>
+                        )
+                    ) : undefined}
                     {isLoadingAttendances && (
                         <p className="w-full h-full text-center my-auto">
                             Loading...
@@ -103,16 +125,53 @@ const AttendancesPage = () => {
                 <div className="bg-white p-6 rounded-xl border">
                     <h1 className="text-xl text-black font-semibold">
                         Gym Traffic this week
-                        {isLoadingStats && (
-                            <p className="mx-auto">Loading...</p>
-                        )}
-                        {errorStats && (
-                            <p className="mx-auto text-white text-xs px-2 py-1 bg-red-500">
-                                {errorStats}
-                            </p>
-                        )}
-                        {JSON.stringify(traffic)}
                     </h1>
+                    <p className="text-muted-foreground text-sm">
+                        22 - 24 January 2024
+                    </p>
+                    {isLoadingStats && <p className="mx-auto">Loading...</p>}
+                    {errorStats && (
+                        <p className="mx-auto text-white text-xs px-2 py-1 bg-red-500">
+                            {errorStats}
+                        </p>
+                    )}
+                    <ChartContainer config={chartConfig}>
+                        <BarChart
+                            accessibilityLayer
+                            data={[
+                                { day: 'sebuah', member: 30 },
+                                { day: 'sebuah', member: 30 },
+                                { day: 'Rizal', member: 30 },
+                                { day: 'Rizal', member: 30 },
+                                { day: 'Rizal', member: 30 },
+                                { day: 'Rizal', member: 67 },
+                            ]}
+                            margin={{
+                                left: 30,
+                                right: 30,
+                            }}
+                        >
+                            <CartesianGrid vertical={false} />
+                            <XAxis
+                                dataKey="day"
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={8}
+                            />
+                            <ChartTooltip
+                                cursor={false}
+                                content={<ChartTooltipContent hideLabel />}
+                            />
+
+                            <Bar
+                                dataKey="member"
+                                type="linear"
+                                stroke="#000"
+                                strokeWidth={2}
+                                // dot={false}
+                            />
+                        </BarChart>
+                    </ChartContainer>
                 </div>
             </div>
         </div>

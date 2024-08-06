@@ -26,6 +26,7 @@ export type Member = {
             status: boolean;
         };
     };
+    createdAt: string;
 };
 
 export interface getMembersResponseData {

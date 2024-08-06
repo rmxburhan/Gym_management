@@ -22,7 +22,7 @@ export const Card: React.FC<CardProps> = ({
         <div
             className={`border rounded-xl p-6 transition-all ${
                 active ? 'border bg-slate-950' : 'border-gray-300 bg-white'
-            } overflow-hidden`}
+            } overflow-hidden w-full h-full`}
         >
             <div className="flex items-center mb-2">
                 <Icon className="text-black w-6 h-6 mr-2" />

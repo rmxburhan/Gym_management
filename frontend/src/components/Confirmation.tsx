@@ -13,7 +13,7 @@ const Confirmation: FC<{
     if (!visible) return '';
     return (
         <Modal onClose={onClose} isModalVisible={visible}>
-            <div className="w-[400px]">
+            <div className="w-[400px] ">
                 <div className="flex flex-col align-middle text-center gap-2">
                     <Icon size={35} className="mx-auto" />
                     <h2 className="font-semibold text-2xl">{header}</h2>
@@ -27,7 +27,7 @@ const Confirmation: FC<{
                         Cancel
                     </button>
                     <button
-                        className="px-4 py-2 bg-green-500 text-white rounded"
+                        className="px-4 py-2 bg-red-600 text-white rounded"
                         onClick={onYes}
                     >
                         Yes

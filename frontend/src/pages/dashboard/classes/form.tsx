@@ -78,7 +78,7 @@ const ClassForm: FC<{ classData: Class | null }> = ({ classData }) => {
     }, [classData]);
 
     return (
-        <div className="bg-white px-4 py-6 rounded-xl border w-full max-w-xl">
+        <div className="bg-white p-4 rounded-xl border w-full max-w-xl">
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
                 <div className="grid w-full items-center gap-1.5 mb-4">
                     <Label htmlFor="name">Name</Label>
