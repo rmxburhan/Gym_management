@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
+import config from "../config";
 
 export default async () => {
   await mongoose
-    .connect(process.env.MONGO_URI || "mongodb://localhost:27017/gym_test")
+    .connect(config.mongo_uri)
     .then(() => {
       console.log("Connected to database");
     })
