@@ -7,6 +7,7 @@ export interface ITrainer extends Document {
   address: IAddress[];
   bank: string;
   bankNumber: number;
+  gender: "male" | "female";
 }
 
 export const trainerSchema = new Schema<ITrainer>({
@@ -21,6 +22,10 @@ export const trainerSchema = new Schema<ITrainer>({
   address: {
     type: [addressSchema],
     required: true,
+  },
+  gender: {
+    type: String,
+    enum: ["male", "female"],
   },
   bank: {
     type: String,

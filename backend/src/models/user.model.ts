@@ -1,10 +1,8 @@
 import { Document, model, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
-import { IMembershipData } from "./membershipdata.model";
 import { IMember, memberSchema } from "./member.model";
 import { IStaff, staffSchema } from "./staff.model";
 import { ITrainer, trainerSchema } from "./trainer.model";
-import { IMembership } from "./membership.model";
 
 export interface IAddress extends Document {
   street: string;

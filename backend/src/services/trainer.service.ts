@@ -37,6 +37,7 @@ export const addTrainer = async (
   bankNumber: number,
   identificationNumber: string,
   phoneNumber: string,
+  gender: string,
   profile?: Express.Multer.File
 ) => {
   const exist = await User.findOne({ email, role: "trainer" });
@@ -56,6 +57,7 @@ export const addTrainer = async (
       address: addresses,
       identificationNumber,
       phoneNumber,
+      gender,
     },
   });
 
@@ -76,6 +78,7 @@ export const updateTrainer = async (
   bankNumber: number,
   phoneNumber: string,
   identificationNumber: string,
+  gender: "male" | "female",
   profile?: Express.Multer.File
 ) => {
   let trainer = await User.findOne({ role: "trainer", _id: id });
@@ -95,6 +98,7 @@ export const updateTrainer = async (
   if (identificationNumber)
     trainer.trainerDetail!.identificationNumber = identificationNumber;
   if (profile) trainer.profile = profile.path.split("public/")[1];
+  if (gender) trainer.trainerDetail!.gender = gender;
   return await trainer.save();
 };
 

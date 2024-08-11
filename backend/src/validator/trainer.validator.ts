@@ -10,6 +10,7 @@ export const validaAddTrainerInput = Joi.object({
     .min(1)
     .max(2)
     .required(),
+  gender: Joi.string().allow(["male", "female"]).required(),
   bank: Joi.string().required(),
   bankNumber: Joi.number().required(),
   identificationNumber: Joi.string().required(),
@@ -25,6 +26,7 @@ export const validateUpdateTrainerInput = Joi.object({
     .min(1)
     .max(2)
     .optional(),
+  gender: Joi.string().allow(["male", "female"]).optional(),
   bank: Joi.string().optional(),
   bankNumber: Joi.number().optional(),
   identificationNumber: Joi.string().optional(),
