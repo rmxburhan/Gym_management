@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model";
 import { RequestAuth } from "../types/request";
-import errorhandlersMiddleware from "./errorhandlers.middleware";
 import tokenService from "../services/token.service";
 
 const authorize = (roles: string[]) => {
@@ -44,7 +43,7 @@ const authorize = (roles: string[]) => {
       next();
     } catch (error: any) {
       error.name = "Unauthorize";
-      errorhandlersMiddleware(error, req, res, next);
+      next(error);
     }
   };
 };
