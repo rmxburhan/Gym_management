@@ -16,19 +16,19 @@ export const settingsSchema = new Schema<ISettings>(
     },
     logo: {
       type: String,
-      required: true,
+      required: false,
     },
     lat: {
       type: String,
-      required: true,
+      required: false,
     },
     lng: {
       type: String,
-      required: true,
+      required: false,
     },
     timezone: {
       type: String,
-      required: true,
+      required: false,
     },
   },
   {
