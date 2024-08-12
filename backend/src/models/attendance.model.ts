@@ -6,21 +6,32 @@ export interface IAttendance extends Document {
   checkOutTime: Date;
 }
 
-const attendanceSchema = new Schema<IAttendance>({
-  userId: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: "User",
+const attendanceSchema = new Schema<IAttendance>(
+  {
+    userId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
+    checkInTime: {
+      type: Date,
+      required: true,
+    },
+    checkOutTime: {
+      type: Date,
+      required: false,
+    },
   },
-  checkInTime: {
-    type: Date,
-    required: true,
-  },
-  checkOutTime: {
-    type: Date,
-    required: false,
-  },
-});
+  {
+    toJSON: {
+      transform: (doc, ret) => {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
+  }
+);
 
 attendanceSchema.virtual("member", {
   ref: "User",

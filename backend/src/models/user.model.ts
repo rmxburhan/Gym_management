@@ -11,24 +11,35 @@ export interface IAddress extends Document {
   zip: string;
 }
 
-export const addressSchema = new Schema<IAddress>({
-  street: {
-    type: String,
-    required: true,
+export const addressSchema = new Schema<IAddress>(
+  {
+    street: {
+      type: String,
+      required: true,
+    },
+    city: {
+      type: String,
+      required: true,
+    },
+    state: {
+      type: String,
+      requried: true,
+    },
+    zip: {
+      type: String,
+      required: true,
+    },
   },
-  city: {
-    type: String,
-    required: true,
-  },
-  state: {
-    type: String,
-    requried: true,
-  },
-  zip: {
-    type: String,
-    required: true,
-  },
-});
+  {
+    toJSON: {
+      transform: (doc, ret) => {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
+  }
+);
 
 export interface IUser extends Document {
   name: string;
@@ -97,20 +108,17 @@ const userSchema = new Schema<IUser>(
   {
     timestamps: true,
     toJSON: {
-      virtuals: true,
-    },
-    toObject: {
+      transform: (doc, ret) => {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        delete ret.password;
+      },
+      versionKey: false,
       virtuals: true,
     },
   }
 );
-
-userSchema.set("toJSON", {
-  transform: (doc, ret) => {
-    delete ret.password;
-    return ret;
-  },
-});
 
 userSchema.pre("save", function (this: IUser, next) {
   const user = this;

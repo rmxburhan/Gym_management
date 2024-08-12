@@ -9,30 +9,25 @@ export default (
   next: NextFunction
 ) => {
   if (error) {
+    let code = 0;
+    let message = error.message;
+
     if (Joi.isError(error)) {
-      return res.status(400).json({
-        errors: error.details[0].message,
-      });
+      code = 400;
     } else if (error.name === "NotFound") {
-      return res.status(404).json({
-        errors: error.message,
-      });
+      code = 404;
     } else if (error.name === "BadRequest") {
-      return res.status(400).json({
-        errors: error.message,
-      });
+      code = 402;
     } else if (error.name === "Unauthorize") {
-      return res.status(401).json({
-        errors: error.message,
-      });
+      code = 401;
     } else if (error.name === "Forbidden") {
-      return res.status(403).json({
-        errors: error.message,
-      });
+      code = 403;
     } else {
-      return res.status(500).json({
-        errors: error.message,
-      });
+      code = 500;
     }
+
+    return res.status(code).json({
+      errors: message,
+    });
   }
 };

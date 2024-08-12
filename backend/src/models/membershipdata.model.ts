@@ -23,7 +23,17 @@ export const membershipDataSchema = new Schema<IMembershipData>(
       required: true,
     },
   },
-  { toJSON: { virtuals: true }, toObject: { virtuals: true } }
+  {
+    toObject: { virtuals: true },
+    toJSON: {
+      virtuals: true,
+      transform: (doc, ret) => {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
+  }
 );
 
 membershipDataSchema.virtual("status").get(function () {

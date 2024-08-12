@@ -43,7 +43,18 @@ const classSchema = new Schema<IClass>(
       required: false,
     },
   },
-  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
+  {
+    timestamps: true,
+    toJSON: {
+      transform: (doc, ret) => {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__vl;
+      },
+      virtuals: true,
+    },
+    toObject: { virtuals: true },
+  }
 );
 
 classSchema.virtual("trainerDetail", {

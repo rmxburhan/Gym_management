@@ -41,6 +41,7 @@ const transactionSchema = new Schema<ITransaction>(
   {
     timestamps: true,
     toJSON: {
+      virtuals: true,
       transform: (doc, ret) => {
         ret.id = ret._id;
         delete ret._id;
