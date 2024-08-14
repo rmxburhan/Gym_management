@@ -92,7 +92,7 @@ const CreateEquipment = () => {
                     setAddLogVisibility(false);
                     getEquipment();
                 }}
-                id={equipment?.data._id || ''}
+                id={equipment?.data.id || ''}
             />
         </div>
     );

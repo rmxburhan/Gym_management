@@ -54,7 +54,7 @@ const memberForm: FC<{ member: Member | null }> = ({ member }) => {
         post: updateMember,
         isLoading: updateMemberLoading,
         error: updateMemberError,
-    } = usePost('members/' + member?._id, PostContentType.FormData);
+    } = usePost('members/' + member?.id, PostContentType.FormData);
     const onSubmit: SubmitHandler<createMemberRequest> = (values) => {
         const formData = new FormData();
         formData.append('name', values.name);

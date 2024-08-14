@@ -115,13 +115,13 @@ export const columnsInit = ({ deleteHandler, updateHandler }: Props) => {
                     <div className="flex flex-row">
                         <Button
                             className="p-0 me-2"
-                            onClick={() => updateHandler(data._id, row.index)}
+                            onClick={() => updateHandler(data.id, row.index)}
                         >
                             <FileIcon size={18} className="m-2" />
                         </Button>
                         <Button
                             className="p-0"
-                            onClick={() => deleteHandler(data._id, row.index)}
+                            onClick={() => deleteHandler(data.id, row.index)}
                         >
                             <TrashIcon size={18} className="m-2" />
                         </Button>

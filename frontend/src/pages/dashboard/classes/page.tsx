@@ -19,13 +19,13 @@ const ClassPage = () => {
         useState<boolean>(false);
     const [filter, setFilter] = useState('');
     const [selectedData, setSelectedData] = useState<{
-        _id: string;
+        id: string;
         index: number;
     }>();
     const navigate = useNavigate();
 
     const openConfirmationDelete = (id: string, index: number) => {
-        setSelectedData({ _id: id, index });
+        setSelectedData({ id: id, index });
         setConfirmationVisible(true);
     };
     const closeConfirmationDelete = () => setConfirmationVisible(false);
@@ -38,7 +38,7 @@ const ClassPage = () => {
 
     const deleteHandler = () => {
         if (selectedData) {
-            deleteClass(selectedData?._id)
+            deleteClass(selectedData?.id)
                 .then((response) => {
                     if (response.status === 204) {
                         refresh();

@@ -3,9 +3,9 @@ export interface getCodeResponse {
     code: string;
 }
 export interface Attendances {
-    _id: string;
+    id: string;
     userId: {
-        _id: string;
+        id: string;
         name: string;
         profile: string;
         email: string;

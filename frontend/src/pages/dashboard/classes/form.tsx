@@ -18,7 +18,7 @@ const ClassForm: FC<{ classData: Class | null }> = ({ classData }) => {
         update: updateClass,
         error: updateClassError,
         isLoading: updateClassLoading,
-    } = usePut('classes/' + classData?._id || '');
+    } = usePut('classes/' + classData?.id || '');
     const { data: trainersData } = useGet<getTrainersResponse>('trainers');
     const {
         register,
@@ -63,7 +63,7 @@ const ClassForm: FC<{ classData: Class | null }> = ({ classData }) => {
     useEffect(() => {
         if (classData) {
             setValue('name', classData.name);
-            setValue('trainer', classData.trainer._id);
+            setValue('trainer', classData.trainer.id);
             setValue('description', classData.description);
             setValue('maxParticipant', classData.maxParticipant);
             const data = new Date(classData.date);
@@ -119,12 +119,12 @@ const ClassForm: FC<{ classData: Class | null }> = ({ classData }) => {
                 <div className="grid w-full items-center gap-1.5 mb-4">
                     <Label htmlFor="trainer">Trainer</Label>
                     <ComboBox
-                        value={classData?.trainer._id}
+                        value={classData?.trainer.id}
                         datas={
                             trainersData?.data
                                 ? trainersData?.data.map((x) => {
                                       return {
-                                          value: x._id,
+                                          value: x.id,
                                           label: x.name,
                                       };
                                   })

@@ -93,9 +93,9 @@ const AttendancesPage = () => {
                             .map((x) => {
                                 return (
                                     <UserList
-                                        key={x._id}
+                                        key={x.id}
                                         name={x.userId.name}
-                                        id={x.userId._id}
+                                        id={x.userId.id}
                                         profile={x.userId.profile}
                                         memberId={x.userId.email}
                                         checkInTime={x.checkInTime}

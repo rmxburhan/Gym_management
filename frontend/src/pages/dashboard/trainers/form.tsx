@@ -48,7 +48,7 @@ const TrainerForm: FC<{ trainer: Trainer | null }> = ({ trainer }) => {
         post: updateTrainer,
         error: updateTrainerError,
         isLoading: updateTrainerLoading,
-    } = usePost('trainers/' + trainer?._id, PostContentType.FormData);
+    } = usePost('trainers/' + trainer?.id, PostContentType.FormData);
     const [imagePreview, setImagePreview] = useState('');
 
     const onSubmit: SubmitHandler<createTrainerRequest> = (values) => {
