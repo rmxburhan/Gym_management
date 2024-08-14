@@ -18,7 +18,7 @@ const attendanceSchema = new Schema<IAttendance>(
       required: true,
     },
     checkOutTime: {
-      type: Date,
+ type: Date,
       required: false,
     },
   },

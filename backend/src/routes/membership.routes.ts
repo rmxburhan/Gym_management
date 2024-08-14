@@ -100,7 +100,11 @@ route.post(
 
       return res.status(200).json({
         message: "Please pay your bill within 1 days",
-        data: transaction,
+        data: {
+          clientSecret: transaction.clientSecret,
+          amount: transaction.totalPayment,
+          expired: transaction.paymentExpire,
+        },
       });
     } catch (error) {
       next(error);

@@ -24,8 +24,9 @@ const authorize = (roles: string[]) => {
       }
 
       const decoded: any = jwt.decode(token);
+      console.log(decoded);
       const user = await User.findOne({
-        _id: decoded.id,
+        _id: decoded._id,
         deletedAt: undefined,
       });
 
@@ -40,8 +41,10 @@ const authorize = (roles: string[]) => {
         });
       }
       (req as RequestAuth).user = user;
+      console.log("decode");
       next();
     } catch (error: any) {
+      console.log(error);
       error.name = "Unauthorize";
       next(error);
     }

@@ -3,6 +3,7 @@ import { Schema, Types, model } from "mongoose";
 export interface ITransaction extends Document {
   member: Types.ObjectId;
   membership: Types.ObjectId;
+  clientSecret: string;
   totalPayment: number;
   paymentType: string;
   paymentExpire: Date;
@@ -20,6 +21,10 @@ const transactionSchema = new Schema<ITransaction>(
       type: Schema.Types.ObjectId,
       required: true,
       ref: "Membership",
+    },
+    clientSecret: {
+      type: String,
+      required: true,
     },
     totalPayment: {
       type: Number,
@@ -45,6 +50,7 @@ const transactionSchema = new Schema<ITransaction>(
       transform: (doc, ret) => {
         ret.id = ret._id;
         delete ret._id;
+        delete ret.clientSecret;
         delete ret.__v;
       },
     },
