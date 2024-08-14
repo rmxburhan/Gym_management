@@ -1,28 +1,24 @@
 import Avatar from '@/components/Avatar';
-import { EllipsisIcon } from 'lucide-react';
+import { ClockIcon } from 'lucide-react';
 
 function ClassCard() {
     return (
-        <div className="h-auto w-full rounded border p-2 grid grid-cols-1 gap-1.5 bg-white">
-            <p className="font-semibold">A class title</p>
-            <p className="text-xs">
-                This is a class description that will teach you about how
-                important it is to write something good than good shit
+        <div className="bg-sky-600 text-white p-4 rounded-md min-h-[100px] flex flex-col gap-2">
+            <p className="font-bold uppercase mb-auto">
+                This is class tite with the following line
             </p>
-            <div className="flex flex-row gap-1.5 items-center mt-2">
+            <p className="text-sm flex gap-2">
+                <ClockIcon size={18} />
+                <span className="font-semibold drop-shadow">08:00 AM</span>
+            </p>
+            <div className="flex flex-row gap-2 items-center">
                 <Avatar
-                    className="w-[40px] h-[40px]"
-                    imageUrl="https://wallpapers.com/images/hd/cute-anime-profile-pictures-hf5vd8c7ywpbvgvf.jpg"
+                    imageUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPXomUZ43ajXSkYCOlloiab6MZehB5TNyGsg&s"
+                    className="w-[40px] h-[40px] border"
                 />
-                <div className="flex flex-col">
-                    <p className="text-xs">The trainer name</p>
-                    <p className="text-xs text-muted-foreground italic">
-                        Senin, 24 January 2024
-                    </p>
+                <div>
+                    <p className="text-sm">Rizal Burhanudin</p>
                 </div>
-                <button className="px-2 rounded-full ms-auto hover:bg-gray-100 transition-colors duration-300">
-                    <EllipsisIcon className="w-[14px] ms-auto p-0" />
-                </button>
             </div>
         </div>
     );

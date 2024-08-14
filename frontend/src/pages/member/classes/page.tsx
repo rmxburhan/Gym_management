@@ -6,7 +6,7 @@ const ClassesPage = () => {
     const { setActiveSideBar } = useHide();
     useEffect(() => setActiveSideBar('/app/classes'), []);
     return (
-        <div className="container pt-8 grid gap-2">
+        <div className="container">
             <h2 className="font-semibold">Upcoming Class</h2>
             <ClassCard />
             <ClassCard />

@@ -2,9 +2,9 @@ import CommunityCard from './CommunityCard';
 
 function Community() {
     return (
-        <div className="">
-            <p className="text-md font-semibold mb-4">Announcements</p>
-            <div id="announcements-container" className="grid gap-4">
+        <div>
+            <p className="text-md font-bold mb-4">Announcements</p>
+            <div className="grid gap-2">
                 <CommunityCard />
                 <CommunityCard />
                 <CommunityCard />

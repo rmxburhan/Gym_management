@@ -1,12 +1,12 @@
 function CommunityCard() {
     return (
-        <div className="bg-white rounded p-4 grid gap-4">
-            <p className="text-md font-semibold">A title</p>
-            <p className="text-md ">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Accusamus rerum accusantium impedit, voluptatum consequatur
-                voluptatem repudiandae optio laborum, vero, culpa a iure sit qui
-                consequuntur? Quasi temporibus fugiat ea porro.
+        <div className="border rounded-md p-4">
+            <p className="text-sm font-semibold">A title</p>
+            <p className="text-xs mb-4">{'Lorem isum todor sit amet'}</p>
+            <p className="text-xs font-semibold">
+                {new Date().toLocaleDateString('id-ID', {
+                    dateStyle: 'full',
+                })}
             </p>
         </div>
     );

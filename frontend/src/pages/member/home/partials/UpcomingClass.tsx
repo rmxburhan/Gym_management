@@ -2,17 +2,18 @@ import ClassCard from './ClassCard';
 
 function UpcomingClass() {
     return (
-        <div>
-            <h2 className="text-md font-semibold">
-                Your upcoming class
-                <span className="text-xs font-semibold text-blue-500 ms-2">
-                    See more &#62;&#62;
-                </span>
-            </h2>
-            <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-2 pt-2">
+        <div className="col-span-2">
+            <h2 className="text-md font-semibold pb-2">Upcoming class</h2>
+            <div className="flex flex-row flex-wrap gap-2">
                 <ClassCard />
                 <ClassCard />
             </div>
+            {/* <div className="absolute top-0 right-0 bottom-0 flex flex-row items-center bg-gradient-to-r">
+                    <div className="flex flex-col items-center">
+                        <ChevronRightCircle size={20} />
+                        <span className="text-xs">See more</span>
+                    </div>
+                </div> */}
         </div>
     );
 }

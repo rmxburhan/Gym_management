@@ -1,18 +1,12 @@
 import useHide from '@/context/SideBarState';
 import { cn } from '@/lib/utils';
-import {
-    Dumbbell,
-    LayoutDashboardIcon,
-    Newspaper,
-    UserCircleIcon,
-} from 'lucide-react';
-import { useEffect } from 'react';
+import { Dumbbell, HomeIcon, Newspaper, UserCircleIcon } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
-let menu = [
+const menu = [
     {
-        name: 'Dashboard',
-        icon: <LayoutDashboardIcon />,
+        name: 'Home',
+        icon: <HomeIcon />,
         path: '/app/home',
     },
     {
