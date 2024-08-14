@@ -7,7 +7,7 @@ const Layout = () => {
     }, []);
     return (
         <div className="flex flex-col h-[100vh]">
-            <div className="flex-grow">
+            <div className="px-4 max-w-[800px] flex-grow">
                 <Outlet />
             </div>
             <NavBar />

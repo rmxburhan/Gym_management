@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { api } from '../network/api';
 import { useNavigate } from 'react-router';
 import useAuth from '@/context/Auth';
+import { isAxiosError } from 'axios';
 
 interface FetchState<T> {
     data: T | null;
@@ -27,11 +28,17 @@ const useGet = <T>(url: string): FetchState<T> => {
                 setData(response.data);
             })
             .catch((error) => {
-                if (error.response?.status == 401) {
-                    logout();
-                    navigate('/login');
+                if (isAxiosError(error)) {
+                    if (error.response?.status == 401) {
+                        logout();
+                        navigate('/login');
+                    }
+                    setError(
+                        error.response?.data.message ||
+                            error.response?.data.errors ||
+                            error.message
+                    );
                 }
-                setError(error.message);
             })
             .finally(() => {
                 setLoading(false);

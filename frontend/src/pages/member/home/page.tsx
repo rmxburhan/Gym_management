@@ -15,7 +15,7 @@ const HomePage = () => {
         setActiveSideBar('/app/home');
     }, []);
     return (
-        <div className="px-4 max-w-[800px] mx-auto pt-4">
+        <div className="mx-auto pt-4">
             <h2 className="font-bold mb-2">Upcoming class</h2>
             <div className="p-2 border border-black mb-2">
                 <p className="text-xl font-bold mb-2">This class title</p>
