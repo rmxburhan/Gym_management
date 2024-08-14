@@ -1,21 +1,16 @@
 import Avatar from '@/components/Avatar';
 import { Button } from '@/components/ui/button';
 import useHide from '@/context/SideBarState';
+import useGet from '@/hooks/useGet';
 import { ArrowRightIcon } from 'lucide-react';
-import { useEffect } from 'react';
-// import { Button } from '@/components/ui/button';
-// import { Clock } from 'lucide-react';
-// import {
-//     Tooltip,
-//     TooltipContent,
-//     TooltipProvider,
-//     TooltipTrigger,
-// } from '@/components/ui/tooltip';
-// import { useNavigate } from 'react-router';
+import { FC, useEffect } from 'react';
+import { getAnnouncementsResponse } from './data';
 
 const HomePage = () => {
     const { setActiveSideBar } = useHide();
-
+    const { data, isLoading } = useGet<getAnnouncementsResponse>(
+        `announcements?startDate=${new Date().toDateString()}`
+    );
     useEffect(() => {
         setActiveSideBar('/app/home');
     }, []);
@@ -53,25 +48,31 @@ const HomePage = () => {
                     <ArrowRightIcon size={16} />
                 </p>
             </div>
-            <AnnouncementsItem />
-            <AnnouncementsItem />
-            <AnnouncementsItem />
+            {data?.data.map((x) => {
+                return (
+                    <AnnouncementsItem
+                        title={x.title}
+                        content={x.content}
+                        date={x.createdAt}
+                    />
+                );
+            })}
+            {isLoading && <p className="p-4 font-semibold">Loading...</p>}
         </div>
     );
 };
 
-const AnnouncementsItem = () => {
+const AnnouncementsItem: FC<{
+    title: string;
+    content: string;
+    date: string;
+}> = ({ title, content, date }) => {
     return (
         <div className="flex flex-col p-2 border border-black mb-2">
-            <p className="font-semibold">This is title</p>
-            <p className="text-sm mb-2">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                Consequatur sint itaque ipsam dolores numquam suscipit ex aut,
-                distinctio neque ullam magni sed quam molestiae a voluptates
-                repudiandae rerum, nobis architecto.
-            </p>
+            <p className="font-semibold">{title}</p>
+            <p className="text-sm mb-2">{content}</p>
             <p className="text-xs text-muted-foreground">
-                {new Date().toLocaleString('id-ID', {
+                {new Date(date).toLocaleString('id-ID', {
                     dateStyle: 'long',
                     timeStyle: 'short',
                 })}
