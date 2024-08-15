@@ -7,7 +7,7 @@ const ActionBar: React.FC<{
     title?: string;
 }> = ({ backButton = false, logo = false, title }) => {
     return (
-        <div className="h-16 border-b mb-4 flex items-center px-3 bg-white sticky top-0 z-20 gap-4">
+        <div className="h-16 border-b flex items-center px-3 bg-white sticky top-0 z-20 gap-4">
             {backButton && (
                 <div
                     className="hover:bg-gray-200 p-1 rounded-full"

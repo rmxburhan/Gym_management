@@ -1,7 +1,6 @@
 import useHide from '@/context/SideBarState';
 import {
     ClockIcon,
-    GroupIcon,
     LetterTextIcon,
     SortAscIcon,
     SortDescIcon,
@@ -13,7 +12,6 @@ function NewsPage() {
     useEffect(() => setActiveSideBar('/app/news'), []);
     return (
         <div className="">
-            {/* <h2 className="font-bold text-xl mb-4">Media</h2> */}
             <div className="sticky top-0 z-40 bg-gray-50 py-2">
                 <input
                     type="text"
@@ -52,7 +50,7 @@ function NewsPage() {
 
 const MediaIcon = () => {
     return (
-        <div className="rounded border border-gray-500 h-[150px] relative overflow-hidden">
+        <div className="rounded border h-[150px] relative overflow-hidden">
             <img
                 src="https://res.cloudinary.com/dk0z4ums3/image/upload/v1608543180/attached_image/mengenal-hatha-yoga-dasar-dari-segala-jenis-yoga.jpg"
                 alt=""

@@ -30,16 +30,15 @@ const NavBar = () => {
     const navigate = useNavigate();
     const { activeSideBar } = useHide();
     return (
-        <div className="bg-white h-[75px] w-full sticky bottom-0 left-0 right-0 border-t">
+        <div className="bg-white min-h-[70px] w-full sticky bottom-0 left-0 right-0 border-t">
             <nav className="grid grid-cols-4 items-center align-middle h-full container">
                 {menu.map((x) => {
                     return (
-                        <div className="flex justify-center">
+                        <div className="flex justify-center" key={x.path}>
                             <button
                                 className={cn(
-                                    'hover:bg-gray-100 hover:cursor-pointer transition-all duration-100 px-2 py-1.5 rounded-lg flex flex-col items-center gap-0.5 min-w-20',
-                                    activeSideBar === x.path &&
-                                        'hover:bg-gray-200 animate-in'
+                                    'hover:cursor-pointer transition-all duration-100 px-2 py-1.5 rounded-lg flex flex-col items-center gap-0.5 min-w-20',
+                                    activeSideBar === x.path && 'animate-in'
                                 )}
                                 onClick={() => {
                                     navigate(x.path);

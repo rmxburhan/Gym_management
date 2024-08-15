@@ -14,11 +14,13 @@ const CheckInPage = () => {
     } = useForm<checkInPayload>();
     const { setActiveSideBar } = useHide();
     useEffect(() => setActiveSideBar('/app/home'), []);
-    const onSubmit: SubmitHandler<checkInPayload> = (values) => {};
+    const onSubmit: SubmitHandler<checkInPayload> = () => {
+        return 0;
+    };
     return (
-        <>
+        <div className="bg-gray-50">
             <ActionBar title="Attendances" backButton />
-            <div className="container h-screen flex flex-col">
+            <div className="container h-screen flex flex-col pt-4 text-sm">
                 <form onSubmit={handleSubmit(onSubmit)} className="mb-4">
                     <Input
                         placeholder="Chek in code"
@@ -47,7 +49,7 @@ const CheckInPage = () => {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

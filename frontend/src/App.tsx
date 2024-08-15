@@ -27,6 +27,9 @@ import Profile from './pages/member/profile/page';
 import NewsPage from './pages/member/news/page';
 import CheckInPage from './pages/member/attendances/page';
 import ReportPage from './pages/dashboard/reports/page';
+import SettingPage from './pages/member/settings/page';
+import MembershipPage from './pages/member/membership/page';
+import MyClassPage from './pages/member/myclass/page';
 
 function App() {
     return (
@@ -50,6 +53,10 @@ function App() {
                                 element={<CheckInPage />}
                             />
                         </Route>
+                        <Route path="checkin" element={<CheckInPage />} />
+                        <Route path="settings" element={<SettingPage />} />
+                        <Route path="membership" element={<MembershipPage />} />
+                        <Route path="myclass" element={<MyClassPage />} />
                     </Route>
 
                     <Route element={<Authorization role="admin" />}>

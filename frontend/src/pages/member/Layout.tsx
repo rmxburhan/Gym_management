@@ -6,8 +6,8 @@ const Layout = () => {
         console.log('asd');
     }, []);
     return (
-        <div className="flex flex-col h-[100vh]">
-            <div className="px-4 max-w-[800px] flex-grow mx-auto w-full bg-gray-50">
+        <div className="flex flex-col h-[100vh] bg-gray-50">
+            <div className="px-4 max-w-[800px] flex-grow mx-auto w-full ">
                 <Outlet />
             </div>
             <NavBar />

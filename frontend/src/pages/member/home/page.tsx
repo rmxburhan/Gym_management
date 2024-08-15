@@ -12,9 +12,11 @@ import {
 import { FC, useEffect } from 'react';
 import { getAnnouncementsResponse } from './data';
 import { getClassesResponse } from '../classes/data';
+import { useNavigate } from 'react-router';
 
 const HomePage = () => {
     const { setActiveSideBar } = useHide();
+    const navigate = useNavigate();
     const { data, isLoading } = useGet<getAnnouncementsResponse>(
         `announcements?startDate=${new Date().toDateString()}`
     );
@@ -64,9 +66,21 @@ const HomePage = () => {
             )}
             <hr className="mb-2" />
             <div className="flex flex-row justify-evenly gap-8 pb-4">
-                <IconMenu icon={IdCardIcon} title="Membership" />
-                <IconMenu icon={ClockIcon} title="Check In" />
-                <IconMenu icon={DumbbellIcon} title={'My Class'} />
+                <IconMenu
+                    icon={IdCardIcon}
+                    title="Membership"
+                    onClick={() => navigate('/app/membership')}
+                />
+                <IconMenu
+                    icon={ClockIcon}
+                    title="Check In"
+                    onClick={() => navigate('/app/checkin')}
+                />
+                <IconMenu
+                    icon={DumbbellIcon}
+                    title={'My Class'}
+                    onClick={() => navigate('/app/myclass')}
+                />
             </div>
 
             <div className="flex">
@@ -79,6 +93,7 @@ const HomePage = () => {
             {data?.data.map((x) => {
                 return (
                     <AnnouncementsItem
+                        key={x.id}
                         title={x.title}
                         content={x.content}
                         date={x.createdAt}
@@ -90,10 +105,14 @@ const HomePage = () => {
     );
 };
 
-const IconMenu = ({ title, icon }: { icon: LucideIcon; title: string }) => {
+const IconMenu = ({
+    title,
+    icon,
+    onClick,
+}: { icon: LucideIcon; title: string; onClick: () => void }) => {
     const Icon = icon;
     return (
-        <div className="flex flex-col text-center flex-wrap">
+        <div className="flex flex-col text-center flex-wrap" onClick={onClick}>
             <div className="p-2 border-2 border-black rounded text-center mx-auto w-[60px] h-[60px] flex justify-center flex-col hover:bg-slate-900 hover:text-white hover:cursor-pointer transition-all duration-150 shadow bg-white">
                 <Icon className="mx-auto" size={36} />
             </div>

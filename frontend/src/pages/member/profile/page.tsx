@@ -14,9 +14,11 @@ import {
     SettingsIcon,
 } from 'lucide-react';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router';
 
 function Profile() {
     const { setActiveSideBar } = useHide();
+    const navigate = useNavigate();
     useEffect(() => setActiveSideBar('/app/profile'), []);
     const { logout } = useAuth();
     const { data } = useGet<getMemberResponseData>('user');
@@ -46,16 +48,40 @@ function Profile() {
                 id="menu"
                 className="divide-y flex flex-col rounded overflow-hidden border bg-white shadow"
             >
-                <SettingMenu icon={IdCardIcon} text="Membership" />
-                <SettingMenu icon={ClockIcon} text="Attendances" />
-                <SettingMenu icon={DumbbellIcon} text="Class" />
-                <SettingMenu icon={PhoneIcon} text="Contact CS" />
-                <SettingMenu icon={HistoryIcon} text="Transaction History" />
-                <SettingMenu icon={SettingsIcon} text="Settings" />
+                <SettingMenu
+                    icon={IdCardIcon}
+                    text="Membership"
+                    onClick={() => navigate('/app/membership')}
+                />
+                <SettingMenu
+                    icon={ClockIcon}
+                    text="Attendances"
+                    onClick={() => navigate('/app/checkin')}
+                />
+                <SettingMenu
+                    icon={DumbbellIcon}
+                    text="Class"
+                    onClick={() => navigate('/app/myclass')}
+                />
+                <SettingMenu
+                    icon={PhoneIcon}
+                    text="Contact CS"
+                    onClick={() => navigate('/app/contact')}
+                />
+                <SettingMenu
+                    icon={HistoryIcon}
+                    text="Transaction History"
+                    onClick={() => navigate('/app/transactions')}
+                />
+                <SettingMenu
+                    icon={SettingsIcon}
+                    text="Settings"
+                    onClick={() => navigate('/app/settings')}
+                />
             </div>
 
             <div
-                className="bg-red-600 text-white flex flex-row items-center p-4 text-sm mt-4 rounded gap-2 shadow"
+                className="bg-red-100 text-red-500 flex flex-row items-center p-4 text-sm mt-4 rounded gap-2 shadow hover:cursor-pointer"
                 onClick={() => logout()}
             >
                 <LogOutIcon size={20} />
@@ -65,10 +91,17 @@ function Profile() {
     );
 }
 
-const SettingMenu = ({ icon, text }: { icon: LucideIcon; text: string }) => {
+const SettingMenu = ({
+    icon,
+    text,
+    onClick,
+}: { icon: LucideIcon; text: string; onClick: () => void }) => {
     const Icon = icon;
     return (
-        <div className="p-4 flex flex-row gap-2 hover:bg-slate-900 hover:text-white hover:cursor-pointer transition-all duration-100 hover:px-8 hover:text-md text-sm items-center">
+        <div
+            className="p-4 flex flex-row gap-2 hover:bg-slate-900 hover:text-white hover:cursor-pointer transition-all duration-100 hover:px-8 hover:text-md text-sm items-center"
+            onClick={onClick}
+        >
             <Icon size={20} />
             <p className="font-bold">{text}</p>
         </div>
