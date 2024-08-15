@@ -10,6 +10,7 @@ import authorize from "../middleware/authorization.middleware";
 import { uploadSingle } from "../utils/upload";
 import path from "node:path";
 import { existsSync, unlinkSync } from "node:fs";
+import authorizememberactive from "../middleware/memberactive.middleware";
 
 const route = Router();
 
@@ -120,6 +121,24 @@ route.post(
 
 			return res.status(201).json({
 				message: "Register success",
+			});
+		} catch (error) {
+			next(error);
+		}
+	},
+);
+
+route.get(
+	"/myclass",
+	authorize(["member"]),
+	authorizememberactive,
+	async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const user = (req as RequestAuth).user;
+			const data = await userService.classData(user.id);
+			return res.status(200).json({
+				message: "Class success retrieved",
+				data,
 			});
 		} catch (error) {
 			next(error);
