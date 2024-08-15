@@ -13,10 +13,10 @@ const ClassesPage = () => {
         <div className="py-4">
             <h2 className="font-bold mb-2 text-xl">Classes</h2>
             <div className="flex gap-2 mb-2">
-                <div className="p-2  border-black border-2 font-semibold rounded">
+                <div className="p-2  border-black border-2 font-semibold rounded shadow bg-white">
                     By name
                 </div>
-                <div className="p-2  border-black border-2 font-semibold rounded">
+                <div className="p-2  border-black border-2 font-semibold rounded shadow bg-white">
                     Order
                 </div>
             </div>
@@ -37,7 +37,7 @@ const ClassesPage = () => {
                 <p className="p-4 text-center font-semibold ">Loading...</p>
             )}
             {error && (
-                <div className="p-4 rounded bg-red-600 text-white text-center">
+                <div className="p-4 rounded bg-red-600 text-white text-center font-semibold text-sm">
                     {error}
                 </div>
             )}

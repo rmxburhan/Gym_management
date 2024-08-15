@@ -1,84 +1,78 @@
-import ActionBar from '@/components/ActionBar';
 import Avatar from '@/components/Avatar';
 import useAuth from '@/context/Auth';
 import useHide from '@/context/SideBarState';
+import useGet from '@/hooks/useGet';
+import { getMemberResponseData } from '@/pages/dashboard/members/data';
 import {
-    CheckCheck,
-    ChevronLeft,
-    CreditCardIcon,
+    ClockIcon,
+    DumbbellIcon,
     HistoryIcon,
-    LogOut,
+    IdCardIcon,
+    LogOutIcon,
+    LucideIcon,
+    PhoneIcon,
     SettingsIcon,
-    UserCircleIcon,
 } from 'lucide-react';
 import { useEffect } from 'react';
 
 function Profile() {
     const { setActiveSideBar } = useHide();
-    const { user, logout } = useAuth();
     useEffect(() => setActiveSideBar('/app/profile'), []);
+    const { logout } = useAuth();
+    const { data } = useGet<getMemberResponseData>('user');
     return (
-        <div className="bg-white h-[100vh]">
-            <ActionBar />
-            <div className="container">
-                <div className="profile-header h-16 bg-indigo-300 relative">
-                    <Avatar
-                        imageUrl="https://i.pinimg.com/originals/84/4e/e9/844ee9e1a2976ef40bf4aac1515aa85f.jpg"
-                        className="absolute w-[80px] h-[80px] -bottom-[65%] left-0"
-                    />
+        <div className="py-4">
+            <div className="profile text-center flex flex-col items-center align-middle mb-2">
+                <Avatar
+                    imageUrl={`http://localhost:5000/${data?.data.profile}`}
+                    className="w-[60px] h-[60px] mb-2"
+                />
+                <p className="text-xl font-bold ">{data?.data.name}</p>
+            </div>
+            <div
+                id="stats"
+                className="border rounded grid grid-cols-2 divide-x overflow-hidden mb-2 bg-white shadow"
+            >
+                <div className="p-2 relative hover:bg-slate-900 hover:text-white hover:cursor-pointer transition-all duration-200">
+                    <p className=" text-center font-bold">Attendances</p>
+                    <p className=" text-center text-sm">4 days in week</p>
                 </div>
-                <div className="grid gap-2 pt-14">
-                    <div className="flex flex-row">
-                        <div className="flex-1">
-                            <div className="font-semibold">
-                                Rizal Burhanudin
-                            </div>
-                            <div className="text-sm">
-                                rizalburhanudin556@gmail.com
-                            </div>
-                        </div>
-                        <div className="px-2 py-1 border rounded flex flex-row items-center divide-x-2">
-                            <div className="me-2 text-center">
-                                <p className="font-semibold">23</p>
-                                <p className="text-xs">Attendances</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="border rounded flex flex-row p-4 bg-white gap-4 items-center">
-                        <UserCircleIcon />
-                        <span className="font-medium text-sm">Profile</span>
-                    </div>
-                    <div className="border rounded flex flex-row p-4 bg-white gap-4 items-center">
-                        <SettingsIcon />
-                        <span className="font-medium text-sm">Settings</span>
-                    </div>
-
-                    <div className="border rounded flex flex-row p-4 bg-white gap-4 items-center">
-                        <HistoryIcon />
-                        <span className="font-medium text-sm">
-                            Attendances history
-                        </span>
-                    </div>
-
-                    <div className="border rounded flex flex-row p-4 bg-white gap-4 items-center">
-                        <CreditCardIcon />
-                        <span className="font-medium text-sm">
-                            Membership plan
-                        </span>
-                    </div>
-                    <hr className="m-2" />
-                    <div
-                        className="border rounded flex flex-row p-4 bg-white gap-4 items-center text-red-500"
-                        onClick={logout}
-                    >
-                        <LogOut />
-                        <span className="font-medium text-sm">Logout</span>
-                    </div>
+                <div className="p-2 relative hover:bg-slate-900 hover:text-white hover:cursor-pointer transition-all duration-200">
+                    <p className=" text-center font-bold">Attendances</p>
+                    <p className=" text-center text-sm">4 days in week</p>
                 </div>
+            </div>
+            <div
+                id="menu"
+                className="divide-y flex flex-col rounded overflow-hidden border bg-white shadow"
+            >
+                <SettingMenu icon={IdCardIcon} text="Membership" />
+                <SettingMenu icon={ClockIcon} text="Attendances" />
+                <SettingMenu icon={DumbbellIcon} text="Class" />
+                <SettingMenu icon={PhoneIcon} text="Contact CS" />
+                <SettingMenu icon={HistoryIcon} text="Transaction History" />
+                <SettingMenu icon={SettingsIcon} text="Settings" />
+            </div>
+
+            <div
+                className="bg-red-600 text-white flex flex-row items-center p-4 text-sm mt-4 rounded gap-2 shadow"
+                onClick={() => logout()}
+            >
+                <LogOutIcon size={20} />
+                <span className="font-bold">Logout</span>
             </div>
         </div>
     );
 }
+
+const SettingMenu = ({ icon, text }: { icon: LucideIcon; text: string }) => {
+    const Icon = icon;
+    return (
+        <div className="p-4 flex flex-row gap-2 hover:bg-slate-900 hover:text-white hover:cursor-pointer transition-all duration-100 hover:px-8 hover:text-md text-sm items-center">
+            <Icon size={20} />
+            <p className="font-bold">{text}</p>
+        </div>
+    );
+};
 
 export default Profile;
