@@ -29,10 +29,13 @@ const Login: FC = () => {
             .then((response) => {
                 if (response.status === 200) {
                     const data = response.data;
+                    if (data.data.role === 'member') {
+                        navigate('/app/home');
+                    } else {
+                        navigate('/dashboard');
+                    }
                     setToken(data.token);
                     setUser(data.data);
-                    navigate('/dashboard');
-                    // alert('login success');
                 } else if (response.status === 422) {
                     alert('Redirect to personal information form');
                     // TODO : this is for member but i will do for admin first so keep remind me

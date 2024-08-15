@@ -69,6 +69,7 @@ route.post(
         bankNumber,
         phoneNumber,
         identificationNumber,
+        gender,
       } = input.value;
 
       const profile = req.file;
@@ -86,6 +87,7 @@ route.post(
         bankNumber,
         identificationNumber,
         phoneNumber,
+        gender,
         profile
       );
 
@@ -93,7 +95,7 @@ route.post(
         throw new Error("Add trainer failed");
       }
 
-      return res.status(200).json({
+      return res.status(201).json({
         message: "Add tariner success",
       });
     } catch (error) {
@@ -166,6 +168,7 @@ route.post(
         bankNumber,
         phoneNumber,
         identificationNumber,
+        gender,
       } = input.value;
 
       if (input.error) {
@@ -182,6 +185,7 @@ route.post(
         bankNumber,
         phoneNumber,
         identificationNumber,
+        gender,
         profile
       );
 

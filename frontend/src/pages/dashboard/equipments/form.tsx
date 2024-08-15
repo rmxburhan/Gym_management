@@ -32,7 +32,7 @@ const EquipmentForm: FC<{ equipment: Equipment | null }> = ({ equipment }) => {
         post: updateEquipment,
         error: updateEquipmentError,
         isLoading: updateEquipmentLoading,
-    } = usePost('equipments/' + equipment?._id, PostContentType.FormData);
+    } = usePost('equipments/' + equipment?.id, PostContentType.FormData);
 
     const onSubmit: SubmitHandler<createEquipmentsRequest> = (values) => {
         const formData = new FormData();

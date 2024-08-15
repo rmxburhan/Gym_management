@@ -41,14 +41,14 @@ export const columnsInit = ({ deleteMethod, updateMethod }: Props) => {
                         <Button
                             className="w-[40px] p-0 me-2"
                             onClick={() => {
-                                updateMethod(data._id, row.index);
+                                updateMethod(data.id, row.index);
                             }}
                         >
                             <FileIcon size={18} />
                         </Button>
                         <Button
                             onClick={() => {
-                                deleteMethod(data._id, row.index);
+                                deleteMethod(data.id, row.index);
                             }}
                             className="w-[40px] p-0"
                         >

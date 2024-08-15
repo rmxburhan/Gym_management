@@ -8,7 +8,8 @@ import Membership from "../models/membership.model";
 export const getTransactions = async () => {
   return await Transaction.find()
     .sort({ createdAt: -1 })
-    .populate("membership", "name description duration");
+    .populate("membership", "name duration")
+    .populate("member", "name profile");
 };
 
 export const getTransaction = async (id: string, user: IUser) => {

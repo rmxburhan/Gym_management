@@ -1,8 +1,8 @@
 // import chalk  from "chalk'
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import attendanceCodeCronJob from "./cron_job/code";
-import connectMonggose from "./startup/db";
+import connectMonggose from "./persistence/db";
 import startup from "./startup/index";
 import routes from "./routes";
 
@@ -13,8 +13,5 @@ startup(app);
 connectMonggose();
 attendanceCodeCronJob();
 routes(app);
-const port = process.env.PORT || 5000;
 
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-});
+export default app;

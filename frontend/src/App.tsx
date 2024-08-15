@@ -20,6 +20,16 @@ import CreateEquipment from './pages/dashboard/equipments/create';
 import Authorization from './pages/auth/Authorization';
 import NotAuthorizated from './pages/auth/NotAuthorizated';
 import Logout from './pages/auth/Logout';
+import HomePage from './pages/member/home/page';
+import Layout from './pages/member/Layout';
+import ClassesPage from './pages/member/classes/page';
+import Profile from './pages/member/profile/page';
+import NewsPage from './pages/member/news/page';
+import CheckInPage from './pages/member/attendances/page';
+import ReportPage from './pages/dashboard/reports/page';
+import SettingPage from './pages/member/settings/page';
+import MembershipPage from './pages/member/membership/page';
+import MyClassPage from './pages/member/myclass/page';
 
 function App() {
     return (
@@ -32,6 +42,23 @@ function App() {
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
                     </Route>
+                    <Route element={<Authorization role="member" />} path="app">
+                        <Route element={<Layout />}>
+                            <Route path="home" element={<HomePage />} />
+                            <Route path="classes" element={<ClassesPage />} />
+                            <Route path="profile" element={<Profile />} />
+                            <Route path="news" element={<NewsPage />} />
+                            <Route
+                                path="attendances"
+                                element={<CheckInPage />}
+                            />
+                        </Route>
+                        <Route path="checkin" element={<CheckInPage />} />
+                        <Route path="settings" element={<SettingPage />} />
+                        <Route path="membership" element={<MembershipPage />} />
+                        <Route path="myclass" element={<MyClassPage />} />
+                    </Route>
+
                     <Route element={<Authorization role="admin" />}>
                         <Route path="/dashboard" element={<DashboardLayout />}>
                             <Route path="" element={<Dashboard />} />
@@ -89,6 +116,7 @@ function App() {
                                 path="notifications"
                                 element={<Notifications />}
                             />
+                            <Route path="reports" element={<ReportPage />} />
                         </Route>
                     </Route>
                     <Route path="*" element={<NoMatch />} />

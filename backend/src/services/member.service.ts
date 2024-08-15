@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import User, { UserQuery } from "../models/user.model";
-import { exists } from "fs";
 
 export const getMembers = async ({
   name,

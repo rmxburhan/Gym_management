@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model";
 import { RequestAuth } from "../types/request";
-import errorhandlersMiddleware from "./errorhandlers.middleware";
 import tokenService from "../services/token.service";
 
 const authorize = (roles: string[]) => {
@@ -25,8 +24,9 @@ const authorize = (roles: string[]) => {
       }
 
       const decoded: any = jwt.decode(token);
+      console.log(decoded);
       const user = await User.findOne({
-        _id: decoded.id,
+        _id: decoded._id,
         deletedAt: undefined,
       });
 
@@ -41,9 +41,12 @@ const authorize = (roles: string[]) => {
         });
       }
       (req as RequestAuth).user = user;
+      console.log("decode");
       next();
     } catch (error: any) {
-      errorhandlersMiddleware(error, req, res, next);
+      console.log(error);
+      error.name = "Unauthorize";
+      next(error);
     }
   };
 };

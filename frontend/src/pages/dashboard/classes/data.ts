@@ -1,11 +1,11 @@
 export interface Class {
-    _id: string;
+    id: string;
     name: string;
     description: string;
     date: string;
     maxParticipant: number;
     trainer: {
-        _id: string;
+        id: string;
         name: string;
         profile: string;
     };

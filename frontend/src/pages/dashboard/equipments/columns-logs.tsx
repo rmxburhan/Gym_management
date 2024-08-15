@@ -9,6 +9,9 @@ export const columns: ColumnDef<EquipmentLog>[] = [
     {
         header: 'Category',
         accessorKey: 'category',
+        cell: ({ row }) => {
+            return <div className="capitalize">{row.original.category}</div>;
+        },
     },
     {
         header: 'Admin name logger',
@@ -21,7 +24,13 @@ export const columns: ColumnDef<EquipmentLog>[] = [
         header: 'Timestamps',
         cell: ({ row }) => {
             const data = row.original;
-            return <div>{new Date(data.createdAt).toLocaleString()}</div>;
+            return (
+                <div>
+                    {new Date(data.createdAt).toLocaleString('id-ID', {
+                        timeZone: 'Asia/Jakarta',
+                    })}
+                </div>
+            );
         },
     },
 ];

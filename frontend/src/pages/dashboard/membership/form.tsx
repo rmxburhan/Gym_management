@@ -20,7 +20,7 @@ const MembershipForm: FC<{ membership: Membership | null }> = ({
         error: updateMembershipError,
         update: updateMembership,
         isLoading: updateMembershipLoading,
-    } = usePut('memberships/' + membership?._id);
+    } = usePut('memberships/' + membership?.id);
     const {
         register,
         handleSubmit,

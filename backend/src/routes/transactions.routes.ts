@@ -13,8 +13,8 @@ route.get(
       const user = (req as RequestAuth).user;
       const transactions =
         user.role === "member"
-          ? await transactionService.getTransactions()
-          : await transactionService.getTransactionHistory(user.id);
+          ? await transactionService.getTransactionHistory(user.id)
+          : await transactionService.getTransactions();
       return res.status(200).json({
         message: "Transactions data success retrieved",
         data: transactions,
@@ -49,6 +49,9 @@ route.get(
   }
 );
 
+/**
+ * This is just for testing use 3rd payment api ASAP bro
+ */
 route.post(
   "/:id/activate",
   authorize(["admin"]),

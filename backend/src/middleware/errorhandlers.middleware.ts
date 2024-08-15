@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
+import { getSystemErrorMap } from "util";
 
 export default (
   error: Error,
@@ -8,14 +9,25 @@ export default (
   next: NextFunction
 ) => {
   if (error) {
+    let code = 0;
+    let message = error.message;
+
     if (Joi.isError(error)) {
-      return res.status(400).json({
-        errors: error.details[0].message,
-      });
+      code = 400;
+    } else if (error.name === "NotFound") {
+      code = 404;
+    } else if (error.name === "BadRequest") {
+      code = 402;
+    } else if (error.name === "Unauthorize") {
+      code = 401;
+    } else if (error.name === "Forbidden") {
+      code = 403;
     } else {
-      return res.status(500).json({
-        message: error.message,
-      });
+      code = 500;
     }
+
+    return res.status(code).json({
+      errors: message,
+    });
   }
 };

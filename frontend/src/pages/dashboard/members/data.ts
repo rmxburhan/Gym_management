@@ -1,7 +1,7 @@
 import { addressSchema } from '../trainers/data';
 
 export type Member = {
-    _id: string;
+    id: string;
     name: string;
     email: string;
     profile: string;
@@ -19,13 +19,14 @@ export type Member = {
             }
         ];
         membership?: {
-            _id: string;
+            id: string;
             registerDate: string;
             expiresDate: string;
             membership: string;
             status: boolean;
         };
     };
+    createdAt: string;
 };
 
 export interface getMembersResponseData {

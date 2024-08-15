@@ -42,14 +42,14 @@ export const columnsInit = ({ deleteMethod, updateMethod }: Props) => {
                     <div className="flex flex-row">
                         <Button
                             className="p-0 w-[40px] me-2"
-                            onClick={() => updateMethod(data._id, row.index)}
+                            onClick={() => updateMethod(data.id, row.index)}
                         >
                             <FileIcon size={18} />
                         </Button>
                         <Button
                             className="p-0 w-[40px]"
                             onClick={() => {
-                                deleteMethod(data._id, row.index);
+                                deleteMethod(data.id, row.index);
                             }}
                         >
                             <TrashIcon className="text-white" size={18} />

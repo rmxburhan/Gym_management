@@ -1,146 +1,150 @@
-import { Document, model, Schema } from "mongoose";
+import { type Document, model, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
-import { IMembershipData } from "./membershipdata.model";
-import { IMember, memberSchema } from "./member.model";
-import { IStaff, staffSchema } from "./staff.model";
-import { ITrainer, trainerSchema } from "./trainer.model";
-import { IMembership } from "./membership.model";
+import { type IMember, memberSchema } from "./member.model";
+import { type IStaff, staffSchema } from "./staff.model";
+import { type ITrainer, trainerSchema } from "./trainer.model";
 
 export interface IAddress extends Document {
-  street: string;
-  city: string;
-  state: string;
-  zip: string;
+	street: string;
+	city: string;
+	state: string;
+	zip: string;
 }
 
-export const addressSchema = new Schema<IAddress>({
-  street: {
-    type: String,
-    required: true,
-  },
-  city: {
-    type: String,
-    required: true,
-  },
-  state: {
-    type: String,
-    requried: true,
-  },
-  zip: {
-    type: String,
-    required: true,
-  },
-});
+export const addressSchema = new Schema<IAddress>(
+	{
+		street: {
+			type: String,
+			required: true,
+		},
+		city: {
+			type: String,
+			required: true,
+		},
+		state: {
+			type: String,
+			requried: true,
+		},
+		zip: {
+			type: String,
+			required: true,
+		},
+	},
+	{
+		toJSON: {
+			transform: (doc, ret) => {
+				ret.id = ret._id;
+				ret._id = undefined;
+				ret.__v = undefined;
+			},
+		},
+	},
+);
 
 export interface IUser extends Document {
-  name: string;
-  email: string;
-  password: string;
-  role: "member" | "trainer" | "admin" | "staff";
-  profile?: string;
-  memberDetail?: IMember | null;
-  staffDetail?: IStaff | null;
-  trainerDetail?: ITrainer | null;
-  deletedAt?: Date;
-  comparePassword: (password: string) => boolean;
+	name: string;
+	email: string;
+	password: string;
+	role: "member" | "trainer" | "admin" | "staff";
+	profile?: string;
+	memberDetail?: IMember | null;
+	staffDetail?: IStaff | null;
+	trainerDetail?: ITrainer | null;
+	deletedAt?: Date;
+	comparePassword: (password: string) => boolean;
 }
 
 export interface UserQuery {
-  _id?: any;
-  name?: any;
-  email?: any;
-  role?: "member" | "trainer" | "admin" | "staff";
-  deletedAt?: any;
+	_id?: any;
+	name?: any;
+	email?: any;
+	role?: "member" | "trainer" | "admin" | "staff";
+	deletedAt?: any;
 }
 
 const userSchema = new Schema<IUser>(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      index: true,
-      required: true,
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
-    role: {
-      type: String,
-      required: true,
-      enum: ["member", "admin", "trainer", "staff"],
-      default: "member",
-    },
-    memberDetail: {
-      type: memberSchema,
-      required: false,
-    },
-    trainerDetail: {
-      type: trainerSchema,
-      required: false,
-    },
-    staffDetail: {
-      type: staffSchema,
-      required: false,
-    },
-    profile: {
-      type: String,
-      required: false,
-    },
-    deletedAt: {
-      type: Date,
-      required: false,
-    },
-  },
-  {
-    timestamps: true,
-    toJSON: {
-      virtuals: true,
-    },
-    toObject: {
-      virtuals: true,
-    },
-  }
+	{
+		name: {
+			type: String,
+			required: true,
+		},
+		email: {
+			type: String,
+			index: true,
+			required: true,
+			unique: true,
+		},
+		password: {
+			type: String,
+			required: true,
+		},
+		role: {
+			type: String,
+			required: true,
+			enum: ["member", "admin", "trainer", "staff"],
+			default: "member",
+		},
+		memberDetail: {
+			type: memberSchema,
+			required: false,
+		},
+		trainerDetail: {
+			type: trainerSchema,
+			required: false,
+		},
+		staffDetail: {
+			type: staffSchema,
+			required: false,
+		},
+		profile: {
+			type: String,
+			required: false,
+		},
+		deletedAt: {
+			type: Date,
+			required: false,
+		},
+	},
+	{
+		timestamps: true,
+		toJSON: {
+			transform: (doc, ret) => {
+				ret.id = ret._id;
+				ret._id = undefined;
+				ret.__v = undefined;
+				ret.password = undefined;
+			},
+			versionKey: false,
+			virtuals: true,
+		},
+	},
 );
 
-userSchema.set("toJSON", {
-  transform: (doc, ret) => {
-    delete ret.password;
-    return ret;
-  },
-});
-
 userSchema.pre("save", function (this: IUser, next) {
-  const user = this;
+	if (this.isModified("password") || this.isNew) {
+		bcrypt.genSalt(10, (err, salt) => {
+			if (err) return next(err);
 
-  if (this.isModified("password") || this.isNew) {
-    bcrypt.genSalt(10, (err, salt) => {
-      if (err) return next(err);
+			bcrypt.hash(this.password, salt, (err, hash) => {
+				if (err) return next(err);
 
-      bcrypt.hash(user.password, salt, (err, hash) => {
-        if (err) return next(err);
-
-        user.password = hash;
-        next();
-      });
-    });
-  } else {
-    return next();
-  }
+				this.password = hash;
+				next();
+			});
+		});
+	} else {
+		return next();
+	}
 });
 
 userSchema.methods.comparePassword = function (
-  candidatePassword: string
+	candidatePassword: string,
 ): boolean {
-  try {
-    return bcrypt.compareSync(candidatePassword, this.password);
-  } catch (error) {
-    throw error;
-  }
+	try {
+		return bcrypt.compareSync(candidatePassword, this.password);
+	} catch (error) {
+		throw error;
+	}
 };
 
 const User = model<IUser>("User", userSchema);

@@ -15,41 +15,57 @@ export const columnsInit = ({ deleteHandler, updateHandler }: Props) => {
         {
             accessorKey: 'name',
             header: 'Name',
+            cell: ({ row }) => {
+                const data = row.original;
+                return (
+                    <div className="flex flex-row items-center gap-2">
+                        <img
+                            src={'http://localhost:5000/' + data.profile}
+                            alt="avatar.png"
+                            className="w-[35px] h-[35px] rounded-full border"
+                        />
+                        <span>{data.name}</span>
+                    </div>
+                );
+            },
         },
         {
             accessorKey: 'email',
-            header: 'email',
+            header: 'Email',
         },
         {
             header: 'Gender',
             cell: ({ row }) => {
                 const gender = row.original.memberDetail?.gender;
-                return <span>{gender ? gender : '-'}</span>;
+                return (
+                    <span className="capitalize">{gender ? gender : '-'}</span>
+                );
             },
         },
         {
-            accessorKey: 'createdAt',
-            header: 'Join date',
+            header: 'Account registered',
+            cell: ({ row }) => {
+                const data = row.original;
+                const formattedDate = new Date(
+                    data.createdAt
+                ).toLocaleDateString('id-ID', {
+                    dateStyle: 'long',
+                });
+                return <div>{formattedDate}</div>;
+            },
         },
         {
             header: 'Join membership date',
             cell: ({ row }) => {
-                const registerDate =
-                    row.original.memberDetail?.membership?.registerDate;
-                return (
-                    <span>
-                        {registerDate
-                            ? new Date(registerDate).toLocaleDateString(
-                                  'id-ID',
-                                  {
-                                      day: '2-digit',
-                                      month: 'long',
-                                      year: 'numeric',
-                                  }
-                              )
-                            : '-'}
-                    </span>
-                );
+                const data = row.original;
+                const formattedDate = data.memberDetail?.membership
+                    ? new Date(
+                          data.memberDetail?.membership?.registerDate
+                      ).toLocaleDateString('id-ID', {
+                          dateStyle: 'long',
+                      })
+                    : '-';
+                return <div>{formattedDate}</div>;
             },
         },
         {
@@ -99,13 +115,13 @@ export const columnsInit = ({ deleteHandler, updateHandler }: Props) => {
                     <div className="flex flex-row">
                         <Button
                             className="p-0 me-2"
-                            onClick={() => updateHandler(data._id, row.index)}
+                            onClick={() => updateHandler(data.id, row.index)}
                         >
                             <FileIcon size={18} className="m-2" />
                         </Button>
                         <Button
                             className="p-0"
-                            onClick={() => deleteHandler(data._id, row.index)}
+                            onClick={() => deleteHandler(data.id, row.index)}
                         >
                             <TrashIcon size={18} className="m-2" />
                         </Button>

@@ -44,10 +44,7 @@ const Addlog: FC<{ onClose: () => void; visible: boolean; id: string }> = ({
         <Modal onClose={onClose} isModalVisible={visible} closeButton={true}>
             <div className="px-2">
                 <h2 className="text-xl font-semibold mb-4">Add log</h2>
-                <form
-                    className="grid gap-1.5"
-                    onSubmit={handleSubmit(onSubmit)}
-                >
+                <form className="grid gap-2" onSubmit={handleSubmit(onSubmit)}>
                     <Label className="font-medium" htmlFor="category">
                         Category
                     </Label>
@@ -76,7 +73,7 @@ const Addlog: FC<{ onClose: () => void; visible: boolean; id: string }> = ({
                             {errors.category.message}
                         </p>
                     )}
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground text-xs">
                         Category for what logs you want to add if you select buy
                         it will added to your current qty and if you sell it
                         will subtract

@@ -8,7 +8,7 @@ const NotAuthorizated: FC = () => {
         if (user?.role == 'admin') {
             return <Navigate to="/dashboard" />;
         } else {
-            return <Navigate to="/home" />;
+            return <Navigate to="/app/home" />;
         }
     }
     return <Outlet />;

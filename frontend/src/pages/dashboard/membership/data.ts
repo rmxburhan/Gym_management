@@ -1,5 +1,5 @@
 export interface UserMembership {
-    _id: string;
+    id: string;
     memberId: string;
     membershipId: string;
     registeredDate: Date;
@@ -8,7 +8,7 @@ export interface UserMembership {
 }
 
 export interface Membership {
-    _id: string;
+    id: string;
     name: string;
     description: string;
     duration: number;

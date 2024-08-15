@@ -12,7 +12,7 @@ const Register = () => {
         post: registerPost,
         error: postRegisterError,
         isLoading: postRegisterLoading,
-    } = usePost('auth/register');
+    } = usePost('user/register');
     const navigate = useNavigate();
     const {
         handleSubmit,

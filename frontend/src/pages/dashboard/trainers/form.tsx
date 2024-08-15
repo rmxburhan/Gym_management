@@ -8,10 +8,10 @@ import {
     useForm,
 } from 'react-hook-form';
 import { Trainer, createTrainerRequest } from './data';
-import { Label } from '@radix-ui/react-label';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { PlusIcon, TractorIcon, TrashIcon } from 'lucide-react';
+import { PlusIcon, TrashIcon } from 'lucide-react';
 import {
     TooltipProvider,
     Tooltip,
@@ -19,6 +19,7 @@ import {
     TooltipTrigger,
 } from '@/components/ui/tooltip';
 const TrainerForm: FC<{ trainer: Trainer | null }> = ({ trainer }) => {
+    const { setActiveSideBar } = useHide();
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const {
         control,
@@ -47,7 +48,7 @@ const TrainerForm: FC<{ trainer: Trainer | null }> = ({ trainer }) => {
         post: updateTrainer,
         error: updateTrainerError,
         isLoading: updateTrainerLoading,
-    } = usePost('trainers/' + trainer?._id, PostContentType.FormData);
+    } = usePost('trainers/' + trainer?.id, PostContentType.FormData);
     const [imagePreview, setImagePreview] = useState('');
 
     const onSubmit: SubmitHandler<createTrainerRequest> = (values) => {
@@ -115,10 +116,11 @@ const TrainerForm: FC<{ trainer: Trainer | null }> = ({ trainer }) => {
                 setImagePreview('http://localhost:5000/' + trainer.profile);
             }
         }
+        setActiveSideBar('/dashboard/trainers');
     }, [trainer]);
 
     return (
-        <div className="bg-white max-w-[600px] rounded-xl border px-4 py-6">
+        <div className="bg-white max-w-[600px] rounded-xl border p-4">
             <div className="flex flex-col items-baseline gap-1.5 mb-2">
                 <Input
                     type="file"

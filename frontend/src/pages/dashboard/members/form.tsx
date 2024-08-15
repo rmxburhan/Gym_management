@@ -54,7 +54,7 @@ const memberForm: FC<{ member: Member | null }> = ({ member }) => {
         post: updateMember,
         isLoading: updateMemberLoading,
         error: updateMemberError,
-    } = usePost('members/' + member?._id, PostContentType.FormData);
+    } = usePost('members/' + member?.id, PostContentType.FormData);
     const onSubmit: SubmitHandler<createMemberRequest> = (values) => {
         const formData = new FormData();
         formData.append('name', values.name);
@@ -130,7 +130,7 @@ const memberForm: FC<{ member: Member | null }> = ({ member }) => {
     }, [member]);
 
     return (
-        <div className="bg-white px-4 py-6 border rounded-xl">
+        <div className="bg-white p-4 border rounded-xl ">
             <div className="flex flex-col items-baseline gap-1.5 mb-2">
                 <Input
                     type="file"

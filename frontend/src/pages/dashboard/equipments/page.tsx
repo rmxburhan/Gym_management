@@ -1,16 +1,18 @@
 import SearchBox from '@/components/SearchBox';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useGet from '@/hooks/useGet';
 import { getEquipmentsResponse } from './data';
 import { DataTable } from '@/components/ui/data-table';
 import { columnsInit } from './columns';
 import Confirmation from '@/components/Confirmation';
-import { FileQuestionIcon } from 'lucide-react';
+import { FileQuestionIcon, SendToBack } from 'lucide-react';
 import useDelete from '@/hooks/useDelete';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router';
+import useHide from '@/context/SideBarState';
 
 const Equipments = () => {
+    const { setActiveSideBar } = useHide();
     const { data, refresh } = useGet<getEquipmentsResponse>('equipments');
     const { remove } = useDelete('equipments');
     const navigate = useNavigate();
@@ -45,9 +47,11 @@ const Equipments = () => {
         }
     };
 
+    useEffect(() => setActiveSideBar('/dashboard/equipments'), []);
+
     return (
-        <div>
-            <h1 className="text-4xl font-semibold mb-8">Equipments</h1>
+        <div className="px-4 pt-4">
+            <h1 className="text-3xl font-semibold mb-4">Equipments</h1>
             <div className="flex flex-col">
                 <div
                     id="table-container"

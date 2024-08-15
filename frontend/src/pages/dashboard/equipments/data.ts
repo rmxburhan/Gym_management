@@ -1,20 +1,20 @@
 export interface Equipment {
-    _id: string;
+    id: string;
     name: string;
     qty: number;
     image?: string;
 }
 
 export interface EquipmentLog {
-    _id: string;
+    id: string;
     equipment:
         | string
         | {
-              _id: string;
+              id: string;
               name: string;
           };
     admin: {
-        _id: string;
+        id: string;
         name: string;
     };
     description: string;
@@ -30,7 +30,7 @@ export interface getEquipmentsResponse {
 export interface getEquipmentResponse {
     message: string;
     data: {
-        _id: string;
+        id: string;
         name: string;
         qty: number;
         image?: string;

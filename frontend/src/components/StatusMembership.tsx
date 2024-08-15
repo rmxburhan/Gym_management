@@ -1,9 +1,10 @@
+import { cn } from '@/lib/utils';
 import React from 'react';
 
 let style: Map = {
-    Nonactive: 'border-red-600 text-red-600',
-    Expired: 'border-yellow-600 text-yellow-600',
-    Active: 'border-green-600 text-green-600',
+    Nonactive: 'bg-red-600 text-white',
+    Expired: 'bg-yellow-600 text-white',
+    Active: 'bg-green-600 text-white',
 };
 interface Map {
     [key: string]: string | undefined;
@@ -12,7 +13,7 @@ interface Map {
 const StatusMembership: React.FC<{ text: string }> = ({ text }) => {
     let myStyle = style[text];
     return (
-        <span className={'px-2 py-1 border rounded ' + myStyle}>{text}</span>
+        <span className={cn('p-2 rounded font-medium', myStyle)}>{text}</span>
     );
 };
 

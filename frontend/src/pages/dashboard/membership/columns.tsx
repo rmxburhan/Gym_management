@@ -82,7 +82,7 @@ export const columnsInit = ({
                         <Button
                             className="p-0 w-[40px] me-2"
                             onClick={() =>
-                                updateHandler(row.original._id, row.index)
+                                updateHandler(row.original.id, row.index)
                             }
                         >
                             <FileIcon size={18} />
@@ -90,7 +90,7 @@ export const columnsInit = ({
                         <Button
                             className="p-0 w-[40px] me-2"
                             onClick={() =>
-                                deleteHandler(row.original._id, row.index)
+                                deleteHandler(row.original.id, row.index)
                             }
                         >
                             <TrashIcon size={18} />
@@ -99,16 +99,16 @@ export const columnsInit = ({
                             <Button
                                 className="bg-green-600 border text-white font-medium p-0 w-[40px] hover:bg-green-500"
                                 onClick={() =>
-                                    publishHandler(row.original._id, row.index)
+                                    publishHandler(row.original.id, row.index)
                                 }
                             >
                                 <UploadCloudIcon size={18} />
                             </Button>
                         ) : (
                             <Button
-                                className="rounded bg-red-500 hover:bg-red-500 border text-white  font-medium p-0 w-[40px]"
+                                className="rounded bg-red-600 hover:bg-red-600 border text-white  font-medium p-0 w-[40px]"
                                 onClick={() => {
-                                    publishHandler(row.original._id, row.index);
+                                    publishHandler(row.original.id, row.index);
                                 }}
                             >
                                 <DownloadCloudIcon size={18} />

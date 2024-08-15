@@ -35,6 +35,11 @@ export const equipmentLogSchema = new Schema<IEquipmentLog>(
     },
     toJSON: {
       virtuals: true,
+      transform: (doc, ret) => {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+      },
     },
   }
 );

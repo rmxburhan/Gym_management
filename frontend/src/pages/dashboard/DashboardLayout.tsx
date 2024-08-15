@@ -41,19 +41,13 @@ const DashboardLayout: React.FC = () => {
         },
         { icon: FileBarChart, title: 'Reports', path: '/dashboard/reports' },
     ];
-    const { activeSideBar, setActiveSideBar } = useHide();
+    const { activeSideBar } = useHide();
     return (
         <div className="flex flex-row">
             <Sidebar>
                 {SidebarList.map((item) => {
                     return (
-                        <Link
-                            to={item.path}
-                            key={item.path}
-                            onClick={() => {
-                                setActiveSideBar(item.path);
-                            }}
-                        >
+                        <Link to={item.path} key={item.path}>
                             <SideBarItem
                                 text={item.title}
                                 Icon={item.icon}
@@ -63,8 +57,8 @@ const DashboardLayout: React.FC = () => {
                     );
                 })}
             </Sidebar>
-            <div id="page" className="flex-1 overflow-y-auto px-8 bg-[#fcfcfc]">
-                <div className="overflow-y-scroll h-screen py-8">
+            <div id="page" className="flex-1 overflow-y-auto bg-gray-50">
+                <div className="overflow-y-scroll h-screen">
                     <Outlet />
                 </div>
             </div>
