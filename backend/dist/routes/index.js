@@ -1,0 +1,33 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const auth_routes_1 = __importDefault(require("./auth.routes"));
+const user_routes_1 = __importDefault(require("./user.routes"));
+const trainer_routes_1 = __importDefault(require("./trainer.routes"));
+const membership_routes_1 = __importDefault(require("./membership.routes"));
+const attendance_routes_1 = __importDefault(require("./attendance.routes"));
+const class_routes_1 = __importDefault(require("./class.routes"));
+const member_routes_1 = __importDefault(require("./member.routes"));
+const equipment_routes_1 = __importDefault(require("./equipment.routes"));
+const transactions_routes_1 = __importDefault(require("./transactions.routes"));
+const setting_routes_1 = __importDefault(require("./setting.routes"));
+const announcements_routes_1 = __importDefault(require("./announcements.routes"));
+const notFound_middleware_1 = __importDefault(require("../middleware/notFound.middleware"));
+const errorhandlers_middleware_1 = __importDefault(require("../middleware/errorhandlers.middleware"));
+exports.default = (app) => {
+    app.use("/api/auth", auth_routes_1.default);
+    app.use("/api/user", user_routes_1.default);
+    app.use("/api/trainers", trainer_routes_1.default);
+    app.use("/api/memberships", membership_routes_1.default);
+    app.use("/api/attendances", attendance_routes_1.default);
+    app.use("/api/classes", class_routes_1.default);
+    app.use("/api/members", member_routes_1.default);
+    app.use("/api/equipments", equipment_routes_1.default);
+    app.use("/api/transactions", transactions_routes_1.default);
+    app.use("/api/settings", setting_routes_1.default);
+    app.use("/api/announcements", announcements_routes_1.default);
+    app.use(errorhandlers_middleware_1.default);
+    app.use(notFound_middleware_1.default);
+};
